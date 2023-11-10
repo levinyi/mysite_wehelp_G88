@@ -1,0 +1,13 @@
+Django==4.2
+mysqlclient
+gunicorn
+lxml
+crispy-bootstrap5
+django-crispy-forms
+openpyxl
+redis
+celery
+pandas
+rarfile
+Pillow
+biopython
