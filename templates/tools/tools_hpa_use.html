@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'tools:tools_list' %}">工具列表</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ tools_id }}</li>
+        </ol>
+    </nav>
+    <div class="row form-control mt-3 pt-3">
+        <div class="col">
+            <h3 class="panel-title">使用方法：</h3>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col">
+                <h5 class="panel-body">
+                    <br><br>
+                    这里是一些使用说明
+                    <br><br>
+                    数据的接收与处理： 上传测序NGS数据文件压缩包，确保文件中没有子文件夹。
+                    <br><br>
+                    项目名称：为项目提供一个可辨识且唯一的名称
+                    <br><br>
+                    <br><br>
+                    查看结果状态：<a href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="row form-control mt-3 pt-3">
+        <form id="uploadForm" class="form-group" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+            <!-- project name -->
+            <div class="mb-4 pt-3">
+                <label for="" class="form-label">Project Name:</label>
+                <input type="text" class="form-control" placeholder="test" 
+                    name="project_name" required="required" pattern="[^\s]+" title="Project Name should not contain spaces"/>
+            </div>
+
+            <!-- NGS data -->
+            <div class="mb-4 pt-3">
+                <label for="formFile1" class="form-label">NGS data (zip/rar)</label>
+                <input class="form-control form-control" required="required" type="file" id="zipFile"
+                    accept=".zip,.rar" name="zipFile">
+                <div id="progressBar" style="width: 0%; background-color: #4CAF50; height: 20px; margin-top: 10px;"></div>
+                <span id="uploadSpeed"></span>
+            </div>
+            <span>核对下表，并修改 PanelDesigned 列 </span>
+            <div class="mb-4 pt-3">
+                <table class="table table-striped table-hover table-bordered" style="text-align:center">
+                    <thead>
+                        <tr>
+                            <th>Number</th>
+                            <th>System</th>
+                            <th>Gene</th>
+                            <th>PanelDesigned</th>
+                            <th>Transcript_USED</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>HPA</td>
+                            <td>CD36</td>
+                            <td contenteditable="true">YES</td>
+                            <td>NM_001001548.2</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>HPA</td>
+                            <td>CD109</td>
+                            <td contenteditable="true">YES</td>
+                            <td>NM_133493.5</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>HPA</td>
+                            <td>GP1BA</td>
+                            <td contenteditable="true">YES</td>
+                            <td>NM_000173.7</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>HPA</td>
+                            <td>GP1BB</td>
+                            <td contenteditable="true">YES</td>
+                            <td>NM_000407.5</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>HPA</td>
+                            <td>GP9</td>
+                            <td contenteditable="true">YES</td>
+                            <td>NM_000174.5</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>HPA</td>
+                            <td>ITGA2</td>
+                            <td contenteditable="true">YES</td>
+                            <td>NM_002203.4</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>HPA</td>
+                            <td>ITGA2B</td>
+                            <td contenteditable="true">YES</td>
+                            <td>NM_000419.5</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>HPA</td>
+                            <td>ITGB3</td>
+                            <td contenteditable="true">YES</td>
+                            <td>NM_000212.3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- button -->
+            <div class="col-xs-7 mb-3">
+                <button type="submit" class="btn btn-primary" id="submitBtn">Start Analysis</button>
+            </div>
+            <div class="col-xs-7 mb-3" id="target-element">
+                {% if check_available %}
+                    <span>Your project name {{ project_name }} is starting </span>
+                    <span>Your unique id is {{ unique_id }}.  Please </span>
+                    <a href="{% url 'tools:check_status' tools_id=tools_id %}">Check Here</span>
+                {% endif %}
+            </div>
+        </form>
+        <div id="progressBarContainer" style="display: none;">
+            <div id="progressBar"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        // 获取并设置CSRF令牌的值
+        var csrftoken = '{{ csrf_token }}';
+
+        $('#uploadForm').submit(function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+
+            var formData = new FormData();
+            formData.append('zipFile', $('#zipFile')[0].files[0]);
+            formData.append('csrfmiddlewaretoken', csrftoken); // 添加额外的CSRF令牌参数
+            formData.append('tools_id', '{{ tools_id }}');
+            var project_name = $('input[name="project_name"]').val();
+            formData.append('project_name', project_name);
+
+            var startTime = new Date().getTime();  // 记录开始时间
+            var startBytes = 0;  // 记录已上传的字节数
+
+            var data = []
+            $('table tr:gt(0)').each(function() {
+                var row = {};
+                $(this).find('td').each(function(index) {
+                    var key = $('table tr:first th').eq(index).text().trim();
+                    var value = $(this).text().trim();
+                    row[key] = value;
+                });
+                data.push(row);
+            });
+            var jsonData = JSON.stringify(data);
+            formData.append('jsonData', jsonData);
+
+            $.ajax({
+                url: "{% url 'tools:tools_use' tools_id=tools_id %}", // window.location.href, // 后端接收上传的URL
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener('progress', function(evt) {
+                        if (evt.lengthComputable) {
+                            var currentTime = new Date().getTime();
+                            var elapsedTime = (currentTime - startTime) / 1000;  // 已经过的时间（秒）
+                            var uploadedBytes = evt.loaded - startBytes;  // 已上传的字节数
+                            var uploadSpeed = uploadedBytes / elapsedTime;  // 上传速度（字节/秒）
+                            var uploadSpeedFormatted = formatFileSize(uploadSpeed) + '/s';  // 格式化后的上传速度
+
+                            var percentComplete = evt.loaded / evt.total * 100;
+                            if (percentComplete > 0){
+                                var progressBarWidth = Math.floor(percentComplete) + '%'; // 将小数值转换为整数
+                                var progressBarText = progressBarWidth + '(' + uploadSpeedFormatted + ')';
+                                $('#progressBar').width(progressBarWidth).html(progressBarText);
+                            }
+                            if (percentComplete >= 100) {
+                                var totalTime = (currentTime - startTime) / 1000;  // 总共用时（秒）
+                                $('#uploadSpeed').html('Upload Complete - Total Time: ' + formatTime(totalTime));
+                            }
+                        }
+                    }, false);
+                    return xhr;
+                },
+                success: function(response) {
+                    // 清空原有内容
+                    $('#target-element').empty();
+
+                    // 设置新的内容
+                    if (response.check_available === 'True') {
+                        var projectInfo = 'Your project is starting: ' + response.project_name;
+                        var checkLink = '<a href="{% url "tools:check_status" tools_id=tools_id %}">Check Here</a>';
+                        $('#target-element').html(projectInfo + checkLink);
+                    }
+                    // 上传完成后的处理逻辑
+                    $('#progressBar').width('100%').html('100%');
+                    $('#uploadSpeed').html('Upload Complete');
+                },
+                error: function(xhr, status, error){
+                    console.log('请求/tools/use/ Failed',error)
+                }
+            });
+        });
+        function formatFileSize(bytes) {
+            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes === 0) {
+                return '0 Byte';
+            }
+            var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+            return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+        }
+        function formatTime(seconds) {
+            var minutes = Math.floor(seconds / 60);
+            seconds = Math.round(seconds % 60);
+            return minutes + 'm ' + seconds + 's';
+        }
+    });
+</script>
+{% endblock %}

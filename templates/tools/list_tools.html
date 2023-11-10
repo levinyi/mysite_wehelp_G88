@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tools List{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/my.tmp.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+
+<section class="mt-8">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div
+                    class="bg-light d-lg-flex justify-content-between align-items-center py-6 py-lg-3 px-8 rounded-3 text-center text-lg-start">
+                    <!-- img -->
+                    <div class="d-lg-flex align-items-center">
+                        <img src="https://freshcart.codescandy.com/assets/images/about/about-icons-1.svg" alt=""
+                            class="img-fluid">
+                        <!-- text -->
+                        <div class="ms-lg-4">
+                            <h1 class="fs-2 mb-1">We have <span class="text-primary">{{ tools.count }}</span> tools now</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="mt-6 mb-lg-14 mb-8">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 g-lg-4">
+            {% for tool in tools %}
+            <div class="col">
+                <div class="card flex-row p-8 card-product">
+                    <div>
+                        <img src="{% static '' %}img/tools_icon/{{ tool.tools_id }}.icon.png" alt=""
+                            class="rounded-circle icon-shape icon-xl">
+                    </div>
+                    <!-- content -->
+                    <div class="ms-6">
+                        <h4 class="mb-1">
+                            <a href="{% url 'tools:tools_use' tools_id=tool.tools_id %}" class="text-inherit stretched-link">{{ tool.tools_name }}</a>
+                        </h4>
+                        <div class="py-3">
+                            <ul class="list-unstyled mb-0 small">
+                                <li>{{ tool.tools_desc }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'tools:tools_list' %}">工具列表</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ tools_id }}</li>
+        </ol>
+    </nav>
+    <div class="row form-control mt-3 pt-3">
+        <div class="col">
+            <h3 class="panel-title">使用方法：</h3>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col">
+                <h5 class="panel-body">
+                    <br><br>
+                    这里是一些使用说明
+                    <br><br>
+                    数据的接收与处理： 上传测序NGS数据文件压缩包，确保文件中没有子文件夹。
+                    <br><br>
+                    项目名称：为项目提供一个可辨识且唯一的名称
+                    <br><br>
+                    <br><br>
+                    查看结果状态：<a href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="row form-control mt-3 pt-3">
+        <form class="form-group" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <!-- project name -->
+            <div class="mb-4 pt-3">
+                <label for="" class="form-label">Project Name:</label>
+                <input type="text" class="form-control" placeholder="20230606_rbc_test" 
+                    name="project_name" required="required" pattern="[^\s]+" title="Project Name should not contain spaces"/>
+            </div>
+            <!-- NGS data -->
+            <div class="mb-4 pt-3">
+                <label for="formFileLg" class="form-label">NGS data (zip/rar)</label>
+                <input class="form-control form-control" required="required" type="file" id="formFile1"
+                    accept=".zip,.rar" name="file_name1">
+            </div>
+            <!-- file2
+            <div class="mb-4 pt-3">
+                <label for="form" class="form-label"> CPUs </label>
+                <input type="number" class="form-control form-control" required="required" type="file" id="cpuUsage"
+                    name="cpuUsage" min="0" max="100">
+            </div> -->
+            <!-- button -->
+            <div class="col-xs-7 mb-4">
+                <button type="submit" class="btn btn-primary" id="submitBtn">Start Analysis</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

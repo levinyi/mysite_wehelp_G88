@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>上传ZIP压缩包</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#zipFile').change(function() {
+                var formData = new FormData();
+                formData.append('zipFile', $('#zipFile')[0].files[0]);
+
+                $.ajax({
+                    url: '/upload', // 后端接收上传的URL
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', function(evt) {
+                            if (evt.lengthComputable) {
+                                var percentComplete = evt.loaded / evt.total * 100;
+                                $('#progressBar').width(percentComplete + '%').html(percentComplete + '%');
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function(response) {
+                        // 上传完成后的处理逻辑
+                        $('#progressBar').width('100%').html('100%');
+                        alert('上传完成！');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>上传ZIP压缩包</h2>
+    <input type="file" id="zipFile" name="zipFile" required>
+    <div id="progressBar" style="width: 0%; background-color: #4CAF50; height: 20px; margin-top: 10px;"></div>
+</body>
+</html>
