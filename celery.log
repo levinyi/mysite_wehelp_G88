@@ -1,0 +1,779 @@
+[2023-07-21 16:58:00,378: DEBUG/MainProcess] | Worker: Preparing bootsteps.
+[2023-07-21 16:58:00,381: DEBUG/MainProcess] | Worker: Building graph...
+[2023-07-21 16:58:00,381: DEBUG/MainProcess] | Worker: New boot order: {Beat, Timer, Hub, Pool, Autoscaler, StateDB, Consumer}
+[2023-07-21 16:58:00,388: DEBUG/MainProcess] | Consumer: Preparing bootsteps.
+[2023-07-21 16:58:00,389: DEBUG/MainProcess] | Consumer: Building graph...
+[2023-07-21 16:58:00,408: DEBUG/MainProcess] | Consumer: New boot order: {Connection, Agent, Events, Mingle, Tasks, Control, Gossip, Heart, event loop}
+[2023-07-21 16:58:00,490: DEBUG/MainProcess] | Worker: Starting Hub
+[2023-07-21 16:58:00,490: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:00,490: DEBUG/MainProcess] | Worker: Starting Pool
+[2023-07-21 16:58:00,677: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:00,677: DEBUG/MainProcess] | Worker: Starting Consumer
+[2023-07-21 16:58:00,677: DEBUG/MainProcess] | Consumer: Starting Connection
+[2023-07-21 16:58:00,682: INFO/MainProcess] Connected to redis://127.0.0.1:6379/0
+[2023-07-21 16:58:00,682: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:00,682: DEBUG/MainProcess] | Consumer: Starting Events
+[2023-07-21 16:58:00,683: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:00,683: DEBUG/MainProcess] | Consumer: Starting Mingle
+[2023-07-21 16:58:00,683: INFO/MainProcess] mingle: searching for neighbors
+[2023-07-21 16:58:01,688: INFO/MainProcess] mingle: all alone
+[2023-07-21 16:58:01,688: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:01,688: DEBUG/MainProcess] | Consumer: Starting Tasks
+[2023-07-21 16:58:01,691: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:01,692: DEBUG/MainProcess] | Consumer: Starting Control
+[2023-07-21 16:58:01,693: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:01,693: DEBUG/MainProcess] | Consumer: Starting Gossip
+[2023-07-21 16:58:01,694: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:01,695: DEBUG/MainProcess] | Consumer: Starting Heart
+[2023-07-21 16:58:01,695: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 16:58:01,695: DEBUG/MainProcess] | Consumer: Starting event loop
+[2023-07-21 16:58:01,696: DEBUG/MainProcess] | Worker: Hub.register Pool...
+[2023-07-21 16:58:01,697: WARNING/MainProcess] /usr/local/lib/python3.8/dist-packages/celery/fixups/django.py:203: UserWarning: Using settings.DEBUG leads to a memory
+            leak, never use this setting in production environments!
+  warnings.warn('''Using settings.DEBUG leads to a memory
+
+[2023-07-21 16:58:01,697: INFO/MainProcess] celery@ecs-2de3 ready.
+[2023-07-21 16:58:01,697: DEBUG/MainProcess] basic.qos: prefetch_count->32
+[2023-07-21 17:11:13,201: INFO/MainProcess] Task tools.tasks.main_task[e37fa0f0-1036-4121-8216-924ca1108d45] received
+[2023-07-21 17:11:13,201: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7fc20bc9ed30> (args:('tools.tasks.main_task', 'e37fa0f0-1036-4121-8216-924ca1108d45', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': 'e37fa0f0-1036-4121-8216-924ca1108d45', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': 'e37fa0f0-1036-4121-8216-924ca1108d45', 'parent_id': None, 'argsrepr': "(1, 'hla', 'f71d46e9-5f52-42e4-b2e4-262163a702c8')", 'kwargsrepr': '{}', 'origin': 'gen3370533@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': 'e37fa0f0-1036-4121-8216-924ca1108d45', 'reply_to': '981c7421-97f9-3ed7-a450-bf7f84fe0eda', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': 'd244c5b3-24a9-474d-8731-a3336bb0c39c'}, 'reply_to': '981c7421-97f9-3ed7-a450-bf7f84fe0eda', 'correlation_id': 'e37fa0f0-1036-4121-8216-924ca1108d45', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-07-21 17:11:13,213: WARNING/ForkPoolWorker-7] project_name: 
+[2023-07-21 17:11:13,213: WARNING/ForkPoolWorker-7]  
+[2023-07-21 17:11:13,213: WARNING/ForkPoolWorker-7] test_project_test_test
+[2023-07-21 17:11:13,213: WARNING/ForkPoolWorker-7] upload_dir: 
+[2023-07-21 17:11:13,213: WARNING/ForkPoolWorker-7]  
+[2023-07-21 17:11:13,213: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla/f71d46e9-5f52-42e4-b2e4-262163a702c8
+[2023-07-21 17:11:13,214: WARNING/ForkPoolWorker-7] zip_file_path: 
+[2023-07-21 17:11:13,214: WARNING/ForkPoolWorker-7]  
+[2023-07-21 17:11:13,214: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla/f71d46e9-5f52-42e4-b2e4-262163a702c8/test_hla2samples.rar
+[2023-07-21 17:11:15,920: WARNING/ForkPoolWorker-7] --- Logging error ---
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7] Traceback (most recent call last):
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 1085, in emit
+    msg = self.format(record)
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 929, in format
+    return fmt.format(record)
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/log.py", line 44, in format
+    return super().format(record)
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/utils/log.py", line 146, in format
+    msg = super().format(record)
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 668, in format
+    record.message = record.getMessage()
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 373, in getMessage
+    msg = msg % self.args
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7] TypeError: not all arguments converted during string formatting
+[2023-07-21 17:11:15,965: WARNING/ForkPoolWorker-7] Call stack:
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/__main__.py", line 15, in main
+    sys.exit(_main())
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/celery.py", line 217, in main
+    return celery(auto_envvar_prefix="CELERY")
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1055, in main
+    rv = self.invoke(ctx)
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/decorators.py", line 26, in new_func
+    return f(get_current_context(), *args, **kwargs)
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/base.py", line 134, in caller
+    return f(ctx, *args, **kwargs)
+[2023-07-21 17:11:16,026: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/worker.py", line 351, in worker
+    worker.start()
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/worker/worker.py", line 203, in start
+    self.blueprint.start(self)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bootsteps.py", line 116, in start
+    step.start(parent)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bootsteps.py", line 365, in start
+    return self.obj.start()
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/base.py", line 129, in start
+    self.on_start()
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/prefork.py", line 109, in on_start
+    P = self._pool = Pool(processes=self.limit,
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/asynpool.py", line 463, in __init__
+    super().__init__(processes, *args, **kwargs)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/asynpool.py", line 480, in _create_worker_process
+    return super()._create_worker_process(i)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 649, in fast_trace_task
+    R, I, T, Rstr = tasks[task].__trace__(
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]   File "/data/webapp/mysite/tools/tasks.py", line 73, in main_task
+    logger.info("BASE_DIR: ", BASE_DIR)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7] Message: 'BASE_DIR: '
+Arguments: ('/data/webapp/mysite',)
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7] BASE_DIR: 
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]  
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7] /data/webapp/mysite
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7] script_dir: 
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7]  
+[2023-07-21 17:11:16,027: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla
+[2023-07-21 17:11:16,027: INFO/ForkPoolWorker-7] tools.tasks.main_task[e37fa0f0-1036-4121-8216-924ca1108d45]: python /data/webapp/mysite/pipeline/project_hla/hla.py /data/webapp/mysite/pipeline/project_hla/f71d46e9-5f52-42e4-b2e4-262163a702c8 test_project_test_test
+[2023-07-21 17:11:16,038: INFO/ForkPoolWorker-7] Task tools.tasks.main_task[e37fa0f0-1036-4121-8216-924ca1108d45] succeeded in 2.8355975076556206s: None
+[2023-07-21 17:17:06,768: DEBUG/MainProcess] | Worker: Preparing bootsteps.
+[2023-07-21 17:17:06,769: DEBUG/MainProcess] | Worker: Building graph...
+[2023-07-21 17:17:06,769: DEBUG/MainProcess] | Worker: New boot order: {Timer, Hub, Pool, Autoscaler, Beat, StateDB, Consumer}
+[2023-07-21 17:17:06,772: DEBUG/MainProcess] | Consumer: Preparing bootsteps.
+[2023-07-21 17:17:06,773: DEBUG/MainProcess] | Consumer: Building graph...
+[2023-07-21 17:17:06,790: DEBUG/MainProcess] | Consumer: New boot order: {Connection, Events, Mingle, Tasks, Control, Agent, Heart, Gossip, event loop}
+[2023-07-21 17:17:06,813: DEBUG/MainProcess] | Worker: Starting Hub
+[2023-07-21 17:17:06,813: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:06,813: DEBUG/MainProcess] | Worker: Starting Pool
+[2023-07-21 17:17:06,999: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:07,000: DEBUG/MainProcess] | Worker: Starting Consumer
+[2023-07-21 17:17:07,000: DEBUG/MainProcess] | Consumer: Starting Connection
+[2023-07-21 17:17:07,005: INFO/MainProcess] Connected to redis://127.0.0.1:6379/0
+[2023-07-21 17:17:07,005: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:07,005: DEBUG/MainProcess] | Consumer: Starting Events
+[2023-07-21 17:17:07,006: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:07,006: DEBUG/MainProcess] | Consumer: Starting Mingle
+[2023-07-21 17:17:07,006: INFO/MainProcess] mingle: searching for neighbors
+[2023-07-21 17:17:07,009: DEBUG/MainProcess] pidbox received method hello(from_node='celery@ecs-2de3', revoked={}) [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': '2eeda54f-6178-334a-8f87-fe1c718256e1'} ticket:fe10af28-76cd-445e-91e6-b466ac8ac352]
+[2023-07-21 17:17:08,012: INFO/MainProcess] mingle: all alone
+[2023-07-21 17:17:08,012: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:08,012: DEBUG/MainProcess] | Consumer: Starting Tasks
+[2023-07-21 17:17:08,015: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:08,015: DEBUG/MainProcess] | Consumer: Starting Control
+[2023-07-21 17:17:08,016: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:08,016: DEBUG/MainProcess] | Consumer: Starting Heart
+[2023-07-21 17:17:08,017: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:08,017: DEBUG/MainProcess] | Consumer: Starting Gossip
+[2023-07-21 17:17:08,019: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:17:08,019: DEBUG/MainProcess] | Consumer: Starting event loop
+[2023-07-21 17:17:08,019: DEBUG/MainProcess] | Worker: Hub.register Pool...
+[2023-07-21 17:17:08,020: WARNING/MainProcess] /usr/local/lib/python3.8/dist-packages/celery/fixups/django.py:203: UserWarning: Using settings.DEBUG leads to a memory
+            leak, never use this setting in production environments!
+  warnings.warn('''Using settings.DEBUG leads to a memory
+
+[2023-07-21 17:17:08,020: INFO/MainProcess] celery@ecs-2de3 ready.
+[2023-07-21 17:17:08,020: DEBUG/MainProcess] basic.qos: prefetch_count->32
+[2023-07-21 17:45:20,157: INFO/MainProcess] Task tools.tasks.main_task[d520c123-3773-44a4-9165-9609f6e0b9ae] received
+[2023-07-21 17:45:20,157: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f85ea631e50> (args:('tools.tasks.main_task', 'd520c123-3773-44a4-9165-9609f6e0b9ae', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': 'd520c123-3773-44a4-9165-9609f6e0b9ae', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': 'd520c123-3773-44a4-9165-9609f6e0b9ae', 'parent_id': None, 'argsrepr': "(1, 'hla', '5faca3bf-3d5c-4585-993a-8f4a90f84bcd')", 'kwargsrepr': '{}', 'origin': 'gen3374813@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': 'd520c123-3773-44a4-9165-9609f6e0b9ae', 'reply_to': '931c487d-ab5d-3fbe-be20-ad5a6bbdec1f', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '5b6eca92-af2a-49f3-bde5-80e9d09e9305'}, 'reply_to': '931c487d-ab5d-3fbe-be20-ad5a6bbdec1f', 'correlation_id': 'd520c123-3773-44a4-9165-9609f6e0b9ae', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-07-21 17:45:20,165: WARNING/ForkPoolWorker-6] project_name: 
+[2023-07-21 17:45:20,166: WARNING/ForkPoolWorker-6]  
+[2023-07-21 17:45:20,166: WARNING/ForkPoolWorker-6] test_project_test_test
+[2023-07-21 17:45:20,166: WARNING/ForkPoolWorker-6] upload_dir: 
+[2023-07-21 17:45:20,166: WARNING/ForkPoolWorker-6]  
+[2023-07-21 17:45:20,166: WARNING/ForkPoolWorker-6] /data/webapp/mysite/pipeline/project_hla/5faca3bf-3d5c-4585-993a-8f4a90f84bcd
+[2023-07-21 17:45:20,166: WARNING/ForkPoolWorker-6] zip_file_path: 
+[2023-07-21 17:45:20,166: WARNING/ForkPoolWorker-6]  
+[2023-07-21 17:45:20,166: WARNING/ForkPoolWorker-6] /data/webapp/mysite/pipeline/project_hla/5faca3bf-3d5c-4585-993a-8f4a90f84bcd/test_hla2samples.rar
+[2023-07-21 17:45:22,847: WARNING/ForkPoolWorker-6] --- Logging error ---
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6] Traceback (most recent call last):
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6]   File "/usr/lib/python3.8/logging/__init__.py", line 1085, in emit
+    msg = self.format(record)
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6]   File "/usr/lib/python3.8/logging/__init__.py", line 929, in format
+    return fmt.format(record)
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/app/log.py", line 44, in format
+    return super().format(record)
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/utils/log.py", line 146, in format
+    msg = super().format(record)
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6]   File "/usr/lib/python3.8/logging/__init__.py", line 668, in format
+    record.message = record.getMessage()
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6]   File "/usr/lib/python3.8/logging/__init__.py", line 373, in getMessage
+    msg = msg % self.args
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6] TypeError: not all arguments converted during string formatting
+[2023-07-21 17:45:22,848: WARNING/ForkPoolWorker-6] Call stack:
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/__main__.py", line 15, in main
+    sys.exit(_main())
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/celery.py", line 217, in main
+    return celery(auto_envvar_prefix="CELERY")
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1055, in main
+    rv = self.invoke(ctx)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/click/decorators.py", line 26, in new_func
+    return f(get_current_context(), *args, **kwargs)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/base.py", line 134, in caller
+    return f(ctx, *args, **kwargs)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/worker.py", line 351, in worker
+    worker.start()
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/worker/worker.py", line 203, in start
+    self.blueprint.start(self)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/bootsteps.py", line 116, in start
+    step.start(parent)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/bootsteps.py", line 365, in start
+    return self.obj.start()
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/base.py", line 129, in start
+    self.on_start()
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/prefork.py", line 109, in on_start
+    P = self._pool = Pool(processes=self.limit,
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/asynpool.py", line 463, in __init__
+    super().__init__(processes, *args, **kwargs)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/asynpool.py", line 480, in _create_worker_process
+    return super()._create_worker_process(i)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2023-07-21 17:45:22,850: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 649, in fast_trace_task
+    R, I, T, Rstr = tasks[task].__trace__(
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6]   File "/data/webapp/mysite/tools/tasks.py", line 73, in main_task
+    logger.info("BASE_DIR: ", BASE_DIR)
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6] Message: 'BASE_DIR: '
+Arguments: ('/data/webapp/mysite',)
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6] BASE_DIR: 
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6]  
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6] /data/webapp/mysite
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6] script_dir: 
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6]  
+[2023-07-21 17:45:22,851: WARNING/ForkPoolWorker-6] /data/webapp/mysite/pipeline/project_hla
+[2023-07-21 17:45:22,851: INFO/ForkPoolWorker-6] tools.tasks.main_task[d520c123-3773-44a4-9165-9609f6e0b9ae]: python /data/webapp/mysite/pipeline/project_hla/hla.py /data/webapp/mysite/pipeline/project_hla/5faca3bf-3d5c-4585-993a-8f4a90f84bcd test_project_test_test
+[2023-07-21 17:45:22,860: INFO/ForkPoolWorker-6] Task tools.tasks.main_task[d520c123-3773-44a4-9165-9609f6e0b9ae] succeeded in 2.7021710872650146s: None
+[2023-07-21 17:51:09,348: DEBUG/MainProcess] | Worker: Closing Hub...
+[2023-07-21 17:51:09,348: DEBUG/MainProcess] | Worker: Closing Pool...
+[2023-07-21 17:51:09,348: DEBUG/MainProcess] | Worker: Closing Consumer...
+[2023-07-21 17:51:09,348: DEBUG/MainProcess] | Worker: Stopping Consumer...
+[2023-07-21 17:51:09,348: DEBUG/MainProcess] | Consumer: Closing Connection...
+[2023-07-21 17:51:09,348: DEBUG/MainProcess] | Consumer: Closing Events...
+[2023-07-21 17:51:09,348: DEBUG/MainProcess] | Consumer: Closing Mingle...
+[2023-07-21 17:51:09,349: DEBUG/MainProcess] | Consumer: Closing Tasks...
+[2023-07-21 17:51:09,349: DEBUG/MainProcess] | Consumer: Closing Control...
+[2023-07-21 17:51:09,349: DEBUG/MainProcess] | Consumer: Closing Heart...
+[2023-07-21 17:51:09,349: DEBUG/MainProcess] | Consumer: Closing Gossip...
+[2023-07-21 17:51:09,349: DEBUG/MainProcess] | Consumer: Closing event loop...
+[2023-07-21 17:51:09,349: DEBUG/MainProcess] | Consumer: Stopping event loop...
+[2023-07-21 17:51:09,349: DEBUG/MainProcess] | Consumer: Stopping Gossip...
+[2023-07-21 17:51:09,349: DEBUG/MainProcess] | Consumer: Stopping Heart...
+[2023-07-21 17:51:09,350: DEBUG/MainProcess] | Consumer: Stopping Control...
+[2023-07-21 17:51:09,350: DEBUG/MainProcess] | Consumer: Stopping Tasks...
+[2023-07-21 17:51:09,351: DEBUG/MainProcess] Canceling task consumer...
+[2023-07-21 17:51:09,351: DEBUG/MainProcess] | Consumer: Stopping Mingle...
+[2023-07-21 17:51:09,351: DEBUG/MainProcess] | Consumer: Stopping Events...
+[2023-07-21 17:51:09,351: DEBUG/MainProcess] | Consumer: Stopping Connection...
+[2023-07-21 17:51:09,351: DEBUG/MainProcess] | Worker: Stopping Pool...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] | Worker: Stopping Hub...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] | Consumer: Shutdown Gossip...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] | Consumer: Shutdown Heart...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] | Consumer: Shutdown Control...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] | Consumer: Shutdown Tasks...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] Canceling task consumer...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] Closing consumer channel...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] | Consumer: Shutdown Events...
+[2023-07-21 17:51:10,358: DEBUG/MainProcess] | Consumer: Shutdown Connection...
+[2023-07-21 17:51:10,359: DEBUG/MainProcess] removing tasks from inqueue until task handler finished
+[2023-07-21 17:51:12,706: DEBUG/MainProcess] | Worker: Preparing bootsteps.
+[2023-07-21 17:51:12,707: DEBUG/MainProcess] | Worker: Building graph...
+[2023-07-21 17:51:12,707: DEBUG/MainProcess] | Worker: New boot order: {StateDB, Beat, Timer, Hub, Pool, Autoscaler, Consumer}
+[2023-07-21 17:51:12,710: DEBUG/MainProcess] | Consumer: Preparing bootsteps.
+[2023-07-21 17:51:12,710: DEBUG/MainProcess] | Consumer: Building graph...
+[2023-07-21 17:51:12,728: DEBUG/MainProcess] | Consumer: New boot order: {Connection, Events, Mingle, Tasks, Control, Heart, Agent, Gossip, event loop}
+[2023-07-21 17:51:12,751: DEBUG/MainProcess] | Worker: Starting Hub
+[2023-07-21 17:51:12,751: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:12,751: DEBUG/MainProcess] | Worker: Starting Pool
+[2023-07-21 17:51:12,941: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:12,942: DEBUG/MainProcess] | Worker: Starting Consumer
+[2023-07-21 17:51:12,942: DEBUG/MainProcess] | Consumer: Starting Connection
+[2023-07-21 17:51:12,946: INFO/MainProcess] Connected to redis://127.0.0.1:6379/0
+[2023-07-21 17:51:12,947: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:12,947: DEBUG/MainProcess] | Consumer: Starting Events
+[2023-07-21 17:51:12,948: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:12,948: DEBUG/MainProcess] | Consumer: Starting Mingle
+[2023-07-21 17:51:12,948: INFO/MainProcess] mingle: searching for neighbors
+[2023-07-21 17:51:12,951: DEBUG/MainProcess] pidbox received method hello(from_node='celery@ecs-2de3', revoked={}) [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': '18244cdb-ae3a-3323-ad9f-47644a205b19'} ticket:3d7c96d2-dbde-45e6-bad0-2f62c3473c5f]
+[2023-07-21 17:51:13,954: INFO/MainProcess] mingle: all alone
+[2023-07-21 17:51:13,954: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:13,954: DEBUG/MainProcess] | Consumer: Starting Tasks
+[2023-07-21 17:51:13,956: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:13,956: DEBUG/MainProcess] | Consumer: Starting Control
+[2023-07-21 17:51:13,958: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:13,958: DEBUG/MainProcess] | Consumer: Starting Heart
+[2023-07-21 17:51:13,959: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:13,959: DEBUG/MainProcess] | Consumer: Starting Gossip
+[2023-07-21 17:51:13,960: DEBUG/MainProcess] ^-- substep ok
+[2023-07-21 17:51:13,960: DEBUG/MainProcess] | Consumer: Starting event loop
+[2023-07-21 17:51:13,960: DEBUG/MainProcess] | Worker: Hub.register Pool...
+[2023-07-21 17:51:13,961: WARNING/MainProcess] /usr/local/lib/python3.8/dist-packages/celery/fixups/django.py:203: UserWarning: Using settings.DEBUG leads to a memory
+            leak, never use this setting in production environments!
+  warnings.warn('''Using settings.DEBUG leads to a memory
+
+[2023-07-21 17:51:13,961: INFO/MainProcess] celery@ecs-2de3 ready.
+[2023-07-21 17:51:13,961: DEBUG/MainProcess] basic.qos: prefetch_count->32
+[2023-07-21 18:03:38,338: INFO/MainProcess] Task tools.tasks.main_task[d6c915e4-2dd3-45ef-b7d1-5e8a4d78b0aa] received
+[2023-07-21 18:03:38,338: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7fc20bc9ed30> (args:('tools.tasks.main_task', 'd6c915e4-2dd3-45ef-b7d1-5e8a4d78b0aa', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': 'd6c915e4-2dd3-45ef-b7d1-5e8a4d78b0aa', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': 'd6c915e4-2dd3-45ef-b7d1-5e8a4d78b0aa', 'parent_id': None, 'argsrepr': "(1, 'hla', 'd3fc5715-ad21-46b0-9b53-91d83705fc7c')", 'kwargsrepr': '{}', 'origin': 'gen3375493@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': 'd6c915e4-2dd3-45ef-b7d1-5e8a4d78b0aa', 'reply_to': 'b05afbc4-3d3a-3c2f-984e-c104bfa73246', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '03e18582-b06d-40f3-b74b-a33b32f454fd'}, 'reply_to': 'b05afbc4-3d3a-3c2f-984e-c104bfa73246', 'correlation_id': 'd6c915e4-2dd3-45ef-b7d1-5e8a4d78b0aa', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7] project_name: 
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7] test_project_test_test
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7] upload_dir: 
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla/d3fc5715-ad21-46b0-9b53-91d83705fc7c
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7] zip_file_path: 
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:03:38,341: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla/d3fc5715-ad21-46b0-9b53-91d83705fc7c/test_hla2samples.rar
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7] --- Logging error ---
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7] Traceback (most recent call last):
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 1085, in emit
+    msg = self.format(record)
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 929, in format
+    return fmt.format(record)
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/log.py", line 44, in format
+    return super().format(record)
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/utils/log.py", line 146, in format
+    msg = super().format(record)
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 668, in format
+    record.message = record.getMessage()
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 373, in getMessage
+    msg = msg % self.args
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7] TypeError: not all arguments converted during string formatting
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7] Call stack:
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/__main__.py", line 15, in main
+    sys.exit(_main())
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/celery.py", line 217, in main
+    return celery(auto_envvar_prefix="CELERY")
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1055, in main
+    rv = self.invoke(ctx)
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+[2023-07-21 18:03:41,064: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/decorators.py", line 26, in new_func
+    return f(get_current_context(), *args, **kwargs)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/base.py", line 134, in caller
+    return f(ctx, *args, **kwargs)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/worker.py", line 351, in worker
+    worker.start()
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/worker/worker.py", line 203, in start
+    self.blueprint.start(self)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bootsteps.py", line 116, in start
+    step.start(parent)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bootsteps.py", line 365, in start
+    return self.obj.start()
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/base.py", line 129, in start
+    self.on_start()
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/prefork.py", line 109, in on_start
+    P = self._pool = Pool(processes=self.limit,
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/asynpool.py", line 463, in __init__
+    super().__init__(processes, *args, **kwargs)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/asynpool.py", line 480, in _create_worker_process
+    return super()._create_worker_process(i)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 649, in fast_trace_task
+    R, I, T, Rstr = tasks[task].__trace__(
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]   File "/data/webapp/mysite/tools/tasks.py", line 73, in main_task
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7] Message: 'BASE_DIR: '
+Arguments: ('/data/webapp/mysite',)
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7] BASE_DIR: 
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7] /data/webapp/mysite
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7] script_dir: 
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:03:41,065: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla
+[2023-07-21 18:03:41,065: INFO/ForkPoolWorker-7] tools.tasks.main_task[d6c915e4-2dd3-45ef-b7d1-5e8a4d78b0aa]: python /data/webapp/mysite/pipeline/project_hla/hla.py /data/webapp/mysite/pipeline/project_hla/d3fc5715-ad21-46b0-9b53-91d83705fc7c test_project_test_test
+[2023-07-21 18:03:41,073: INFO/ForkPoolWorker-7] Task tools.tasks.main_task[d6c915e4-2dd3-45ef-b7d1-5e8a4d78b0aa] succeeded in 2.733939852565527s: None
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Worker: Closing Hub...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Worker: Closing Pool...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Worker: Closing Consumer...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Worker: Stopping Consumer...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Closing Connection...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Closing Events...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Closing Mingle...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Closing Tasks...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Closing Control...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Closing Heart...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Closing Gossip...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Closing event loop...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Stopping event loop...
+[2023-07-21 18:04:38,709: DEBUG/MainProcess] | Consumer: Stopping Gossip...
+[2023-07-21 18:04:38,710: DEBUG/MainProcess] | Consumer: Stopping Heart...
+[2023-07-21 18:04:38,710: DEBUG/MainProcess] | Consumer: Stopping Control...
+[2023-07-21 18:04:38,711: DEBUG/MainProcess] | Consumer: Stopping Tasks...
+[2023-07-21 18:04:38,711: DEBUG/MainProcess] Canceling task consumer...
+[2023-07-21 18:04:38,711: DEBUG/MainProcess] | Consumer: Stopping Mingle...
+[2023-07-21 18:04:38,711: DEBUG/MainProcess] | Consumer: Stopping Events...
+[2023-07-21 18:04:38,711: DEBUG/MainProcess] | Consumer: Stopping Connection...
+[2023-07-21 18:04:38,711: DEBUG/MainProcess] | Worker: Stopping Pool...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] | Worker: Stopping Hub...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] | Consumer: Shutdown Gossip...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] | Consumer: Shutdown Heart...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] | Consumer: Shutdown Control...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] | Consumer: Shutdown Tasks...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] Canceling task consumer...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] Closing consumer channel...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] | Consumer: Shutdown Events...
+[2023-07-21 18:04:39,719: DEBUG/MainProcess] | Consumer: Shutdown Connection...
+[2023-07-21 18:04:39,720: DEBUG/MainProcess] removing tasks from inqueue until task handler finished
+[2023-07-21 18:04:46,386: DEBUG/MainProcess] pidbox received method hello(from_node='celery@ecs-2de3', revoked={}) [reply_to:{'exchange': 'reply.celery.pidbox', 'routing_key': '1440f03e-3738-3e88-917f-5f3f6a9e6472'} ticket:1f83722a-7a8e-4d93-ab32-271c46f8a06c]
+[2023-07-21 18:17:19,194: INFO/MainProcess] Task tools.tasks.main_task[187cf873-b042-4b5b-9df0-c8f8561a405c] received
+[2023-07-21 18:17:19,194: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7fc20bc9ed30> (args:('tools.tasks.main_task', '187cf873-b042-4b5b-9df0-c8f8561a405c', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '187cf873-b042-4b5b-9df0-c8f8561a405c', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '187cf873-b042-4b5b-9df0-c8f8561a405c', 'parent_id': None, 'argsrepr': "(1, 'hla', 'b9af5e16-c784-49c5-a793-23f7293e430c')", 'kwargsrepr': '{}', 'origin': 'gen3375493@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '187cf873-b042-4b5b-9df0-c8f8561a405c', 'reply_to': '02106ec9-d60b-3707-9d22-0910a62c4d46', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '95e5532a-c59e-44d9-88c1-b800d9268af5'}, 'reply_to': '02106ec9-d60b-3707-9d22-0910a62c4d46', 'correlation_id': '187cf873-b042-4b5b-9df0-c8f8561a405c', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7] project_name: 
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7] test_project_test_test
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7] upload_dir: 
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla/b9af5e16-c784-49c5-a793-23f7293e430c
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7] zip_file_path: 
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:17:19,197: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla/b9af5e16-c784-49c5-a793-23f7293e430c/test_hla2samples.rar
+[2023-07-21 18:17:21,878: WARNING/ForkPoolWorker-7] --- Logging error ---
+[2023-07-21 18:17:21,878: WARNING/ForkPoolWorker-7] Traceback (most recent call last):
+[2023-07-21 18:17:21,878: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 1085, in emit
+    msg = self.format(record)
+[2023-07-21 18:17:21,878: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 929, in format
+    return fmt.format(record)
+[2023-07-21 18:17:21,878: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/log.py", line 44, in format
+    return super().format(record)
+[2023-07-21 18:17:21,878: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/utils/log.py", line 146, in format
+    msg = super().format(record)
+[2023-07-21 18:17:21,878: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 668, in format
+    record.message = record.getMessage()
+[2023-07-21 18:17:21,878: WARNING/ForkPoolWorker-7]   File "/usr/lib/python3.8/logging/__init__.py", line 373, in getMessage
+    msg = msg % self.args
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7] TypeError: not all arguments converted during string formatting
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7] Call stack:
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/bin/celery", line 8, in <module>
+    sys.exit(main())
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/__main__.py", line 15, in main
+    sys.exit(_main())
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/celery.py", line 217, in main
+    return celery(auto_envvar_prefix="CELERY")
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1130, in __call__
+    return self.main(*args, **kwargs)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1055, in main
+    rv = self.invoke(ctx)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1657, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 1404, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/core.py", line 760, in invoke
+    return __callback(*args, **kwargs)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/click/decorators.py", line 26, in new_func
+    return f(get_current_context(), *args, **kwargs)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/base.py", line 134, in caller
+    return f(ctx, *args, **kwargs)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bin/worker.py", line 351, in worker
+    worker.start()
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/worker/worker.py", line 203, in start
+    self.blueprint.start(self)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bootsteps.py", line 116, in start
+    step.start(parent)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/bootsteps.py", line 365, in start
+    return self.obj.start()
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/base.py", line 129, in start
+    self.on_start()
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/prefork.py", line 109, in on_start
+    P = self._pool = Pool(processes=self.limit,
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/asynpool.py", line 463, in __init__
+    super().__init__(processes, *args, **kwargs)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 1046, in __init__
+    self._create_worker_process(i)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/concurrency/asynpool.py", line 480, in _create_worker_process
+    return super()._create_worker_process(i)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 1158, in _create_worker_process
+    w.start()
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 124, in start
+    self._popen = self._Popen(self)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/context.py", line 333, in _Popen
+    return Popen(process_obj)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/popen_fork.py", line 24, in __init__
+    self._launch(process_obj)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/popen_fork.py", line 79, in _launch
+    code = process_obj._bootstrap()
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 327, in _bootstrap
+    self.run()
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/process.py", line 114, in run
+    self._target(*self._args, **self._kwargs)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 292, in __call__
+    sys.exit(self.workloop(pid=pid))
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/billiard/pool.py", line 362, in workloop
+    result = (True, prepare_result(fun(*args, **kwargs)))
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 649, in fast_trace_task
+    R, I, T, Rstr = tasks[task].__trace__(
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+[2023-07-21 18:17:21,879: WARNING/ForkPoolWorker-7]   File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+[2023-07-21 18:17:21,880: WARNING/ForkPoolWorker-7]   File "/data/webapp/mysite/tools/tasks.py", line 73, in main_task
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+[2023-07-21 18:17:21,880: WARNING/ForkPoolWorker-7] Message: 'BASE_DIR: '
+Arguments: ('/data/webapp/mysite',)
+[2023-07-21 18:17:21,880: WARNING/ForkPoolWorker-7] BASE_DIR: 
+[2023-07-21 18:17:21,880: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:17:21,880: WARNING/ForkPoolWorker-7] /data/webapp/mysite
+[2023-07-21 18:17:21,880: WARNING/ForkPoolWorker-7] script_dir: 
+[2023-07-21 18:17:21,880: WARNING/ForkPoolWorker-7]  
+[2023-07-21 18:17:21,880: WARNING/ForkPoolWorker-7] /data/webapp/mysite/pipeline/project_hla
+[2023-07-21 18:17:21,880: INFO/ForkPoolWorker-7] tools.tasks.main_task[187cf873-b042-4b5b-9df0-c8f8561a405c]: python /data/webapp/mysite/pipeline/project_hla/hla.py /data/webapp/mysite/pipeline/project_hla/b9af5e16-c784-49c5-a793-23f7293e430c test_project_test_test
+[2023-07-21 18:17:21,889: INFO/ForkPoolWorker-7] Task tools.tasks.main_task[187cf873-b042-4b5b-9df0-c8f8561a405c] succeeded in 2.694460641592741s: None
+[2023-08-12 16:32:50,508: DEBUG/MainProcess] | Worker: Preparing bootsteps.
+[2023-08-12 16:32:50,511: DEBUG/MainProcess] | Worker: Building graph...
+[2023-08-12 16:32:50,511: DEBUG/MainProcess] | Worker: New boot order: {Timer, Hub, Pool, Autoscaler, Beat, StateDB, Consumer}
+[2023-08-12 16:32:50,519: DEBUG/MainProcess] | Consumer: Preparing bootsteps.
+[2023-08-12 16:32:50,519: DEBUG/MainProcess] | Consumer: Building graph...
+[2023-08-12 16:32:50,540: DEBUG/MainProcess] | Consumer: New boot order: {Connection, Events, Mingle, Tasks, Control, Agent, Gossip, Heart, event loop}
+[2023-08-12 16:32:50,576: DEBUG/MainProcess] | Worker: Starting Hub
+[2023-08-12 16:32:50,576: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:50,576: DEBUG/MainProcess] | Worker: Starting Pool
+[2023-08-12 16:32:50,770: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:50,770: DEBUG/MainProcess] | Worker: Starting Consumer
+[2023-08-12 16:32:50,770: DEBUG/MainProcess] | Consumer: Starting Connection
+[2023-08-12 16:32:50,798: INFO/MainProcess] Connected to redis://127.0.0.1:6379/0
+[2023-08-12 16:32:50,798: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:50,798: DEBUG/MainProcess] | Consumer: Starting Events
+[2023-08-12 16:32:50,800: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:50,800: DEBUG/MainProcess] | Consumer: Starting Mingle
+[2023-08-12 16:32:50,800: INFO/MainProcess] mingle: searching for neighbors
+[2023-08-12 16:32:51,805: INFO/MainProcess] mingle: all alone
+[2023-08-12 16:32:51,805: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:51,805: DEBUG/MainProcess] | Consumer: Starting Tasks
+[2023-08-12 16:32:51,808: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:51,808: DEBUG/MainProcess] | Consumer: Starting Control
+[2023-08-12 16:32:51,810: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:51,810: DEBUG/MainProcess] | Consumer: Starting Gossip
+[2023-08-12 16:32:51,811: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:51,811: DEBUG/MainProcess] | Consumer: Starting Heart
+[2023-08-12 16:32:51,812: DEBUG/MainProcess] ^-- substep ok
+[2023-08-12 16:32:51,812: DEBUG/MainProcess] | Consumer: Starting event loop
+[2023-08-12 16:32:51,812: DEBUG/MainProcess] | Worker: Hub.register Pool...
+[2023-08-12 16:32:51,814: WARNING/MainProcess] /usr/local/lib/python3.8/dist-packages/celery/fixups/django.py:203: UserWarning: Using settings.DEBUG leads to a memory
+            leak, never use this setting in production environments!
+  warnings.warn('''Using settings.DEBUG leads to a memory
+
+[2023-08-12 16:32:51,814: INFO/MainProcess] celery@ecs-2de3 ready.
+[2023-08-12 16:32:51,814: DEBUG/MainProcess] basic.qos: prefetch_count->32
+[2023-08-12 16:32:51,934: INFO/MainProcess] Task tools.tasks.main_task[8e013d3c-93b3-45fa-b03f-667deb1ef697] received
+[2023-08-12 16:32:51,934: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '8e013d3c-93b3-45fa-b03f-667deb1ef697', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '8e013d3c-93b3-45fa-b03f-667deb1ef697', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '8e013d3c-93b3-45fa-b03f-667deb1ef697', 'parent_id': None, 'argsrepr': "(1, 'hla', 'd35356e9-5705-4a48-a739-ec8bb58586b4')", 'kwargsrepr': '{}', 'origin': 'gen3934588@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '8e013d3c-93b3-45fa-b03f-667deb1ef697', 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '867fafd3-981b-4a36-9fd3-623ef8c3b025'}, 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'correlation_id': '8e013d3c-93b3-45fa-b03f-667deb1ef697', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 16:32:51,935: INFO/MainProcess] Task tools.tasks.main_task[0dfc1e2e-b6e2-446b-b69b-91c790b86b20] received
+[2023-08-12 16:32:51,935: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '0dfc1e2e-b6e2-446b-b69b-91c790b86b20', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '0dfc1e2e-b6e2-446b-b69b-91c790b86b20', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '0dfc1e2e-b6e2-446b-b69b-91c790b86b20', 'parent_id': None, 'argsrepr': "(1, 'hla', '8da6e6f6-de8a-44de-b4d3-599c000b00c3')", 'kwargsrepr': '{}', 'origin': 'gen3934588@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '0dfc1e2e-b6e2-446b-b69b-91c790b86b20', 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '85ee00cd-85cf-4cf4-ab54-9ae8830d3e59'}, 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'correlation_id': '0dfc1e2e-b6e2-446b-b69b-91c790b86b20', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 16:32:51,936: INFO/MainProcess] Task tools.tasks.main_task[08273979-293d-4852-afb2-f8fed78e9ca6] received
+[2023-08-12 16:32:51,936: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '08273979-293d-4852-afb2-f8fed78e9ca6', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '08273979-293d-4852-afb2-f8fed78e9ca6', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '08273979-293d-4852-afb2-f8fed78e9ca6', 'parent_id': None, 'argsrepr': "(1, 'hla', '7f6c3be2-2f13-42fe-891e-3b166ca1a4a0')", 'kwargsrepr': '{}', 'origin': 'gen3934588@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '08273979-293d-4852-afb2-f8fed78e9ca6', 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': 'd5402be3-3e87-4f37-9511-e544bc94535c'}, 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'correlation_id': '08273979-293d-4852-afb2-f8fed78e9ca6', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 16:32:51,937: INFO/MainProcess] Task tools.tasks.main_task[1e934cc2-7454-400e-8f9a-ee3fa070eb1f] received
+[2023-08-12 16:32:51,937: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '1e934cc2-7454-400e-8f9a-ee3fa070eb1f', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '1e934cc2-7454-400e-8f9a-ee3fa070eb1f', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '1e934cc2-7454-400e-8f9a-ee3fa070eb1f', 'parent_id': None, 'argsrepr': "(1, 'hla', 'a92c5d5e-7dc3-469d-affd-c5f1e2d0ad33')", 'kwargsrepr': '{}', 'origin': 'gen3934588@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '1e934cc2-7454-400e-8f9a-ee3fa070eb1f', 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '3890b620-3b80-4e07-aec1-bc0388b882d4'}, 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'correlation_id': '1e934cc2-7454-400e-8f9a-ee3fa070eb1f', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 16:32:51,938: INFO/MainProcess] Task tools.tasks.main_task[b72d1706-715b-4dbc-b89d-5c69716238b4] received
+[2023-08-12 16:32:51,938: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', 'b72d1706-715b-4dbc-b89d-5c69716238b4', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': 'b72d1706-715b-4dbc-b89d-5c69716238b4', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': 'b72d1706-715b-4dbc-b89d-5c69716238b4', 'parent_id': None, 'argsrepr': "(1, 'hla', 'b32c3f19-d336-4403-be55-7a693e833042')", 'kwargsrepr': '{}', 'origin': 'gen3934588@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': 'b72d1706-715b-4dbc-b89d-5c69716238b4', 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '603dbf2a-a125-4a1d-a3de-cc2e56e4ee3d'}, 'reply_to': '4582661f-6c43-3284-b814-487db01d6eb0', 'correlation_id': 'b72d1706-715b-4dbc-b89d-5c69716238b4', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 16:32:51,940: INFO/MainProcess] Task tools.tasks.main_task[ec25f562-2241-42fa-8164-b83049218a7e] received
+[2023-08-12 16:32:51,940: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', 'ec25f562-2241-42fa-8164-b83049218a7e', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': 'ec25f562-2241-42fa-8164-b83049218a7e', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': 'ec25f562-2241-42fa-8164-b83049218a7e', 'parent_id': None, 'argsrepr': "(1, 'hla', '74b3ab37-acbb-4160-b7bb-0876939cdf7b')", 'kwargsrepr': '{}', 'origin': 'gen3935653@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': 'ec25f562-2241-42fa-8164-b83049218a7e', 'reply_to': '31837355-555c-3f9c-8126-d8a468315464', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': 'ebf48696-bac3-4681-9b6f-f8851370da53'}, 'reply_to': '31837355-555c-3f9c-8126-d8a468315464', 'correlation_id': 'ec25f562-2241-42fa-8164-b83049218a7e', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 16:32:51,942: INFO/MainProcess] Task tools.tasks.main_task[89a2c710-2794-497d-a745-44603320dedf] received
+[2023-08-12 16:32:51,943: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '89a2c710-2794-497d-a745-44603320dedf', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '89a2c710-2794-497d-a745-44603320dedf', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '89a2c710-2794-497d-a745-44603320dedf', 'parent_id': None, 'argsrepr': "(1, 'hla', '2d137217-2f1e-4e6a-92e4-410bdf8339c8')", 'kwargsrepr': '{}', 'origin': 'gen3937258@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '89a2c710-2794-497d-a745-44603320dedf', 'reply_to': '6d9c6a8e-0684-3c7d-a64f-d16bdef06e26', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '809f84cd-86ae-492e-8470-20da798e82a3'}, 'reply_to': '6d9c6a8e-0684-3c7d-a64f-d16bdef06e26', 'correlation_id': '89a2c710-2794-497d-a745-44603320dedf', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 16:32:51,951: WARNING/ForkPoolWorker-5] Unsupported archive file type.
+[2023-08-12 16:32:51,967: ERROR/ForkPoolWorker-4] Task tools.tasks.main_task[ec25f562-2241-42fa-8164-b83049218a7e] raised unexpected: FileNotFoundError(2, 'No such file or directory')
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 63, in main_task
+    extract_archive(zip_file_path, upload_dir)
+  File "/usr/local/lib/python3.8/dist-packages/celery/local.py", line 188, in __call__
+    return self._get_current_object()(*a, **kw)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 735, in __protected_call__
+    return orig(self, *args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/task.py", line 392, in __call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 38, in extract_archive
+    with rarfile.RarFile(archive_file) as rf:
+  File "/usr/local/lib/python3.8/dist-packages/rarfile.py", line 689, in __init__
+    self._parse()
+  File "/usr/local/lib/python3.8/dist-packages/rarfile.py", line 879, in _parse
+    ver, sfx_ofs = _find_sfx_header(self._rarfile)
+  File "/usr/local/lib/python3.8/dist-packages/rarfile.py", line 319, in _find_sfx_header
+    with XFile(xfile) as fd:
+  File "/usr/local/lib/python3.8/dist-packages/rarfile.py", line 2579, in __init__
+    self._fd = open(xfile, "rb", bufsize)
+FileNotFoundError: [Errno 2] No such file or directory: '/data/webapp/mysite/pipeline/project_hla/74b3ab37-acbb-4160-b7bb-0876939cdf7b/test_hla2samples.rar'
+[2023-08-12 16:32:52,008: ERROR/ForkPoolWorker-7] Task tools.tasks.main_task[8e013d3c-93b3-45fa-b03f-667deb1ef697] raised unexpected: FileNotFoundError(2, 'No such file or directory')
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 63, in main_task
+    extract_archive(zip_file_path, upload_dir)
+  File "/usr/local/lib/python3.8/dist-packages/celery/local.py", line 188, in __call__
+    return self._get_current_object()(*a, **kw)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 735, in __protected_call__
+    return orig(self, *args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/task.py", line 392, in __call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 26, in extract_archive
+    with zipfile.ZipFile(archive_file, 'r') as zip_ref:
+  File "/usr/lib/python3.8/zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: '/data/webapp/mysite/pipeline/project_hla/d35356e9-5705-4a48-a739-ec8bb58586b4/final_file.zip'
+[2023-08-12 16:32:52,008: ERROR/ForkPoolWorker-3] Task tools.tasks.main_task[b72d1706-715b-4dbc-b89d-5c69716238b4] raised unexpected: FileNotFoundError(2, 'No such file or directory')
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 63, in main_task
+    extract_archive(zip_file_path, upload_dir)
+  File "/usr/local/lib/python3.8/dist-packages/celery/local.py", line 188, in __call__
+    return self._get_current_object()(*a, **kw)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 735, in __protected_call__
+    return orig(self, *args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/task.py", line 392, in __call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 26, in extract_archive
+    with zipfile.ZipFile(archive_file, 'r') as zip_ref:
+  File "/usr/lib/python3.8/zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: '/data/webapp/mysite/pipeline/project_hla/b32c3f19-d336-4403-be55-7a693e833042/final_file.zip'
+[2023-08-12 16:32:52,008: ERROR/ForkPoolWorker-8] Task tools.tasks.main_task[0dfc1e2e-b6e2-446b-b69b-91c790b86b20] raised unexpected: FileNotFoundError(2, 'No such file or directory')
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 63, in main_task
+    extract_archive(zip_file_path, upload_dir)
+  File "/usr/local/lib/python3.8/dist-packages/celery/local.py", line 188, in __call__
+    return self._get_current_object()(*a, **kw)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 735, in __protected_call__
+    return orig(self, *args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/task.py", line 392, in __call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 26, in extract_archive
+    with zipfile.ZipFile(archive_file, 'r') as zip_ref:
+  File "/usr/lib/python3.8/zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: '/data/webapp/mysite/pipeline/project_hla/8da6e6f6-de8a-44de-b4d3-599c000b00c3/final_file.zip'
+[2023-08-12 16:32:52,008: ERROR/ForkPoolWorker-1] Task tools.tasks.main_task[08273979-293d-4852-afb2-f8fed78e9ca6] raised unexpected: FileNotFoundError(2, 'No such file or directory')
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 63, in main_task
+    extract_archive(zip_file_path, upload_dir)
+  File "/usr/local/lib/python3.8/dist-packages/celery/local.py", line 188, in __call__
+    return self._get_current_object()(*a, **kw)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 735, in __protected_call__
+    return orig(self, *args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/task.py", line 392, in __call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 26, in extract_archive
+    with zipfile.ZipFile(archive_file, 'r') as zip_ref:
+  File "/usr/lib/python3.8/zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: '/data/webapp/mysite/pipeline/project_hla/7f6c3be2-2f13-42fe-891e-3b166ca1a4a0/final_file.zip'
+[2023-08-12 16:32:52,008: ERROR/ForkPoolWorker-2] Task tools.tasks.main_task[1e934cc2-7454-400e-8f9a-ee3fa070eb1f] raised unexpected: FileNotFoundError(2, 'No such file or directory')
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 63, in main_task
+    extract_archive(zip_file_path, upload_dir)
+  File "/usr/local/lib/python3.8/dist-packages/celery/local.py", line 188, in __call__
+    return self._get_current_object()(*a, **kw)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 735, in __protected_call__
+    return orig(self, *args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/task.py", line 392, in __call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 26, in extract_archive
+    with zipfile.ZipFile(archive_file, 'r') as zip_ref:
+  File "/usr/lib/python3.8/zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: '/data/webapp/mysite/pipeline/project_hla/a92c5d5e-7dc3-469d-affd-c5f1e2d0ad33/final_file.zip'
+[2023-08-12 16:32:53,420: INFO/ForkPoolWorker-5] Task tools.tasks.main_task[89a2c710-2794-497d-a745-44603320dedf] succeeded in 1.4762251488864422s: None
+[2023-08-12 16:42:56,492: INFO/MainProcess] Task tools.tasks.main_task[1037d4d1-fa5b-4c5b-8c0d-e16de0aa1c0a] received
+[2023-08-12 16:42:56,492: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '1037d4d1-fa5b-4c5b-8c0d-e16de0aa1c0a', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '1037d4d1-fa5b-4c5b-8c0d-e16de0aa1c0a', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '1037d4d1-fa5b-4c5b-8c0d-e16de0aa1c0a', 'parent_id': None, 'argsrepr': "(1, 'hla', '825af63e-45ad-4030-9dd6-68d39cb30001')", 'kwargsrepr': '{}', 'origin': 'gen3940673@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '1037d4d1-fa5b-4c5b-8c0d-e16de0aa1c0a', 'reply_to': 'ce38e946-3cc1-3f08-8348-052a5ea07b73', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': 'ea91bba1-d031-4a81-ade1-6a035dfea92a'}, 'reply_to': 'ce38e946-3cc1-3f08-8348-052a5ea07b73', 'correlation_id': '1037d4d1-fa5b-4c5b-8c0d-e16de0aa1c0a', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 17:42:47,226: INFO/MainProcess] Task tools.tasks.main_task[c9a38eed-2c70-492e-a1b0-0eeb6fc10427] received
+[2023-08-12 17:42:47,871: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', 'c9a38eed-2c70-492e-a1b0-0eeb6fc10427', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': 'c9a38eed-2c70-492e-a1b0-0eeb6fc10427', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': 'c9a38eed-2c70-492e-a1b0-0eeb6fc10427', 'parent_id': None, 'argsrepr': "(1, 'hpa', 'd3af2c5f-b62f-4dea-8561-3989a2a0e96d')", 'kwargsrepr': '{}', 'origin': 'gen3940673@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': 'c9a38eed-2c70-492e-a1b0-0eeb6fc10427', 'reply_to': 'ce38e946-3cc1-3f08-8348-052a5ea07b73', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '9d821f5f-3adb-4295-82ce-4bc6b6ca39a5'}, 'reply_to': 'ce38e946-3cc1-3f08-8348-052a5ea07b73', 'correlation_id': 'c9a38eed-2c70-492e-a1b0-0eeb6fc10427', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-12 17:46:34,270: ERROR/ForkPoolWorker-8] Task tools.tasks.main_task[c9a38eed-2c70-492e-a1b0-0eeb6fc10427] raised unexpected: CalledProcessError(123, 'xargs -a /data/webapp/mysite/pipeline/project_hpa/d3af2c5f-b62f-4dea-8561-3989a2a0e96d/test_project_test_test/need_to_be_packaged.txt zip -q -j /data/webapp/mysite/pipeline/project_hpa/d3af2c5f-b62f-4dea-8561-3989a2a0e96d/test_project_test_test.zip')
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 451, in trace_task
+    R = retval = fun(*args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/celery/app/trace.py", line 734, in __protected_call__
+    return self.run(*args, **kwargs)
+  File "/data/webapp/mysite/tools/tasks.py", line 81, in main_task
+    subprocess.run(f'xargs -a {upload_dir}/{project_name}/need_to_be_packaged.txt zip -q -j {full_zip_path}', shell=True, check=True)
+  File "/usr/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command 'xargs -a /data/webapp/mysite/pipeline/project_hpa/d3af2c5f-b62f-4dea-8561-3989a2a0e96d/test_project_test_test/need_to_be_packaged.txt zip -q -j /data/webapp/mysite/pipeline/project_hpa/d3af2c5f-b62f-4dea-8561-3989a2a0e96d/test_project_test_test.zip' returned non-zero exit status 123.
+[2023-08-12 19:28:24,383: INFO/ForkPoolWorker-7] Task tools.tasks.main_task[1037d4d1-fa5b-4c5b-8c0d-e16de0aa1c0a] succeeded in 9927.890581920743s: None
+[2023-08-15 09:36:20,067: INFO/MainProcess] Task tools.tasks.main_task[3435553b-ef2f-4410-80c3-75023872d01d] received
+[2023-08-15 09:36:20,067: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '3435553b-ef2f-4410-80c3-75023872d01d', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '3435553b-ef2f-4410-80c3-75023872d01d', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '3435553b-ef2f-4410-80c3-75023872d01d', 'parent_id': None, 'argsrepr': "(1, 'hla', 'aaf9de67-67cf-4841-ae36-4ded16517157')", 'kwargsrepr': '{}', 'origin': 'gen3981163@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '3435553b-ef2f-4410-80c3-75023872d01d', 'reply_to': '2a23d684-9dfa-3eb9-9b24-8344579c92ff', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '7f2c3160-73d2-4b8c-80c4-8594acd0b774'}, 'reply_to': '2a23d684-9dfa-3eb9-9b24-8344579c92ff', 'correlation_id': '3435553b-ef2f-4410-80c3-75023872d01d', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-15 12:42:16,007: INFO/ForkPoolWorker-7] Task tools.tasks.main_task[3435553b-ef2f-4410-80c3-75023872d01d] succeeded in 11155.938667904586s: None
+[2023-08-15 23:17:46,892: INFO/MainProcess] Task tools.tasks.main_task[389da889-f6d1-4aae-805c-023dccb38807] received
+[2023-08-15 23:17:46,893: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '389da889-f6d1-4aae-805c-023dccb38807', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '389da889-f6d1-4aae-805c-023dccb38807', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '389da889-f6d1-4aae-805c-023dccb38807', 'parent_id': None, 'argsrepr': "(1, 'hla', '99645a52-6752-40e8-ac5a-8efbebb6de1e')", 'kwargsrepr': '{}', 'origin': 'gen4001545@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '389da889-f6d1-4aae-805c-023dccb38807', 'reply_to': '8ef3f79e-3af3-3b42-9baf-71f8c0a8e4d9', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': '9526a190-98ee-4da3-8580-ff2b6f0d488b'}, 'reply_to': '8ef3f79e-3af3-3b42-9baf-71f8c0a8e4d9', 'correlation_id': '389da889-f6d1-4aae-805c-023dccb38807', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-15 23:18:34,793: INFO/ForkPoolWorker-7] Task tools.tasks.main_task[389da889-f6d1-4aae-805c-023dccb38807] succeeded in 47.8987799026072s: None
+[2023-08-15 23:32:34,953: INFO/MainProcess] Task tools.tasks.main_task[f2e3aa8d-6b0c-43f4-ac8c-942c664fbd7b] received
+[2023-08-15 23:32:34,954: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', 'f2e3aa8d-6b0c-43f4-ac8c-942c664fbd7b', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': 'f2e3aa8d-6b0c-43f4-ac8c-942c664fbd7b', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': 'f2e3aa8d-6b0c-43f4-ac8c-942c664fbd7b', 'parent_id': None, 'argsrepr': "(3, 'hla', '66187e34-8beb-456a-a2f3-6b8604a150c5')", 'kwargsrepr': '{}', 'origin': 'gen4007435@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': 'f2e3aa8d-6b0c-43f4-ac8c-942c664fbd7b', 'reply_to': 'faa2e716-224c-35cd-a514-4923bc63b7a9', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': 'de21f2f5-9a0f-4a83-9368-0b9a2d5ecb1f'}, 'reply_to': 'faa2e716-224c-35cd-a514-4923bc63b7a9', 'correlation_id': 'f2e3aa8d-6b0c-43f4-ac8c-942c664fbd7b', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-08-15 23:32:37,956: INFO/ForkPoolWorker-7] Task tools.tasks.main_task[f2e3aa8d-6b0c-43f4-ac8c-942c664fbd7b] succeeded in 3.001480769366026s: None
+[2023-09-01 10:25:00,889: INFO/MainProcess] Task tools.tasks.main_task[2e8263c6-16c0-4994-86af-aa9c0b2f2638] received
+[2023-09-01 10:25:00,890: DEBUG/MainProcess] TaskPool: Apply <function fast_trace_task at 0x7f81d1b89f70> (args:('tools.tasks.main_task', '2e8263c6-16c0-4994-86af-aa9c0b2f2638', {'lang': 'py', 'task': 'tools.tasks.main_task', 'id': '2e8263c6-16c0-4994-86af-aa9c0b2f2638', 'shadow': None, 'eta': None, 'expires': None, 'group': None, 'group_index': None, 'retries': 0, 'timelimit': [None, None], 'root_id': '2e8263c6-16c0-4994-86af-aa9c0b2f2638', 'parent_id': None, 'argsrepr': "(3, 'hla', '52704fe9-cee6-4f1a-b90b-35ac623f4523')", 'kwargsrepr': '{}', 'origin': 'gen4016892@ecs-2de3', 'ignore_result': False, 'properties': {'correlation_id': '2e8263c6-16c0-4994-86af-aa9c0b2f2638', 'reply_to': '23a22001-6f8c-36de-8a05-bc0d6cd9dffe', 'delivery_mode': 2, 'delivery_info': {'exchange': '', 'routing_key': 'celery'}, 'priority': 0, 'body_encoding': 'base64', 'delivery_tag': 'e57ba078-ea04-4a26-a670-f2857e745af3'}, 'reply_to': '23a22001-6f8c-36de-8a05-bc0d6cd9dffe', 'correlation_id': '2e8263c6-16c0-4994-86af-aa9c0b2f2638', 'hostname': 'celery@ecs-2de3', 'delivery_info': {'exchange': '', 'routing_key': 'celery', 'priority': 0,... kwargs:{})
+[2023-09-01 11:00:26,909: INFO/ForkPoolWorker-7] Task tools.tasks.main_task[2e8263c6-16c0-4994-86af-aa9c0b2f2638] succeeded in 2126.01861333102s: None
