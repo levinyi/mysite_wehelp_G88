@@ -38,26 +38,28 @@ def tools_use(request, tools_id):
     if request.method == "GET":
         return render(request, f'tools/tools_{tools_id}_use.html', {'tools_id': tools_id})
     elif request.method == "POST":
-        unique_id = str(uuid.uuid4())
-        upload_dir = os.path.join(BASE_DIR, f'pipeline/project_{tools_id}', unique_id)
-         
-        zip_file = request.FILES['zipFile']
+        if tools_id == 'hla':
+            unique_id = str(uuid.uuid4())
+            upload_dir = os.path.join(BASE_DIR, f'pipeline/project_{tools_id}', unique_id)
 
-        user = request.user
-        user_id = user.id
-        project_name = request.POST.get("project_name")
-        result = Result.objects.create(
-            user = user, 
-            tools_name = tools_id,
-            unique_id = unique_id,
-            project_name = project_name, 
-            result_path = upload_dir,
-            data = zip_file,
-            status = 'pending',
-        )
-        print("tools_id: ", tools_id)
+            user = request.user
+            user_id = user.id
+            data_path = request.POST.get("data_path")
+            project_name = os.path.basename(os.path.dirname(data_path))
+            print(data_path, project_name)
 
-        if tools_id == 'hpa':
+            result = Result.objects.create(
+                user = user, 
+                tools_name = tools_id,
+                unique_id = unique_id,
+                project_name = project_name,
+                result_path = upload_dir,
+                data = data_path,
+                status = 'pending',
+            )
+            print("tools_id: ", tools_id)
+
+        elif tools_id == 'hpa':
             # # 获取JSON数据, 并保存为xls文件
             json_data = request.POST.get('jsonData')
             data = json.loads(json_data)
@@ -78,7 +80,9 @@ def tools_use(request, tools_id):
             'project_name': project_name,
             'unique_id': unique_id
         }
-        return JsonResponse(response_data)
+        return redirect(f'/tools/check-status/{tools_id}/')
+    else:
+        return JsonResponse({"status":'error',"response":'error Post Method.'})
 '''
 # tools_use for chuck upload
 @login_required
