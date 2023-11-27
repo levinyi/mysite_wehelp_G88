@@ -59,11 +59,15 @@ def main_task(user_id, tools_id, unique_id):
     print(f"project_name:{project_name},data_dir: {data_dir}, result_path: {result_path}")
     # 更新任务状态为"in_progress" &  执行Python脚本
     update_task_status('running', unique_id, user_id)
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+    ### 这里要改，以后要将script_dir放到tools/scripts下面
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
     script_dir = os.path.join(BASE_DIR, f'pipeline/project_{tools_id}')
     print("BASE_DIR: ", BASE_DIR) # /data/webapp/mysite
     print("script_dir: ", script_dir) # /data/webapp/mysite/pipeline/project_hla
   
+
     if tools_id == 'hpa':
         print("YES hpa is running")
         print(f'python {script_dir}/hpa.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls')  # 调用python脚本

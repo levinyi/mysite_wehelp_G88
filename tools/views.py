@@ -151,33 +151,31 @@ def update_data_path(request):
     data_type = data.get('data_type')
     if not data_type:
         return JsonResponse({'message':'No data type provided'}, status=400)
-    # print("your data type is : ", data_type)
+
     if data_type not in rawdata_dirs:
         return JsonResponse({'message': 'Invalid data type'}, status=400)
 
     base_path = rawdata_dirs[data_type]
-
     if not os.path.exists(base_path):
         return JsonResponse({'message': 'Base path does not exist'}, status=400)
 
     try:
-        # print("yes, here")
         for subdir in os.listdir(base_path):
             subdir_path = os.path.join(base_path, subdir)
             if os.path.isdir(subdir_path):
-                if any(file.endswith('fq.gz') for file in os.listdir(subdir_path)):
+                fq_gz_files = [file for file in os.listdir(subdir_path) if file.endswith('fq.gz')]
+                fq_gz_count = len(fq_gz_files)
+                if fq_gz_count > 0:
                     create_time = datetime.fromtimestamp(os.path.getctime(subdir_path)).date()
                     NGSDataPath.objects.update_or_create(
                         data_path=subdir_path,
                         data_name=subdir,
                         data_type=data_type,
-                        defaults={'status': 'active','create_time': create_time}
+                        defaults={'status': 'active', 'create_time': create_time, 'fq_gz_count': fq_gz_count}
                     )
-        objects_list = NGSDataPath.objects.filter(data_type=data_type)
-        # print(len(objects_list))
-        files = list(NGSDataPath.objects.filter(data_type=data_type).values_list('data_name', flat=True))
-        print('Update database successfully,and found :',files)
-        return JsonResponse({'files':files, 'message':'Data paths updated successfully'})
+        data_objects = NGSDataPath.objects.filter(data_type=data_type)
+        formated_data = [f"{data.data_name}({data.fq_gz_count})" for data in data_objects]
+        return JsonResponse({'files':formated_data, 'message':'Data paths updated successfully'})
     except Exception as e:
         print("try Exception as e:", e)
         return JsonResponse({'message': str(e)}, status=500)
