@@ -25,7 +25,6 @@ def tools_list(request):
     return render(request, 'tools/list_tools.html', {'tools': tools})
 
 
-
 def save_json_as_xls(json_data, file_path):
     with open(file_path, "w") as f:
         # 写入标题行
@@ -171,10 +170,10 @@ def update_data_path(request):
                         data_path=subdir_path,
                         data_name=subdir,
                         data_type=data_type,
-                        defaults={'status': 'active', 'create_time': create_time, 'fq_gz_count': fq_gz_count}
+                        defaults={'status': 'active', 'create_time': create_time, 'fq_count': fq_gz_count}
                     )
         data_objects = NGSDataPath.objects.filter(data_type=data_type)
-        formated_data = [f"{data.data_name}({data.fq_gz_count})" for data in data_objects]
+        formated_data = [f"{data.data_name}({data.fq_count})" for data in data_objects]
         return JsonResponse({'files':formated_data, 'message':'Data paths updated successfully'})
     except Exception as e:
         print("try Exception as e:", e)

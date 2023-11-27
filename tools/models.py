@@ -37,6 +37,7 @@ class NGSDataPath(models.Model):
     data_path = models.CharField(verbose_name="data path", max_length=332)
     data_name = models.CharField(verbose_name="data name", max_length=332)
     data_type = models.CharField(verbose_name="data type", max_length=332, null=True, blank=True)
+    fq_count  = models.SmallIntegerField(verbose_name="fq.gz count", default=2)
     create_time = models.DateField(verbose_name="create time", db_index=True)
     status = models.CharField(verbose_name="status", max_length=332)
 

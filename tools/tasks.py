@@ -67,7 +67,6 @@ def main_task(user_id, tools_id, unique_id):
     print("BASE_DIR: ", BASE_DIR) # /data/webapp/mysite
     print("script_dir: ", script_dir) # /data/webapp/mysite/pipeline/project_hla
   
-
     if tools_id == 'hpa':
         print("YES hpa is running")
         print(f'python {script_dir}/hpa.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls')  # 调用python脚本
