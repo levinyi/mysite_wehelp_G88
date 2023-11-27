@@ -9,9 +9,11 @@ from .tasks import main_task
 from .utils.pagination import Pagination
 import subprocess
 from datetime import datetime
+from decouple import config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+DATA_DIR = config('DATA_DIR')
 
 # Create your views here.
 def index(request):
@@ -46,7 +48,7 @@ def tools_use(request, tools_id):
         project_name = data.get("projectName")
         selectedPath = data.get("selectedPath")
         rawdata_path = NGSDataPath.objects.get(data_name=selectedPath).data_path
-        project_base_dir = f"/data/storeData/ztron/rawdata/{tools_id.upper()}/analysis/"
+        project_base_dir = os.path.join(DATA_DIR, f"{tools_id.upper()}","analysis")
         project_dir = os.path.join(project_base_dir, project_name)
         if not os.path.exists(project_dir):
             os.mkdir(project_dir)
@@ -137,9 +139,9 @@ def download_result(request, unique_id):
 
 # 存储路径的字典
 rawdata_dirs = {
-    'hla': "/data/storeData/ztron/rawdata/HLA/rawdata/",
-    'hpa': "/data/storeData/ztron/rawdata/HPA/rawdata/",
-    'rbc': "/data/storeData/ztron/rawdata/RBC/rawdata/"
+    'hla': str(os.path.join(DATA_DIR, "HLA", "rawdata")),
+    'hpa': str(os.path.join(DATA_DIR, "HPA", "rawdata")),
+    'rbc': str(os.path.join(DATA_DIR, "RBC", "rawdata")),
 }
 
 @require_http_methods(["POST"])
@@ -149,7 +151,7 @@ def update_data_path(request):
     data_type = data.get('data_type')
     if not data_type:
         return JsonResponse({'message':'No data type provided'}, status=400)
-    print("your data type is : ", data_type)
+    # print("your data type is : ", data_type)
     if data_type not in rawdata_dirs:
         return JsonResponse({'message': 'Invalid data type'}, status=400)
 
@@ -159,7 +161,7 @@ def update_data_path(request):
         return JsonResponse({'message': 'Base path does not exist'}, status=400)
 
     try:
-        print("yes, here")
+        # print("yes, here")
         for subdir in os.listdir(base_path):
             subdir_path = os.path.join(base_path, subdir)
             if os.path.isdir(subdir_path):
@@ -172,10 +174,9 @@ def update_data_path(request):
                         defaults={'status': 'active','create_time': create_time}
                     )
         objects_list = NGSDataPath.objects.filter(data_type=data_type)
-        print(len(objects_list))
-        print('Update database successfully,and found :')
+        # print(len(objects_list))
         files = list(NGSDataPath.objects.filter(data_type=data_type).values_list('data_name', flat=True))
-        print(files)
+        print('Update database successfully,and found :',files)
         return JsonResponse({'files':files, 'message':'Data paths updated successfully'})
     except Exception as e:
         print("try Exception as e:", e)
