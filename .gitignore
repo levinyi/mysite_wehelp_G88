@@ -3,4 +3,4 @@ pipeline/
 __pycache__/
 *.sh
 *.yml
-static/
+*.xls
