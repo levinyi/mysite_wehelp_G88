@@ -1,0 +1,138 @@
+.main-top-con-cell {
+    width: 410px;
+    height: 206px;
+    float: left;
+    vertical-align: top;
+    background-color: #fff;
+    padding: 15px;
+    margin: 5px;
+    position: relative;
+}
+
+.box-shadow {
+    /* box-shadow: 1px 1px 9px 1px rgb(0 0 0 / 15%); */
+    box-shadow: 0 8px 16px 1px #00000014;
+    border-radius: 0 !important;
+}
+
+.badge{
+    display: inline-block; /* 在浏览器中显示为一个块状元素 */
+    padding: 3px 7px; /* 内边距 */
+    font-size: 12px; /* 字体大小 */
+    font-weight: 700; /* 字体粗细 */
+    line-height: 1; /* 行高 */
+    color: #fff; /* 字体颜色 */
+    text-align: center; /* 文字对齐 */
+    white-space: nowrap; /* 字符串中的空白符不会被压缩 */
+    vertical-align: middle; /* 垂直对齐 */
+    background-color: #777; /* 背景色 */
+    border-radius: 10px; /* 圆角 */
+}
+.likeable {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 30px;
+    font-size: 20px;
+    color: #ccc;
+    cursor: pointer;
+}
+.likeable:hover {
+    color: #ff0000;
+}
+.likeable.active {
+    color: #ff0000;
+}
+.likeable.active:hover {
+    color: #ff0000;
+}
+.likeable.active:active {
+    color: #ff0000;
+}
+.likeable.active:focus {
+    color: #ff0000;
+}
+.item-bd {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.item-bd {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    padding-top: 8px;
+    color: #b3b3b3;
+    height: 50px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    width: fit-content;
+}
+.clearfix {
+    clear: both;
+    display: block;
+    height: 1%;
+}
+.vip-tip {
+    font-size: 12px;
+    line-height: 18px;
+    border-radius: 17px;
+    padding: 1px 7px 0px 7px;
+    border: solid 1px #ff9753;
+    color: #ff9753;
+    background: #ffe9d5;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+}
+.main-top-con-cell .item-icon {
+    padding-top: 30px;
+    margin: 0 auto;
+    display: block;
+}
+.item-icon img.icon-img {
+    width: 80px;
+    height: 80px;
+    padding: 5px;
+    border-radius: 80px;
+}
+
+.box:hover img{
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+}
+img{
+    margin: 0,auto;
+    display: block;
+    transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+}
+a {
+    text-decoration: none;
+    text-decoration: line-through;
+}
+
+.icon-shape {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+}
+.icon-xl {
+    height: 13.5rem;
+    line-height: 13.5rem;
+    width: 13.5rem;
+}
