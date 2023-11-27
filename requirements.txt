@@ -11,3 +11,4 @@ pandas
 rarfile
 Pillow
 biopython
+numpy

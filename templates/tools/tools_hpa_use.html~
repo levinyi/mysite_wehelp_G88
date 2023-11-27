@@ -44,7 +44,7 @@
             <div class="mb-4 pt-3">
                 <label for="formFile1" class="form-label">NGS data path</label>
                 <select class="form-select" id="path_select" name="path_select">
-                    <option value="" {% if not ngs_model.ngs_rawdata_path %}selected{% endif %}>Choose Folder Name</option>
+                    <option value="" {% if not gns_model.ngs_rawdata_path %}selected{% endif %}>Choose Folder Name</option>
                     {% for file in available_files %}
                         <option value="{{ file.data_name }}" {% if file.data_name == ngs_model.ngs_rawdata_path %}selected{% endif %}>
                             {{ file.data_name }}

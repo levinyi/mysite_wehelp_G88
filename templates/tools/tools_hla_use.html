@@ -17,13 +17,9 @@
         <div class="row pt-3">
             <div class="col">
                 <h5 class="panel-body">
-                    <br><br>
-                    这里是一些使用说明
-                    <br><br>
-                    数据的接收与处理： 填写数据路径
-                    <br><br>
-                    项目名称：为项目提供一个可辨识且唯一的名称.
-                    <br><br>
+                    <br>
+                    <ul>1.填写项目名称：为项目提供一个可辨识且唯一的名称.</ul>
+                    <ul>2.找到数据路径，数据路径不存在时点击刷新按钮。数据中必须包含fq.gz文件才能被找到。</ul>
                     <br><br>
                     查看结果状态：<a href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a>
                 </h5>
@@ -31,21 +27,27 @@
         </div>
     </div>
     <div class="row form-control mt-3 pt-3">
-        <form id="uploadForm" class="form-group" method="post" enctype="multipart/form-data">{% csrf_token %}
+        <form id="uploadForm" class="form-group" method="post">{% csrf_token %}
             <!-- project name -->
-            <!-- <div class="mb-4 pt-3">
+            <div class="mb-4 pt-3">
                 <label for="" class="form-label">Project Name:</label>
                 <input type="text" class="form-control" placeholder="20230710_XXX_HLA_test" 
                     name="project_name" required="required" pattern="[^\s]+" title="Project Name should not contain spaces"/>
             </div>
-		-->
             <!-- NGS data -->
             <div class="mb-4 pt-3">
-                <label for="" class="form-label">HLA Data Path:</label>
-                <input type="text" class="form-control" placeholder="/storeData/ztron/rawdata/R1100700230071/FT100020385/L01" 
-                    name="data_path" required="required" pattern="[^\s]+" title="Project Name should not contain spaces"/>
+                <label for="formFile1" class="form-label">NGS data path</label>
+                <select class="form-select" id="path_select" name="path_select">
+                    <option value="" {% if not ngs_model.ngs_rawdata_path %}selected{% endif %}>Choose Folder Name</option>
+                    {% for file in available_files %}
+                        <option value="{{ file.data_name }}" {% if file.data_name == ngs_model.ngs_rawdata_path %}selected{% endif %}>
+                            {{ file.data_name }}
+                        </option>
+                    {% endfor %}
+               </select>
+               <span>未找到? <a href="{% url 'tools:update_data_path' %}" id="update-data-link"><i class="bi bi-arrow-clockwise"></i></a></span>
             </div>
-            <!-- file2 -->
+            
             <!-- button -->
             <div class="col-xs-7 mb-3">
                 <button type="submit" class="btn btn-primary" id="submitBtn">Start Analysis</button>
@@ -58,13 +60,109 @@
                 {% endif %}
             </div>
         </form>
-        <div id="progressBarContainer" style="display: none;">
-            <div id="progressBar"></div>
-        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block javascript %}
-<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script type="text/javascript">
+    document.getElementById('uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // 检查下拉框是否选择了非默认值
+        let selectedPath = document.getElementById('path_select').value;
+        if (!selectedPath || selectedPath === "") {
+            alert("请选择一个有效的文件夹名称！");
+            return; // 阻止表单提交
+        }
+        // 收集数据
+        let projectName = document.getElementsByName('project_name')[0].value;
+
+        let formData = {
+            projectName: projectName,
+            selectedPath: selectedPath,
+        };
+
+        // 发送 AJAX 请求
+        fetch("{% url 'tools:tools_use' 'hla' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('提交成功:', data);
+            if (data.status === 'success') {
+                // 处理成功的响应，例如刷新页面或跳转
+                alert("任务提交成功!,将跳转到状态查询页！")
+                // window.location.reload(); // 例如刷新页面
+                window.location.href = '/tools/check_status/hla/'; // 跳转到另一个页面
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    // refresh data selection.
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('update-data-link').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // AJAX 请求
+            fetch("{% url 'tools:update_data_path' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'), // 获取 CSRF token
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({data_type: 'hla'}) // 根据你的需求设置正确的数据类型
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.files){
+                    updateDropdown(data.files);
+                    alert("刷新成功！");  // 显示弹窗提示
+                } else {
+                    console.error('no files data in response');
+                    alert("刷新失败，请稍后再试。");  // 显示错误提示
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("发生错误：" + error);  // 显示错误提示
+            });
+        });
+    });
+
+    function updateDropdown(files) {
+        let select = document.getElementById('path_select');
+        select.innerHTML = '<option value="">Choose Folder Name</option>';
+
+        // 创建并添加新选项
+        files.forEach(function(file) {
+            let option = document.createElement('option');
+            option.value = file;
+            option.textContent = file;
+            select.appendChild(option);
+        });
+    }
+
+    // 获取 CSRF token 的函数
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
 {% endblock %}

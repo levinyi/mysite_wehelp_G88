@@ -5,7 +5,7 @@
 <div class="container">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-decoration-none" href="{% url 'tools:tools_list' %}">工具列表</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'tools:tools_list' %}">工具列表</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ tools_id }}</li>
         </ol>
     </nav>
@@ -17,29 +17,23 @@
         <div class="row pt-3">
             <div class="col">
                 <h5 class="panel-body">
+                    <br>
+                    <li>1.填写项目名称：为项目提供一个可辨识且唯一的名称.</li>
+                    <li>2.找到数据路径，数据路径不存在时点击刷新按钮。数据中必须包含fq.gz文件才能被找到。</li>
                     <br><br>
-                    这里是一些使用说明
-                    <br><br>
-                    数据的接收与处理： 上传测序NGS数据文件压缩包，确保文件中没有子文件夹。
-                    <br><br>
-                    项目名称：为项目提供一个可辨识且唯一的名称
-                    <br><br>
-                    <br><br>
-                    查看结果状态：<a class="text-decoration-none" href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a>
+                    查看结果状态：<a href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a>
                 </h5>
             </div>
         </div>
     </div>
     <div class="row form-control mt-3 pt-3">
         <form id="uploadForm" class="form-group" method="post">{% csrf_token %}
-
             <!-- project name -->
             <div class="mb-4 pt-3">
                 <label for="" class="form-label">Project Name:</label>
-                <input type="text" class="form-control" placeholder="test" 
+                <input type="text" class="form-control" placeholder="20230710_XXX_HLA_test" 
                     name="project_name" required="required" pattern="[^\s]+" title="Project Name should not contain spaces"/>
             </div>
-
             <!-- NGS data -->
             <div class="mb-4 pt-3">
                 <label for="formFile1" class="form-label">NGS data path</label>
@@ -53,81 +47,7 @@
                </select>
                <span>未找到? <a href="{% url 'tools:update_data_path' %}" id="update-data-link"><i class="bi bi-arrow-clockwise"></i></a></span>
             </div>
-
-            <!-- table json data -->
-            <span>核对下表，并修改 PanelDesigned 列 </span>
-            <div class="mb-4 pt-3">
-                <table class="table table-striped table-hover table-bordered" style="text-align:center" id="myTable">
-                    <thead>
-                        <tr>
-                            <th>Number</th>
-                            <th>System</th>
-                            <th>Gene</th>
-                            <th>PanelDesigned</th>
-                            <th>Transcript_USED</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>HPA</td>
-                            <td>CD36</td>
-                            <td contenteditable="true">YES</td>
-                            <td>NM_001001548.2</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>HPA</td>
-                            <td>CD109</td>
-                            <td contenteditable="true">YES</td>
-                            <td>NM_133493.5</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>HPA</td>
-                            <td>GP1BA</td>
-                            <td contenteditable="true">YES</td>
-                            <td>NM_000173.7</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>HPA</td>
-                            <td>GP1BB</td>
-                            <td contenteditable="true">YES</td>
-                            <td>NM_000407.5</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>HPA</td>
-                            <td>GP9</td>
-                            <td contenteditable="true">YES</td>
-                            <td>NM_000174.5</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>HPA</td>
-                            <td>ITGA2</td>
-                            <td contenteditable="true">YES</td>
-                            <td>NM_002203.4</td>
-                        </tr>
-                        <tr>
-                            <td>7</td>
-                            <td>HPA</td>
-                            <td>ITGA2B</td>
-                            <td contenteditable="true">YES</td>
-                            <td>NM_000419.5</td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td>HPA</td>
-                            <td>ITGB3</td>
-                            <td contenteditable="true">YES</td>
-                            <td>NM_000212.3</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
+            
             <!-- button -->
             <div class="col-xs-7 mb-3">
                 <button type="submit" class="btn btn-primary" id="submitBtn">Start Analysis</button>
@@ -148,7 +68,7 @@
 <script type="text/javascript">
     document.getElementById('uploadForm').addEventListener('submit', function(event) {
         event.preventDefault();
-        
+
         // 检查下拉框是否选择了非默认值
         let selectedPath = document.getElementById('path_select').value;
         if (!selectedPath || selectedPath === "") {
@@ -157,16 +77,14 @@
         }
         // 收集数据
         let projectName = document.getElementsByName('project_name')[0].value;
-        let tableData = collectTableData();
-        
+
         let formData = {
             projectName: projectName,
             selectedPath: selectedPath,
-            tableData: tableData
         };
 
         // 发送 AJAX 请求
-        fetch("{% url 'tools:tools_use' 'hpa' %}", {
+        fetch("{% url 'tools:tools_use' 'hla' %}", {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -181,28 +99,12 @@
                 // 处理成功的响应，例如刷新页面或跳转
                 alert("任务提交成功!,将跳转到状态查询页！")
                 // window.location.reload(); // 例如刷新页面
-                window.location.href = '/tools/check_status/hpa/'; // 跳转到另一个页面
+                window.location.href = '/tools/check_status/hla/'; // 跳转到另一个页面
             }
         })
         .catch(error => console.error('Error:', error));
     });
-    
-    // submit table.
-    function collectTableData() {
-        let table = document.getElementById('myTable');
-        let rows = table.getElementsByTagName('tr');
-        let tableData = [];
-        for (let i = 0; i < rows.length; i++) {
-            let cells = rows[i].getElementsByTagName('td');
-            let rowData = {};
-            for (let j = 0; j < cells.length; j++) {
-                rowData[`column${j}`] = cells[j].innerText;
-            }
-            tableData.push(rowData);
-        }
-        return tableData;
-    }
-
+    // refresh data selection.
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('update-data-link').addEventListener('click', function(event) {
             event.preventDefault();
@@ -214,7 +116,7 @@
                     'X-CSRFToken': getCookie('csrftoken'), // 获取 CSRF token
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({data_type: 'hpa'}) // 根据你的需求设置正确的数据类型
+                body: JSON.stringify({data_type: 'hla'}) // 根据你的需求设置正确的数据类型
             })
             .then(response => response.json())
             .then(data => {

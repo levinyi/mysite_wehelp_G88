@@ -23,6 +23,7 @@ class Result(models.Model):
     tools_name  = models.CharField(verbose_name="tool name", max_length=10, choices=TOOLS_CHOICES)
     unique_id   = models.CharField(verbose_name="unique id", max_length=255, unique=True)
     proj_name   = models.CharField(verbose_name="proj name", max_length=255, blank=True, null=True)
+    project_name   = models.CharField(verbose_name="project name", max_length=255, blank=True, null=True)
     result_path = models.CharField(verbose_name="resu path", max_length=255, blank=True, null=True)
     raw_data    = models.CharField(verbose_name="raw data",  max_length=255, blank=True, null=True)
     status      = models.CharField(verbose_name="status",    max_length=20, default='pending')

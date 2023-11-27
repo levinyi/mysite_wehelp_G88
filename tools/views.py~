@@ -75,7 +75,7 @@ def tools_use(request, tools_id):
         # 异步处理：
         main_task.delay(user_id, tools_id, unique_id)
 
-        return JsonResponse({"status": "success", "message": "submit successfully."})
+        return JsonResponse("status": 'success', 'message':'submit successfully.')
     else:
         return JsonResponse({"status":'error',"response":'error Post Method.'})
 
