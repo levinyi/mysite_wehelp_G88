@@ -83,4 +83,5 @@ def main_task(user_id, tools_id, unique_id):
     # 更新任务状态为"已完成" & print end_time.
     end_time = timezone.now()
     update_task_status('completed', unique_id, user_id, end_time=end_time)
+    print("finished!")
 

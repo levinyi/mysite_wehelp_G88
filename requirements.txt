@@ -12,3 +12,4 @@ rarfile
 Pillow
 biopython
 numpy
+python-decouple
