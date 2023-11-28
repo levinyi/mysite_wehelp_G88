@@ -56,7 +56,7 @@ def main_task(user_id, tools_id, unique_id):
     project_name = result.proj_name
     data_dir     = result.raw_data 
     result_path  = result.result_path
-    print(f"project_name:{project_name}, data_dir: {data_dir}, result_path: {result_path}")
+    print(f"project_name:{project_name}, data_dir: {data_dir}, result_path: {result_path}")  # project_name:project1, data_dir: /home/dushiyi/mysite_wehelp/data/HLA/analysis/project1, result_path: /home/dushiyi/mysite_wehelp/data/HLA/analysis/project1
     # 更新任务状态为"in_progress" &  执行Python脚本
     update_task_status('running', unique_id, user_id)
 
@@ -66,20 +66,14 @@ def main_task(user_id, tools_id, unique_id):
     print(f"BASE_DIR: {BASE_DIR}")
 
     script_dir = os.path.join(BASE_DIR, 'scripts')
-    print(f"script_dir: {script_dir}")
+    print(f"script_dir: {script_dir}") # /home/dushiyi/mysite_wehelp/tools/scripts
     
-    '''
-    if tools_id == 'hpa':
-        print("YES hpa is running")
-        print(f'python {script_dir}/hpa.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls')  # 调用python脚本
-        subprocess.run(f'python {script_dir}/hpa.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls', shell=True)  # 调用python脚本
-    elif tools_id == 'hla':
-        print("yes hla script is running")
-        print(f"python {script_dir}/hla.py {data_dir} {project_name} {result_path}")
-        subprocess.run(f"python {script_dir}/hla.py {data_dir} {project_name} {result_path}", shell=True)
+    if tools_id == 'hla':
+        subprocess.run(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path}", shell=True)
+    elif tools_id == 'hpa':
+        subprocess.run(f'python {script_dir}/hpa.01.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls', shell=True)  # 调用python脚本
     elif tools_id == 'rbc':
-        subprocess.run(f'python {script_dir}/rbc.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.rbc.xls', shell=True)
-    '''
+        subprocess.run(f'python {script_dir}/rbc.01.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.rbc.xls', shell=True)
 
     # 更新任务状态为"打包中" & 打包文件
     update_task_status('packaging', unique_id, user_id)
