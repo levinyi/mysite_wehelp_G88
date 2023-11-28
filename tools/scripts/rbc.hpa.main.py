@@ -1,12 +1,13 @@
-import subprocess
-import sys
 import os
-import fnmatch
+import sys
+import argparse
+import subprocess
 import concurrent.futures
 from commonFunction import find_files_by_suffix, process_fastq_files
 
 
-def analyze_sample(sample_name, sample_files, project_dir, software_path, database_path, script_path, ref_fa, output_templates_file):
+def analyze_sample(sample_name, sample_files, project_dir, software_path, database_path, 
+                    script_path, ref_fa, output_templates_file):
     fq1 = sample_files['fq1']
     fq2 = sample_files['fq2']
     sample_folder = os.path.join(project_dir, sample_name)
@@ -40,29 +41,35 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         f"{software_path}/gatk/gatk --java-options \"-Xmx30G\" Funcotator --data-sources-path {database_path}/funcotator_dataSources.v1.7.20200521s --ref-version hg38 --output-file-format MAF --reference {ref_fa} --exclude-field Center --exclude-field Tumor_Sample_Barcode --exclude-field Matched_Norm_Sample_Barcode --exclude-field Match_Norm_Seq_Allele1 --exclude-field Match_Norm_Seq_Allele2 --exclude-field Tumor_Validation_Allele1 --exclude-field Tumor_Validation_Allele2 --exclude-field Match_Norm_Validation_Allele1 --exclude-field Match_Norm_Validation_Allele2 --exclude-field Verification_Status --exclude-field Validation_Status --exclude-field Mutation_Status --exclude-field Sequencing_Phase --exclude-field Sequence_Source --exclude-field Validation_Method --exclude-field Score --exclude-field BAM_File --exclude-field Sequencer --exclude-field Tumor_Sample_UUID --exclude-field Matched_Norm_Sample_UUID --variant {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf --output {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.raw.MAF --remove-filtered-variants true"],
         shell=True)
 
-    # GREP command
+    # GREP remove MAF header
     subprocess.run([
         f"grep -v \"^#\" {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.raw.MAF > {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.MAF.xls"],
         shell=True)
 
-    # Python scripts execution
+    # Python scripts filter MAF table
     subprocess.run([
-        f"python3 {script_path}/deal_maf_table.py  -m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.MAF.xls -o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.MAF.xls"],
+        f"python3 {script_path}/rbc.deal_maf_table.py  -m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.MAF.xls -o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.MAF.xls"],
         shell=True)
 
+    # add dbsnp HVGS info
     subprocess.run([
-        f"python3 {script_path}/maf_add_dbSNP_HVGS.py -m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.MAF.xls -s {database_path}/dbSNP.db.txt -t {output_templates_file} -o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.add.dbsnp.MAF.xls"],
+        f"python3 {script_path}/rbc.maf_add_dbSNP_HVGS.py -m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.MAF.xls -s {database_path}/dbSNP.db.txt -t {output_templates_file} -o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.add.dbsnp.MAF.xls"],
         shell=True)
 
+    # identify blood group info
     subprocess.run([
-        f"python3 {script_path}/Blood_group_identification.py -b {database_path}/Blood.Gene.metadata.manually.checked.v2.xlsx -m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.add.dbsnp.MAF.xls -o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.brief.table.xlsx"],
+        f"python3 {script_path}/rbc.Blood_group_identification.py -b {database_path}/Blood.Gene.metadata.manually.checked.v2.xlsx -p {database_path}/HPA.Gene.cDNA_Changes.xls -m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.add.dbsnp.MAF.xls -o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.brief.table.xlsx"],
+        shell=True)
+
+    # extract CDS sequence
+    subprocess.run([
+        f"python3 {script_path}/rbc.extractCDS.py {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.add.dbsnp.MAF.xls {database_path}/RBC.HPA.CDS.60.fasta {project_dir}/{sample_name}/{sample_name}.Rawsample.CDS.fasta"], 
         shell=True)
 
     result_list = [f"{project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.brief.table.xlsx"]
     return result_list
 
-
-def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, output_templates_file):
+def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, output_templates_file, hpa):
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
     sample_dict = process_fastq_files(fastq_list)
     print("sample_dict: ", sample_dict)
@@ -71,13 +78,18 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     print("Start multiprocess analysis!")
     result_list = []
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        futures = [executor.submit(analyze_sample, sample_name, sample_files, project_dir, software_path, database_path, script_path, ref_fa, output_templates_file) 
+        futures = [executor.submit(analyze_sample, sample_name, sample_files, project_dir, software_path, database_path, 
+                                    script_path, ref_fa, output_templates_file)
                    for sample_name, sample_files in sample_dict.items()]
 
         for future in concurrent.futures.as_completed(futures):
             result_list.extend(future.result())
 
-    subprocess.run(f"python3 {script_path}/hpa.summary.report.py -i {project_dir} -o {project_dir}/{project_name}.Rawsample.funcotated.brief.table.xlsx", shell=True)
+    if hpa:
+        subprocess.run(f"python3 {script_path}/hpa.summary.report.py -i {project_dir} -o {project_dir}/{project_name}.Rawsample.funcotated.brief.table.xlsx", shell=True)
+    # else:
+    #     subprocess.run(f"python3 {script_path}/rbc.summary.report.py -i {project_dir} -o {project_dir}/{project_name}.Rawsample.funcotated.brief.table.xlsx", shell=True)
+    
     ##########################################################################
     # write file list that need to be packaged into a file.
     with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
@@ -89,21 +101,30 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     print("finished!")
 
 
-if __name__ == "__main__":
-    data_dir     = sys.argv[1]
-    project_name = sys.argv[2]
-    output_templates_file = sys.argv[3]
-    project_dir = sys.argv[4]
-    os.makedirs(project_dir, exist_ok=True)
+# 在主脚本中
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
 
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    software_path = os.path.join(BASE_DIR, "pipeline/software")
-    database_path = os.path.join(BASE_DIR, "pipeline/database")
-    ref_fa = os.path.join(BASE_DIR, "pipeline/ref/hg38/Homo_sapiens_assembly38.fasta")
-    script_path = os.path.join(BASE_DIR, "tools/scripts")
-    print(f"data_dir: {data_dir}")
-    print(f"project_name: {project_name}")
-    print(f"BASE_DIR: {BASE_DIR}")
-    print(f"softwarepath: {software_path}")
+    # 定义位置参数
+    parser.add_argument('data_dir', type=str, help='The directory where data is stored')
+    parser.add_argument('project_name', type=str, help='The name of the project')
+    parser.add_argument('output_templates_file', type=str, help='The output templates file path')
 
-    main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, output_templates_file)
+    # 定义可选参数
+    parser.add_argument('--hpa', action='store_true', help='If this is a hpa project', default=False)
+
+    # 解析命令行参数
+    args = parser.parse_args()
+
+    # 使用参数
+    data_dir = args.data_dir
+    project_dir = os.path.join(data_dir, args.project_name)
+    
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    software_path = os.path.join(BASE_DIR, "software")
+    database_path = os.path.join(BASE_DIR, "database")
+    script_path = os.path.join(BASE_DIR, "scripts")
+    ref_fa = os.path.join(BASE_DIR, "ref/hg38/Homo_sapiens_assembly38.fasta")
+
+    main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, 
+        args.output_templates_file, args.hpa)

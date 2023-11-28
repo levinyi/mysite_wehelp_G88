@@ -87,8 +87,8 @@ def deal_MAF_file(maf_file):
 
 def main():
     maf_file = sys.argv[1]  # small.add.dbsnp.MAF.xls
-    cds_file = sys.argv[2]
-    out_file = sys.argv[3]
+    cds_file = sys.argv[2]  # cds.fasta
+    out_file = sys.argv[3]  # output.cds.fasta
 
     mutation_dict, gene_dict = deal_MAF_file(maf_file)
     print("mutation_dict : ", mutation_dict)

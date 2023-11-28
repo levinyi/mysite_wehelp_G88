@@ -1,16 +1,9 @@
 import sys
 import os
+sys.path.append(os.path.realpath(__file__))
+from multiDict import addtwodimdict
 
 input_files = sys.argv[1:]
-
-
-def addtwodimdict(thedict, key_a, key_b, val):
-    ''' this is a function to add two dimetion dict '''
-    if key_a in thedict:
-        thedict[key_a].update({key_b: val})
-    else:
-        thedict.update({key_a: {key_b: val}})
-    return thedict
 
 
 def deal_hla(afile):
