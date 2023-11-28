@@ -56,7 +56,8 @@ def main_task(user_id, tools_id, unique_id):
     project_name = result.proj_name
     data_dir     = result.raw_data 
     result_path  = result.result_path
-    print(f"project_name:{project_name}, data_dir: {data_dir}, result_path: {result_path}")  # project_name:project1, data_dir: /home/dushiyi/mysite_wehelp/data/HLA/analysis/project1, result_path: /home/dushiyi/mysite_wehelp/data/HLA/analysis/project1
+    print(f"project_name:{project_name}, data_dir: {data_dir}, result_path: {result_path}")  # project_name:project1, data_dir: /home/dushiyi/mysite_wehelp/data/HLA/analysis/project1, 
+    # result_path: /home/dushiyi/mysite_wehelp/data/HLA/analysis/project1
     # 更新任务状态为"in_progress" &  执行Python脚本
     update_task_status('running', unique_id, user_id)
 

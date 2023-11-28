@@ -16,7 +16,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     threads = os.cpu_count()
 
     # BWA MEM command
-    print("BWA MEM Start!")
+    print(f"BWA MEM Start: {sample_name}")
     subprocess.run([
         f"bwa mem -t {threads} -v 1 -Y -H \"@HD\\tVN:1.5\\tGO:none\\tSO:coordinate\" -R \"@RG\\tID:TEST\\tSM:TEST\\tLB:Target\\tPL:BGI\\tPU:HVW2MCCXX:6:none\"  {ref_fa} {fq1} {fq2} | samtools view -buhS -t {ref_fa}.fai - | samtools sort -o {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -"],
         shell=True)
@@ -86,6 +86,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
             result_list.extend(future.result())
 
     if hpa:
+        print("Start HPA report!")
         subprocess.run(f"python3 {script_path}/hpa.summary.report.py -i {project_dir} -o {project_dir}/{project_name}.Rawsample.funcotated.brief.table.xlsx", shell=True)
     # else:
     #     subprocess.run(f"python3 {script_path}/rbc.summary.report.py -i {project_dir} -o {project_dir}/{project_name}.Rawsample.funcotated.brief.table.xlsx", shell=True)
