@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'tools',
     'account',
-    'widget_tweaks',
+    'widget_tweaks',  # pip install django-widget-tweaks
 ]
 
 MIDDLEWARE = [
