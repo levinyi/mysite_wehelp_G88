@@ -1,27 +1,43 @@
 {% extends 'base.html' %}
-
+{% load static %}
+{% load widget_tweaks %}
 {% block title %}Login{% endblock %}
-
 {% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        {% if form.errors %}
+        <div class="col-12 mb-3">
+            <div class="alert alert-danger text-center" role="alert">
+                <p>Your username and password didn't match. Please try again.</p>
+            </div>
+        </div>
+        {% endif %}
 
-<div class="row text-center vertical-middle-sm"> 
-    <h1>Login</h1> 
-    <p>Input your username and password</p> 
-    <form class="form-horizontal" action="." method="post">{% csrf_token %}
-        <!-- {{ form.as_p}} -->
-        <div class="form-group">
-            <label for="{{ form.username.id_for_label }}"
-            class="col-md-5 control-label" style="color:red">
-            <span class="glyphicon glyphicon-user"></span>Username</label>
-            <div class="col-md-6 text-left">{{ form.username }}</div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="post" role="form" class="needs-validation" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                            {{ form.username|add_class:"form-control" }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                            {{ form.password|add_class:"form-control" }}
+                        </div>
+                        <div class="d-grid col-auto">
+                            <button type="submit" class="btn btn-primary">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+                {% comment %} <div class="card-footer text-center"> {% endcomment %}
+                    {% comment %} <p class="mb-0">Don’t have an account yet? <a href="{% url 'account:user_register' %}" class="text-decoration-none">Register here.</a></p> {% endcomment %}
+                    {% comment %} <p class="mb-0">Forgot your password? <a href="{% url 'account:password_reset' %}" class="text-decoration-none">Reset here</a> {% endcomment %}
+                    {% comment %} <p class="mb-0">Forgot your password? <a href="{% url 'account:contact_us' %}"  class="text-decoration-none" >Contact us.</a> {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+            </div>
         </div>
-        <div class="form-group">
-            <label for="{{ form.password.id_for_label }}"
-            class="col-md-5 control-label" style="color:blue">
-            <span class="glyphicon glyphicon-floppy-open"></span>Password</label>
-            <div class="col-md-6 text-left">{{ form.password }}</div>
-        </div>
-        <input type="submit" value="Login"> 
-    </form> 
-</div> 
-{% endblock %} 
+    </div>
+</div>
+{% endblock %}
