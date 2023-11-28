@@ -71,9 +71,9 @@ def main_task(user_id, tools_id, unique_id):
     if tools_id == 'hla':
         subprocess.run(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path}", shell=True)
     elif tools_id == 'hpa':
-        subprocess.run(f'python {script_dir}/hpa.01.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls', shell=True)  # 调用python脚本
+        subprocess.run(f'python {script_dir}/hpa.01.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls {result_path}', shell=True)  # 调用python脚本
     elif tools_id == 'rbc':
-        subprocess.run(f'python {script_dir}/rbc.01.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.rbc.xls', shell=True)
+        subprocess.run(f'python {script_dir}/rbc.01.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.rbc.xls {result_path}', shell=True)
 
     # 更新任务状态为"打包中" & 打包文件
     update_task_status('packaging', unique_id, user_id)

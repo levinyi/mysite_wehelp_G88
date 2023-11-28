@@ -7,3 +7,4 @@ __pycache__/
 *.xls
 .env
 *~
+pipeline/software/gatk/gatk-package-4.2.6.1-local.jar
