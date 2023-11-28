@@ -40,13 +40,22 @@ def save_json_as_xls(json_data, file_path):
 @login_required
 def tools_use(request, tools_id):
     if request.method == "GET":
-        available_files = NGSDataPath.objects.filter(data_type=tools_id)
-        return render(request, f'tools/tools_{tools_id}_use.html', {'tools_id': tools_id,'available_files':available_files})
+        data_objects = NGSDataPath.objects.filter(data_type=tools_id)
+        available_files_list = []
+        for file in data_objects:
+            file_dict = {
+                'data_path': file.data_path,
+                'data_name': file.data_name,
+                'create_time': file.create_time.strftime('%Y-%m-%d'),  # 假设 create_time 是一个 datetime 对象
+                'status': file.status,
+                'fq_count': file.fq_count,
+            }
+            available_files_list.append(file_dict)
+        return render(request, f'tools/tools_{tools_id}_use.html', {'tools_id': tools_id,'available_files':available_files_list})
     elif request.method == "POST":
         data = json.loads(request.body)
         project_name = data.get("projectName")
         selectedPath = data.get("selectedPath")
-        print(selectedPath)
         rawdata_path = NGSDataPath.objects.get(data_name=selectedPath).data_path
         project_base_dir = os.path.join(DATA_DIR, f"{tools_id.upper()}","analysis")
         project_dir = os.path.join(project_base_dir, project_name)
@@ -173,9 +182,7 @@ def update_data_path(request):
                         data_type=data_type,
                         defaults={'status': 'active', 'create_time': create_time, 'fq_count': fq_gz_count}
                     )
-        data_objects = NGSDataPath.objects.filter(data_type=data_type)
-        formated_data = [f"{data.data_name}({data.fq_count})" for data in data_objects]
-        return JsonResponse({'files':formated_data, 'message':'Data paths updated successfully'})
+        return JsonResponse({'status': 'success', 'message': 'Data updated successfully'})
     except Exception as e:
         print("try Exception as e:", e)
         return JsonResponse({'message': str(e)}, status=500)

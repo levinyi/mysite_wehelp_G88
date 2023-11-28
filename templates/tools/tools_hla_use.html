@@ -38,10 +38,10 @@
             <div class="mb-4 pt-3">
                 <label for="formFile1" class="form-label">NGS data path</label>
                 <select class="form-select" id="path_select" name="path_select">
-                    <option value="" {% if not ngs_model.ngs_rawdata_path %}selected{% endif %}>Choose Folder Name</option>
+                    <option value="" selected>Choose Folder Name</option>
                     {% for file in available_files %}
-                        <option value="{{ file.data_name }}" {% if file.data_name == ngs_model.ngs_rawdata_path %}selected{% endif %}>
-                            {{ file.data_name }}
+                        <option value="{{ file.data_name }}">
+                            {{ file.data_name }}({{ file.fq_count }})
                         </option>
                     {% endfor %}
                </select>
@@ -110,43 +110,32 @@
             event.preventDefault();
 
             // AJAX 请求
-            fetch("{% url 'tools:update_data_path' %}", {
-                method: 'POST',
+            $.ajax({
+                url: "{% url 'tools:update_data_path' %}", // 后端处理的 URL
+                type: "POST", // 数据提交方式
                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken'), // 获取 CSRF token
+                    'X-CSRFToken': getCookie('csrftoken'),
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({data_type: 'hla'}) // 根据你的需求设置正确的数据类型
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.files){
-                    updateDropdown(data.files);
-                    alert("刷新成功！");  // 显示弹窗提示
-                } else {
-                    console.error('no files data in response');
+                data: JSON.stringify({data_type: 'hla'}), // 要发送的数据
+                success: function(data) {
+                    if (data.status === 'success'){
+
+                        alert("刷新成功！");  // 显示成功提示
+                        // 刷新页面
+                        window.location.reload();
+                    } else {
+                        console.error('no files data in response');
+                        alert("刷新失败，请稍后再试。");  // 显示错误提示
+                    }
+                },
+                error: function(xhr, errmsg, err) {
+                    console.error('Error:', xhr, errmsg, err);
                     alert("刷新失败，请稍后再试。");  // 显示错误提示
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert("发生错误：" + error);  // 显示错误提示
             });
         });
     });
-
-    function updateDropdown(files) {
-        let select = document.getElementById('path_select');
-        select.innerHTML = '<option value="">Choose Folder Name</option>';
-
-        // 创建并添加新选项
-        files.forEach(function(file) {
-            let option = document.createElement('option');
-            option.value = file;
-            option.textContent = file;
-            select.appendChild(option);
-        });
-    }
 
     // 获取 CSRF token 的函数
     function getCookie(name) {
