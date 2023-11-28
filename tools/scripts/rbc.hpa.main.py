@@ -109,6 +109,7 @@ if __name__ == '__main__':
     parser.add_argument('data_dir', type=str, help='The directory where data is stored')
     parser.add_argument('project_name', type=str, help='The name of the project')
     parser.add_argument('output_templates_file', type=str, help='The output templates file path')
+    parser.add_argument('result_path', type=str, help='The result path')
 
     # 定义可选参数
     parser.add_argument('--hpa', action='store_true', help='If this is a hpa project', default=False)
@@ -118,13 +119,14 @@ if __name__ == '__main__':
 
     # 使用参数
     data_dir = args.data_dir
-    project_dir = os.path.join(data_dir, args.project_name)
+    project_dir = args.result_path
     
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    software_path = os.path.join(BASE_DIR, "software")
-    database_path = os.path.join(BASE_DIR, "database")
-    script_path = os.path.join(BASE_DIR, "scripts")
-    ref_fa = os.path.join(BASE_DIR, "ref/hg38/Homo_sapiens_assembly38.fasta")
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    software_path = os.path.join(BASE_DIR, "pipeline/software")
+    database_path = os.path.join(BASE_DIR, "pipeline/database")
+
+    script_path = os.path.join(BASE_DIR, "tools/scripts")
+    ref_fa = os.path.join(BASE_DIR, "pipeline/ref/hg38/Homo_sapiens_assembly38.fasta")
 
     main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, 
         args.output_templates_file, args.hpa)
