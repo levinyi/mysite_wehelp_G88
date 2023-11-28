@@ -183,6 +183,11 @@
                 // window.location.reload(); // 例如刷新页面
                 window.location.href = '/tools/check_status/hpa/'; // 跳转到另一个页面
             }
+            else {
+                // 处理失败的响应
+                console.error('Error:', data);
+                alert("任务提交失败，请联系管理员启动异步服务!,错误信息：" + data.message);
+            }
         })
         .catch(error => console.error('Error:', error));
     });

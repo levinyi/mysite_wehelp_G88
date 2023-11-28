@@ -84,8 +84,14 @@ def tools_use(request, tools_id):
         )
         
         # 异步处理：
-        main_task.delay(user_id, tools_id, unique_id)
-
+        try:
+            main_task.delay(user_id, tools_id, unique_id)
+        except Exception as e:
+            response_data = {
+                'status': 'error',
+                'message': str(e),
+            }
+            return JsonResponse(response_data, status=500)
         return JsonResponse({"status": "success", "message": "submit successfully."})
     else:
         return JsonResponse({"status":'error',"response":'error Post Method.'})
