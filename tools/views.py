@@ -66,7 +66,6 @@ def tools_use(request, tools_id):
             print("Saved file:", file_path)
 
         unique_id = str(uuid.uuid4())
-        now = timezone.now()
         user_id = request.user.id
 
         result = Result.objects.create(
