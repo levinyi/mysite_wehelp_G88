@@ -27,11 +27,6 @@ def tools_list(request):
 
 def save_json_as_xls(json_data, file_path):
     with open(file_path, "w") as f:
-        # 写入标题行
-        # headers = "\t".join(json_data[0].keys())
-        # f.write(headers + "\n")
-
-        # 写入数据行
         for item in json_data:
             line = "\t".join(str(value) for value in item.values())
             f.write(line + "\n")
@@ -127,7 +122,6 @@ def delete_status(request, unique_id):
 def download_result(request, unique_id):
     try:
         result = Result.objects.get(unique_id=str(unique_id))
-
         if result.status != "completed":
             return HttpResponse("任务尚未完成，无法下载")
 
