@@ -22,7 +22,7 @@ def main(project_dir, hpa_db, outputfile):
 
     for each in file_list:
         content = []
-        sample_name = os.path.basename(os.path.dirname(os.path.dirname(each)))
+        sample_name = os.path.dirname(os.path.dirname(each))
         content.append(sample_name)
 
         df = pd.read_csv(each)
