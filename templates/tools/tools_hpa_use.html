@@ -197,7 +197,17 @@
         let table = document.getElementById('myTable');
         let rows = table.getElementsByTagName('tr');
         let tableData = [];
-        for (let i = 0; i < rows.length; i++) {
+
+        // 首先收集表头数据
+        let headers = rows[0].getElementsByTagName('th');
+        let headerData = {};
+        for (let h = 0; h < headers.length; h++) {
+            headerData[`column${h}`] = headers[h].innerText;
+        }
+        tableData.push(headerData);
+
+        // 然后收集表格中的数据
+        for (let i = 1; i < rows.length; i++) {  // 从索引 1 开始，因为 0 是表头
             let cells = rows[i].getElementsByTagName('td');
             let rowData = {};
             for (let j = 0; j < cells.length; j++) {

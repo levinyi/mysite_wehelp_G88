@@ -28,8 +28,8 @@ def tools_list(request):
 def save_json_as_xls(json_data, file_path):
     with open(file_path, "w") as f:
         # 写入标题行
-        headers = "\t".join(json_data[0].keys())
-        f.write(headers + "\n")
+        # headers = "\t".join(json_data[0].keys())
+        # f.write(headers + "\n")
 
         # 写入数据行
         for item in json_data:
@@ -64,6 +64,7 @@ def tools_use(request, tools_id):
 
         if tools_id in ['hpa','rbc']:
             json_data = data.get('tableData')
+            print("json_data: ", json_data)
             file_extension = 'hpa.xls' if tools_id == 'hpa' else 'rbc.xls'
             file_path = os.path.join(project_dir, f'tableOfBloodGroupSystems.{file_extension}')
             save_json_as_xls(json_data, file_path)
