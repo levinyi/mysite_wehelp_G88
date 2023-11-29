@@ -2,20 +2,20 @@ import pandas as pd
 import os
 import sys
 from collections import defaultdict
+import argparse
 
 def deal_hpa_db(hpa_db):
     df = pd.read_csv(hpa_db, sep="\t", skiprows=1, names=['System', 'Gene', 'cDNA_Changes', 'homo', 'het'])
     db_dict = df.set_index('cDNA_Changes')[['homo', 'het']].T.to_dict()
     return db_dict
 
-def main():
-
-    script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    hpa_db = os.path.join(script_dir, 'database',"HPA.Gene.cDNA_Changes.xls")
+def main(project_dir, hpa_db, outputfile):
+    # script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # hpa_db = os.path.join(script_dir, 'database',"HPA.Gene.cDNA_Changes.xls")
 
     hpa_db_dict = deal_hpa_db(hpa_db)
-    file_list = [i.rstrip("\n") for i in os.popen("find . -type f -name *brief.table.xls").readlines()]
-    print("find {} samples in current directory".format(len(file_list)))
+    file_list = [i.rstrip("\n") for i in os.popen(f"find {project_dir} -type f -name *brief.table.xls").readlines()]
+    print(f"find {len(file_list)} samples in {project_dir} directory")
 
     header= ["Sample"] + [f"HPA-{i}"  for i in range(1, 36)]
     big_list = [header]
@@ -44,9 +44,24 @@ def main():
         big_list.append(content)
     big_df = pd.DataFrame(big_list[1:], columns=big_list[0])
     # print(big_df)
-    big_df.to_csv("HPA.summary.report.xls",index=False, header=True)
+    big_df.to_csv(outputfile, index=False, header=True)
     print("all done!")
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+
+    # 定义参数 -i -d -o 
+    parser.add_argument('-i', dest='project_dir', action='store', help="project dir")
+    parser.add_argument('-d', dest='hpa_db',     action='store', help="hpa database file")
+    parser.add_argument('-o', dest='outputfile', action="store", help="output file full path")
+
+    # 解析命令行参数
+    args = parser.parse_args()
+
+    # 使用参数
+    project_dir = args.project_dir
+    hpa_db = args.hpa_db   ## "/path/to/database/HPA.Gene.cDNA_Changes.xls"
+    outputfile = args.outputfile  #  "/path/to/HPA.summary.report.xls")
+
+    main(project_dir, hpa_db, outputfile)

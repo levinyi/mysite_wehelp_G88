@@ -87,18 +87,20 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
 
     if hpa:
         print("Start HPA report!")
-        subprocess.run(f"python3 {script_path}/hpa.summary.report.py -i {project_dir} -o {project_dir}/{project_name}.Rawsample.funcotated.brief.table.xlsx", shell=True)
+        subprocess.run(f"python3 {script_path}/hpa.summary.report.py -i {project_dir} -d {database_path}/HPA.Gene.cDNA_Changes.xls -o {project_dir}/HPA.summary.report.xls", shell=True)
+        
+        # write file list that need to be packaged into a file.
+        with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
+            f.write(f"{project_dir}/HPA.summary.report.xls\n")
+            
+            # 添加其他要打包的文件， 需要确认！
+            # for each in result_list:
+            #     f.write(each + "\n")
     # else:
     #     subprocess.run(f"python3 {script_path}/rbc.summary.report.py -i {project_dir} -o {project_dir}/{project_name}.Rawsample.funcotated.brief.table.xlsx", shell=True)
     
     ##########################################################################
-    # write file list that need to be packaged into a file.
-    with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
-        f.write(f"{project_dir}/{project_name}.Rawsample.funcotated.brief.table.xlsx\n")
-        
-        # 添加其他要打包的文件， 需要确认！
-        # for each in result_list:
-        #     f.write(each + "\n")
+
     print("finished!")
 
 
