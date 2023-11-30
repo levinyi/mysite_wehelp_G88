@@ -24,8 +24,8 @@ def trim_fastq(sample_name, sample_file, project_dir, software_path):
     trim_data_dir = os.path.join(project_dir, sample_name, f"downsample_{trim_string}")
 
     os.makedirs(trim_data_dir, exist_ok=True)
-    subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq1_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_1.fq.gz", shell=True)
-    subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq2_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_2.fq.gz", shell=True)
+    subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq1_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_1.fq.gz --quiet", shell=True)
+    subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq2_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_2.fq.gz --quiet", shell=True)
 
 def deal_fastqc(sample_name, sample_files, project_dir, software_path, redirct=False):
     print("dealing fastqc!")
@@ -95,9 +95,9 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     print("sample_dict: ", sample_dict)
     
     ## Step 1 对原始数据进行 fastqc， 不需要等待执行结果。下面的fastqc会覆盖掉这个，想个办法解决，换个名字？
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        for sample_name, sample_files in sample_dict.items():
-            executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
+    # with concurrent.futures.ProcessPoolExecutor() as executor:
+    #     for sample_name, sample_files in sample_dict.items():
+    #         executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
 
     ### Step 2 对原始数据进行downsample. 要等待执行结果。
     ##################### 处理downsample文件夹下的fastq文件 #####################################
@@ -113,9 +113,9 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     sample_dict = process_fastq_files(fastq_list)
     print("downsample_dict: ", sample_dict)
 
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        for sample_name, sample_files in sample_dict.items():
-            executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
+    # with concurrent.futures.ProcessPoolExecutor() as executor:
+    #     for sample_name, sample_files in sample_dict.items():
+    #         executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
 
     ### 对downsample数据进行 bwa + hlahd， 要等待执行结果。
     result_list = []
