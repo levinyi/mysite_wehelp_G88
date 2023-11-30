@@ -5,8 +5,10 @@ import fnmatch
 import concurrent.futures
 from commonFunction import find_files_by_suffix, process_fastq_files
 
-os.environ["PATH"] += os.pathsep + "/data/webapp/mysite/pipeline/software/hlahd/hlahd.1.7.0/bin"
-# print(os.environ["PATH"])
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+software_path = os.path.join(BASE_DIR, "pipeline/software")
+os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
+print(os.environ["PATH"])
 
 
 def trim_fastq(sample_name, sample_file, project_dir, software_path):
