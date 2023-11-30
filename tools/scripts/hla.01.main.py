@@ -16,7 +16,7 @@ def trim_fastq(sample_name, sample_file, project_dir, software_path):
     trim_portion = 0.1
     seqkit_seed = 120
     trim_string = "1M"
-    trim_number = int(float(trim_string.rstrip("M"))*1000000),  # 1000000
+    trim_number = int(float(trim_string.rstrip("M"))*1000000)  # 1000000
     
     fq1_path = sample_file['fq1']
     fq2_path = sample_file['fq2']
