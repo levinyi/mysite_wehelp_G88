@@ -5,8 +5,10 @@ import fnmatch
 import concurrent.futures
 from commonFunction import find_files_by_suffix, process_fastq_files
 
-os.environ["PATH"] += os.pathsep + "/data/webapp/mysite/pipeline/software/hlahd/hlahd.1.7.0/bin"
-# print(os.environ["PATH"])
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+software_path = os.path.join(BASE_DIR, "pipeline/software")
+os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
+print(os.environ["PATH"])
 
 
 def trim_fastq(sample_name, sample_file, project_dir, software_path):
@@ -79,14 +81,14 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         f"{software_path}/hlahd/hlahd.1.7.0/HLA_gene.split.txt "
         f"{software_path}/hlahd/hlahd.1.7.0/dictionary/ "
         "HLA-HD_Result "
-        f"{sample_dir}/"
+        f"{project_dir}/{sample_name}/"
     )
     subprocess.run(hlahd_command, shell=True)
 
     
-    subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {sample_dir}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt", shell=True)
+    subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt", shell=True)
     
-    return  f"{sample_dir}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt"
+    return  f"{project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt"
 
 
 def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa):
