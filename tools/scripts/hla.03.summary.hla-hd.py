@@ -21,6 +21,7 @@ print("find {} samples in current directory".format(len(file_list)))
 with open(os.path.join(result_path, "HLA-HD_Result_final.summary.xls"),"w") as output:
     for each in file_list:
         sample_name = os.path.dirname(each).split("/")[-3] # /xxx/test-autoupload/S25002365_L01_P135/HLA-HD_Resule/result/HLA-HD_Result_final.result.txt
+             # /data/storeData/ztron/rawdata/HLA/analysis/test_hla_4/FT100020530_L01_UDB-P045/mapping/HLA-HD_Result/result/HLA-HD_Result_final.result.txt
         sample_dict = {}
         with open(each,"r") as f:
             for line in f:
