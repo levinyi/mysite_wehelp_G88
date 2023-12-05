@@ -1,5 +1,5 @@
 import pandas as pd
-import os
+import os, sys
 import argparse
 
 def deal_hpa_db(hpa_db):
@@ -66,6 +66,11 @@ if __name__ == '__main__':
 
     # 解析命令行参数
     args = parser.parse_args()
+
+    if not args.project_dir or not args.hpa_db or not args.outputfile:
+        # print help message if arguments are not valid
+        parser.print_help()
+        sys.exit(1)
 
     # 使用参数
     project_dir = args.project_dir
