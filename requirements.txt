@@ -14,3 +14,4 @@ biopython
 numpy
 python-decouple
 django-widget-tweaks
+multiqc

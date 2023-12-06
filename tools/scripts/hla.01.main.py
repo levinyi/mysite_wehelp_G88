@@ -96,10 +96,10 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     sample_dict = process_fastq_files(fastq_list)
     print("sample_dict: ", sample_dict)
     
-    ## Step 1 对原始数据进行 fastqc， 不需要等待执行结果。下面的fastqc会覆盖掉这个，想个办法解决，换个名字？
-    # with concurrent.futures.ProcessPoolExecutor() as executor:
-    #     for sample_name, sample_files in sample_dict.items():
-    #         executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
+    # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。下面的fastqc会覆盖掉这个，想个办法解决，换个名字？
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for sample_name, sample_files in sample_dict.items():
+            executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
 
     ### Step 2 对原始数据进行downsample. 要等待执行结果。
     ##################### 处理downsample文件夹下的fastq文件 #####################################
@@ -115,9 +115,10 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     sample_dict = process_fastq_files(fastq_list)
     print("downsample_dict: ", sample_dict)
 
-    # with concurrent.futures.ProcessPoolExecutor() as executor:
-    #     for sample_name, sample_files in sample_dict.items():
-    #         executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
+    # fastqc 
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for sample_name, sample_files in sample_dict.items():
+            executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
 
     ### 对downsample数据进行 bwa + hlahd， 要等待执行结果。
     result_list = []
@@ -131,6 +132,10 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     subprocess.run(f"python {script_path}/hla.03.summary.hla-hd.py {project_dir}",shell=True)
 
     ###########################################################################################
+    # multiqc
+    # multiqc was installed through pip install.
+    subprocess.run(f"multiqc  . --outdir {project_dir} --quiet", shell=True)
+
     # write file list that need to be packaged into a file.
     with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
         f.write(f"{project_dir}/HLA-HD_Result_final.summary.xls\n")
