@@ -79,7 +79,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         for sample_name, sample_files in sample_dict.items():
             executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
     # multiqc was installed through pip install.
-    subprocess.run(f"multiqc  . --outdir {project_dir} --quiet", shell=True)
+    subprocess.run(f"multiqc {project_dir}", shell=True)
 
     ### 主要分析步骤
     print("Start multiprocess analysis!")
