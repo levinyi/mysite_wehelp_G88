@@ -59,11 +59,11 @@ def tools_use(request, tools_id):
 
         if tools_id in ['hpa','rbc']:
             json_data = data.get('tableData')
-            print("json_data: ", json_data)
+            # print("json_data: ", json_data)
             file_extension = 'hpa.xls' if tools_id == 'hpa' else 'rbc.xls'
             file_path = os.path.join(project_dir, f'tableOfBloodGroupSystems.{file_extension}')
             save_json_as_xls(json_data, file_path)
-            print("Saved file:", file_path)
+            # print("Saved file:", file_path)
 
         unique_id = str(uuid.uuid4())
         user_id = request.user.id
@@ -77,7 +77,7 @@ def tools_use(request, tools_id):
             raw_data = rawdata_path,
             status = 'pending',
         )
-        
+        print("submit a task: ", tools_id, project_name)
         # 异步处理：
         try:
             main_task.delay(user_id, tools_id, unique_id)
