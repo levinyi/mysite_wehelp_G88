@@ -3,7 +3,7 @@ import sys
 import argparse
 import subprocess
 import concurrent.futures
-from commonFunction import find_files_by_suffix, process_fastq_files
+from commonFunction import deal_fastqc, find_files_by_suffix, process_fastq_files
 
 
 def analyze_sample(sample_name, sample_files, project_dir, software_path, database_path, 
@@ -73,6 +73,13 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
     sample_dict = process_fastq_files(fastq_list)
     print("sample_dict: ", sample_dict)
+
+    # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。下面的fastqc会覆盖掉这个，想个办法解决，换个名字？
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for sample_name, sample_files in sample_dict.items():
+            executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
+    # multiqc was installed through pip install.
+    subprocess.run(f"multiqc  . --outdir {project_dir} --quiet", shell=True)
 
     ### 主要分析步骤
     print("Start multiprocess analysis!")

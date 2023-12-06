@@ -3,7 +3,7 @@ import sys
 import os
 import fnmatch
 import concurrent.futures
-from commonFunction import find_files_by_suffix, process_fastq_files
+from commonFunction import deal_fastqc, find_files_by_suffix, process_fastq_files
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 software_path = os.path.join(BASE_DIR, "pipeline/software")
@@ -28,19 +28,6 @@ def trim_fastq(sample_name, sample_file, project_dir, software_path):
     os.makedirs(trim_data_dir, exist_ok=True)
     subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq1_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_1.fq.gz --quiet", shell=True)
     subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq2_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_2.fq.gz --quiet", shell=True)
-
-def deal_fastqc(sample_name, sample_files, project_dir, software_path, redirct=False):
-    print("dealing fastqc!")
-    fastqc = os.path.join(software_path, "fastqc/fastqc")
-    fq1 = sample_files['fq1']
-    fq2 = sample_files['fq2']
-    sample_dir = os.path.join(project_dir, sample_name, 'fastqc')
-    threads = os.cpu_count()
-    os.makedirs(sample_dir, exist_ok=True)
-    if redirct:
-        subprocess.run(f"{fastqc} --threads {threads} --format fastq --quiet  {fq1} {fq2}", shell=True)
-    else:
-        subprocess.run(f"{fastqc} --threads {threads} --format fastq --outdir {sample_dir} --quiet  {fq1} {fq2}", shell=True)
 
 
 def analyze_sample(sample_name, sample_files, project_dir, software_path, database_path, script_path, ref_fa):
