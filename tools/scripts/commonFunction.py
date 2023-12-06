@@ -42,13 +42,13 @@ def process_fastq_files(fastq_files_list):
 
 def deal_fastqc(sample_name, sample_files, project_dir, software_path, redirct=False):
     print("dealing fastqc!")
-    fastqc = os.path.join(software_path, "fastqc/fastqc")
+    fastqc = os.path.join(software_path, "Fastqc/fastqc")
     fq1 = sample_files['fq1']
     fq2 = sample_files['fq2']
-    sample_dir = os.path.join(project_dir, sample_name, 'fastqc')
     threads = os.cpu_count()
-    os.makedirs(sample_dir, exist_ok=True)
     if redirct:
-        subprocess.run(f"{fastqc} --threads {threads} --format fastq --quiet  {fq1} {fq2}", shell=True)
-    else:
+        sample_dir = os.path.join(project_dir, sample_name, 'fastqc')
+        os.makedirs(sample_dir, exist_ok=True)
         subprocess.run(f"{fastqc} --threads {threads} --format fastq --outdir {sample_dir} --quiet  {fq1} {fq2}", shell=True)
+    else:
+        subprocess.run(f"{fastqc} --threads {threads} --format fastq --quiet  {fq1} {fq2}", shell=True)
