@@ -77,7 +77,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。下面的fastqc会覆盖掉这个，想个办法解决，换个名字？
     with concurrent.futures.ProcessPoolExecutor() as executor:
         for sample_name, sample_files in sample_dict.items():
-            executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
+            executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
     # multiqc was installed through pip install.
     subprocess.run(f"multiqc  . --outdir {project_dir} --quiet", shell=True)
 
