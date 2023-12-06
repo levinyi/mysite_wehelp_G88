@@ -51,7 +51,7 @@ def tools_use(request, tools_id):
         data = json.loads(request.body)
         project_name = data.get("projectName")
         selectedPath = data.get("selectedPath")
-        rawdata_path = NGSDataPath.objects.get(data_name=selectedPath).data_path
+        rawdata_path = NGSDataPath.objects.get(data_name=selectedPath, data_type=tools_id).data_path
         project_base_dir = os.path.join(DATA_DIR, f"{tools_id.upper()}","analysis")
         project_dir = os.path.join(project_base_dir, project_name)
         if not os.path.exists(project_dir):

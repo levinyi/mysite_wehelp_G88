@@ -42,16 +42,11 @@ def main(project_dir, hpa_db, outputfile):
                 else:
                     # 如果是het，将homo和het的值结合起来
                     content.append(f"{homo_het['homo']},{homo_het['het']}")
-                # if (df_filtered['homo/het'] == 'homo').any():
-                #     content.append(homo_het['homo'])
-                # elif (df_filtered['homo/het'] == 'het').any():
-                #     content.append(homo_het['het'])
             else:
                 content.append(str(homo_het['homo']))
 
         big_list.append(content)
     big_df = pd.DataFrame(big_list[1:], columns=big_list[0])
-    # print(big_df)
     big_df.to_csv(outputfile, index=False, header=True)
     print("all done!")
 
