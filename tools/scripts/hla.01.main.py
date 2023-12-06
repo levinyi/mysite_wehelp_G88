@@ -52,12 +52,13 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 
     subprocess.run(["samtools", "index", f"{sample_dir}/{sample_name}.hla.sortedByCoord.bam"])
     
+    subprocess.run(f'samtools mpileup -f {ref_fa} {sample_dir}/{sample_name}.hla.sortedByCoord.bam -aa -A -Q 13 -o {sample_dir}/{sample_name}.pileup.Q13.out', shell=True)
+    subprocess.run(f'python {script_path}/03_mileup_stats.py {sample_dir}/{sample_name}.pileup.Q13.out > {sample_dir}/{sample_name}.pileup.Q13.out.stats', shell=True)
+    
     # extract fastq
     subprocess.run(f"samtools view -@ {threads} -bF 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
     subprocess.run(f"samtools view -@ 8 -bf 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.Unmapped.hla.bam", shell=True)
     subprocess.run(f"samtools fastq -@ {threads} -1 {sample_dir}/{sample_name}.mapped.hla.1.fastq -2 {sample_dir}/{sample_name}.mapped.hla.2.fastq -n {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
-    
-
     
     # hlahd
     hlahd_command = (
@@ -71,7 +72,6 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         f"{project_dir}/{sample_name}/"
     )
     subprocess.run(hlahd_command, shell=True)
-
     
     subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt", shell=True)
     

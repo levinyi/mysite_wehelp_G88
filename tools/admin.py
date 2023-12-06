@@ -12,6 +12,7 @@ class ResultAdmin(admin.ModelAdmin):
 
 class NGSDataPathAdmin(admin.ModelAdmin):
     list_display = ('data_name','data_type', 'fq_count', 'data_path', 'create_time', 'status')
+    list_filter = ('data_type', 'data_type', 'create_time', 'status')
 
 
 admin.site.register(Tools, ToolsAdmin)
