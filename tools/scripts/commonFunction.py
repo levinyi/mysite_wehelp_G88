@@ -42,7 +42,7 @@ def process_fastq_files(fastq_files_list):
 
 def deal_fastqc(sample_name, sample_files, project_dir, software_path, redirct=False):
     print("dealing fastqc!")
-    fastqc = os.path.join(software_path, "Fastqc/fastqc")
+    fastqc = os.path.join(software_path, "FastQC/fastqc")
     fq1 = sample_files['fq1']
     fq2 = sample_files['fq2']
     threads = os.cpu_count()
