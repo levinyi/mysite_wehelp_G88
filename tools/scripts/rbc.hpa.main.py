@@ -13,7 +13,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     sample_folder = os.path.join(project_dir, sample_name)
     os.makedirs(sample_folder, exist_ok=True)
 
-    threads = os.cpu_count()
+    threads = round(os.cpu_count()/10) # 10% cpu for each thread
 
     # BWA MEM command
     print(f"BWA MEM Start: {sample_name}")
@@ -28,17 +28,17 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 
     # GATK HaplotypeCaller command
     subprocess.run([
-        f"{software_path}/gatk/gatk --java-options \"-Xmx30G\" HaplotypeCaller -R {ref_fa} -I {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -L {database_path}/Blood.gene.bed -O {project_dir}/{sample_name}/{sample_name}.Rawsample.output.raw.vcf --QUIET true --verbosity ERROR --create-output-variant-index false"],
+        f"{software_path}/gatk/gatk --java-options \"-Xmx5G\" HaplotypeCaller -R {ref_fa} -I {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -L {database_path}/Blood.gene.bed -O {project_dir}/{sample_name}/{sample_name}.Rawsample.output.raw.vcf --QUIET true --verbosity ERROR --create-output-variant-index false"],
         shell=True)
 
     # GATK VariantFiltration command
     subprocess.run([
-        f"{software_path}/gatk/gatk VariantFiltration -R {ref_fa} -V {project_dir}/{sample_name}/{sample_name}.Rawsample.output.raw.vcf -filter \"QD < 2.0\"  --filter-name \"QDFilter\" -filter \"MQ < 40.0\" --filter-name \"MQFilter\" -filter \"FS > 60.0\" --filter-name \"FSFilter\" --create-output-variant-index false --output {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf"],
+        f"{software_path}/gatk/gatk --java-options \"-Xmx5G\" VariantFiltration -R {ref_fa} -V {project_dir}/{sample_name}/{sample_name}.Rawsample.output.raw.vcf -filter \"QD < 2.0\"  --filter-name \"QDFilter\" -filter \"MQ < 40.0\" --filter-name \"MQFilter\" -filter \"FS > 60.0\" --filter-name \"FSFilter\" --create-output-variant-index false --output {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf"],
         shell=True)
 
     # GATK Funcotator command
     subprocess.run([
-        f"{software_path}/gatk/gatk --java-options \"-Xmx30G\" Funcotator --data-sources-path {database_path}/funcotator_dataSources.v1.7.20200521s --ref-version hg38 --output-file-format MAF --reference {ref_fa} --exclude-field Center --exclude-field Tumor_Sample_Barcode --exclude-field Matched_Norm_Sample_Barcode --exclude-field Match_Norm_Seq_Allele1 --exclude-field Match_Norm_Seq_Allele2 --exclude-field Tumor_Validation_Allele1 --exclude-field Tumor_Validation_Allele2 --exclude-field Match_Norm_Validation_Allele1 --exclude-field Match_Norm_Validation_Allele2 --exclude-field Verification_Status --exclude-field Validation_Status --exclude-field Mutation_Status --exclude-field Sequencing_Phase --exclude-field Sequence_Source --exclude-field Validation_Method --exclude-field Score --exclude-field BAM_File --exclude-field Sequencer --exclude-field Tumor_Sample_UUID --exclude-field Matched_Norm_Sample_UUID --variant {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf --output {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.raw.MAF --remove-filtered-variants true"],
+        f"{software_path}/gatk/gatk --java-options \"-Xmx5G\" Funcotator --data-sources-path {database_path}/funcotator_dataSources.v1.7.20200521s --ref-version hg38 --output-file-format MAF --reference {ref_fa} --exclude-field Center --exclude-field Tumor_Sample_Barcode --exclude-field Matched_Norm_Sample_Barcode --exclude-field Match_Norm_Seq_Allele1 --exclude-field Match_Norm_Seq_Allele2 --exclude-field Tumor_Validation_Allele1 --exclude-field Tumor_Validation_Allele2 --exclude-field Match_Norm_Validation_Allele1 --exclude-field Match_Norm_Validation_Allele2 --exclude-field Verification_Status --exclude-field Validation_Status --exclude-field Mutation_Status --exclude-field Sequencing_Phase --exclude-field Sequence_Source --exclude-field Validation_Method --exclude-field Score --exclude-field BAM_File --exclude-field Sequencer --exclude-field Tumor_Sample_UUID --exclude-field Matched_Norm_Sample_UUID --variant {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf --output {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.raw.MAF --remove-filtered-variants true"],
         shell=True)
 
     # GREP remove MAF header
