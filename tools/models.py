@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Tools(models.Model):
     """小工具管理"""
     tools_name = models.CharField(verbose_name="小工具", max_length=64)
-    tools_id = models.CharField(verbose_name="tools_id", max_length=64)
+    tools_id   = models.CharField(verbose_name="tools_id", max_length=64)
     tools_desc = models.TextField(verbose_name="功能表述")
     tools_icon = models.ImageField(upload_to="static/img/tools_icon", blank=True)
 

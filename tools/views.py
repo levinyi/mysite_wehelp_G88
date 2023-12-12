@@ -157,7 +157,7 @@ rawdata_dirs = {
 def update_data_path(request):
     # get data_type
     data = json.loads(request.body)
-    data_type = data.get('data_type')
+    data_type = data.get('data_type')  # hla, hpa, rbc from front-end
     if not data_type:
         return JsonResponse({'message':'No data type provided'}, status=400)
 
@@ -169,6 +169,10 @@ def update_data_path(request):
         return JsonResponse({'message': 'Base path does not exist'}, status=400)
 
     try:
+        # Remove existing entries for the given data_type
+        NGSDataPath.objects.filter(data_type=data_type).delete()
+        
+        # Add new entries
         for subdir in os.listdir(base_path):
             subdir_path = os.path.join(base_path, subdir)
             if os.path.isdir(subdir_path):
