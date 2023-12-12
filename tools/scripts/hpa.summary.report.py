@@ -48,7 +48,7 @@ def main(project_dir, hpa_db, outputfile):
         big_list.append(content)
     big_df = pd.DataFrame(big_list[1:], columns=big_list[0])
     big_df.to_csv(outputfile, index=False, header=True)
-    print("all done!")
+    print("hpa summary report done!")
 
 
 if __name__ == '__main__':

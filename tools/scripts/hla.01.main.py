@@ -8,7 +8,7 @@ from commonFunction import deal_fastqc, find_files_by_suffix, process_fastq_file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 software_path = os.path.join(BASE_DIR, "pipeline/software")
 os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
-print(os.environ["PATH"])
+# print(os.environ["PATH"])
 
 
 def trim_fastq(sample_name, sample_file, project_dir, software_path):
@@ -81,7 +81,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa):
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
     sample_dict = process_fastq_files(fastq_list)
-    print("sample_dict: ", sample_dict)
+    # print("sample_dict: ", sample_dict)
     
     # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。下面的fastqc会覆盖掉这个，想个办法解决，换个名字？
     with concurrent.futures.ProcessPoolExecutor() as executor:
@@ -126,7 +126,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         # 添加其他要打包的文件， 需要确认！
         # for result in result_list:
         #     f.write(f"{result}\n")
-    print("finished!")
+    print("Package result finished!")
 
 
 if __name__ == "__main__":
@@ -140,11 +140,11 @@ if __name__ == "__main__":
     database_path = os.path.join(BASE_DIR, "pipeline/database")
     ref_fa = os.path.join(BASE_DIR, "pipeline/ref/hla/hla_gen.fasta")
     script_path = os.path.join(BASE_DIR, "tools/scripts")
-    print(f"BASE_DIR: {BASE_DIR}")
-    print(f"software_path: {software_path}")
-    print(f"database_path: {database_path}")
-    print(f"ref_fa: {ref_fa}")
-    print(f"script_path: {script_path}")
-    print(f"project_dir: {project_dir}")
+    # print(f"BASE_DIR: {BASE_DIR}")
+    # print(f"software_path: {software_path}")
+    # print(f"database_path: {database_path}")
+    # print(f"ref_fa: {ref_fa}")
+    # print(f"script_path: {script_path}")
+    # print(f"project_dir: {project_dir}")
 
     main(data_dir, project_dir, software_path, database_path, script_path, ref_fa)

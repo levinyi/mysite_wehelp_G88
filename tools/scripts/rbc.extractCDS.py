@@ -57,17 +57,11 @@ def extract_cds(mutation_dict, gene_dict, cds_file, out_file):
     with open(out_file, 'w') as f:
         for trans_id, cdna_dict in mutation_dict.items():
             raw_seq = cds_dict[trans_id]
-            print(trans_id)
             new_seq = raw_seq
             for changes, homo_het in cdna_dict.items():
-                print("\t", changes, homo_het)
                 pos, ref, allele, subt = replace_base(changes, homo_het)
-                print("\t\t", pos, ref, allele, subt)
                 new_seq = new_seq[:pos] + subt + new_seq[pos + len(subt):]
             f.write(f">{gene_dict[trans_id]}\n{new_seq}\n")
-            # print(f"trans_id: {trans_id}")
-            # print(f"raw_seq : {raw_seq}")
-            # print(f"new_seq: {new_seq}")
 
 
 def deal_MAF_file(maf_file):
@@ -91,8 +85,6 @@ def main():
     out_file = sys.argv[3]  # output.cds.fasta
 
     mutation_dict, gene_dict = deal_MAF_file(maf_file)
-    print("mutation_dict : ", mutation_dict)
-    print("gene dict ", gene_dict)
     extract_cds(mutation_dict, gene_dict, cds_file, out_file)
 
 

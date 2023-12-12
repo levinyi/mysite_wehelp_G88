@@ -13,12 +13,12 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     sample_folder = os.path.join(project_dir, sample_name)
     os.makedirs(sample_folder, exist_ok=True)
 
-    threads = round(os.cpu_count()/10) # 10% cpu for each thread
+    # threads = round(os.cpu_count()/10) # 10% cpu for each thread
 
     # BWA MEM command
     print(f"BWA MEM Start: {sample_name}")
     subprocess.run([
-        f"bwa mem -t {threads} -v 1 -Y -H \"@HD\\tVN:1.5\\tGO:none\\tSO:coordinate\" -R \"@RG\\tID:TEST\\tSM:TEST\\tLB:Target\\tPL:BGI\\tPU:HVW2MCCXX:6:none\"  {ref_fa} {fq1} {fq2} | samtools view -buhS -t {ref_fa}.fai - | samtools sort -o {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -"],
+        f"bwa mem -t 1 -v 1 -Y -H \"@HD\\tVN:1.5\\tGO:none\\tSO:coordinate\" -R \"@RG\\tID:TEST\\tSM:TEST\\tLB:Target\\tPL:BGI\\tPU:HVW2MCCXX:6:none\"  {ref_fa} {fq1} {fq2} | samtools view -buhS -t {ref_fa}.fai - | samtools sort -o {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -"],
         shell=True)
     
     # Samtools index command
@@ -28,17 +28,17 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 
     # GATK HaplotypeCaller command
     subprocess.run([
-        f"{software_path}/gatk/gatk --java-options \"-Xmx5G\" HaplotypeCaller -R {ref_fa} -I {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -L {database_path}/Blood.gene.bed -O {project_dir}/{sample_name}/{sample_name}.Rawsample.output.raw.vcf --QUIET true --verbosity ERROR --create-output-variant-index false"],
+        f"{software_path}/gatk/gatk --java-options \"-Xmx50G\" HaplotypeCaller -R {ref_fa} -I {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -L {database_path}/Blood.gene.bed -O {project_dir}/{sample_name}/{sample_name}.Rawsample.output.raw.vcf --QUIET true --verbosity ERROR --create-output-variant-index false"],
         shell=True)
 
     # GATK VariantFiltration command
     subprocess.run([
-        f"{software_path}/gatk/gatk --java-options \"-Xmx5G\" VariantFiltration -R {ref_fa} -V {project_dir}/{sample_name}/{sample_name}.Rawsample.output.raw.vcf -filter \"QD < 2.0\"  --filter-name \"QDFilter\" -filter \"MQ < 40.0\" --filter-name \"MQFilter\" -filter \"FS > 60.0\" --filter-name \"FSFilter\" --create-output-variant-index false --output {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf"],
+        f"{software_path}/gatk/gatk --java-options \"-Xmx50G\" VariantFiltration -R {ref_fa} -V {project_dir}/{sample_name}/{sample_name}.Rawsample.output.raw.vcf -filter \"QD < 2.0\"  --filter-name \"QDFilter\" -filter \"MQ < 40.0\" --filter-name \"MQFilter\" -filter \"FS > 60.0\" --filter-name \"FSFilter\" --create-output-variant-index false --output {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf"],
         shell=True)
 
     # GATK Funcotator command
     subprocess.run([
-        f"{software_path}/gatk/gatk --java-options \"-Xmx5G\" Funcotator --data-sources-path {database_path}/funcotator_dataSources.v1.7.20200521s --ref-version hg38 --output-file-format MAF --reference {ref_fa} --exclude-field Center --exclude-field Tumor_Sample_Barcode --exclude-field Matched_Norm_Sample_Barcode --exclude-field Match_Norm_Seq_Allele1 --exclude-field Match_Norm_Seq_Allele2 --exclude-field Tumor_Validation_Allele1 --exclude-field Tumor_Validation_Allele2 --exclude-field Match_Norm_Validation_Allele1 --exclude-field Match_Norm_Validation_Allele2 --exclude-field Verification_Status --exclude-field Validation_Status --exclude-field Mutation_Status --exclude-field Sequencing_Phase --exclude-field Sequence_Source --exclude-field Validation_Method --exclude-field Score --exclude-field BAM_File --exclude-field Sequencer --exclude-field Tumor_Sample_UUID --exclude-field Matched_Norm_Sample_UUID --variant {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf --output {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.raw.MAF --remove-filtered-variants true"],
+        f"{software_path}/gatk/gatk --java-options \"-Xmx50G\" Funcotator --data-sources-path {database_path}/funcotator_dataSources.v1.7.20200521s --ref-version hg38 --output-file-format MAF --reference {ref_fa} --exclude-field Center --exclude-field Tumor_Sample_Barcode --exclude-field Matched_Norm_Sample_Barcode --exclude-field Match_Norm_Seq_Allele1 --exclude-field Match_Norm_Seq_Allele2 --exclude-field Tumor_Validation_Allele1 --exclude-field Tumor_Validation_Allele2 --exclude-field Match_Norm_Validation_Allele1 --exclude-field Match_Norm_Validation_Allele2 --exclude-field Verification_Status --exclude-field Validation_Status --exclude-field Mutation_Status --exclude-field Sequencing_Phase --exclude-field Sequence_Source --exclude-field Validation_Method --exclude-field Score --exclude-field BAM_File --exclude-field Sequencer --exclude-field Tumor_Sample_UUID --exclude-field Matched_Norm_Sample_UUID --variant {project_dir}/{sample_name}/{sample_name}.Rawsample.output.filtered.vcf --output {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.raw.MAF --remove-filtered-variants true"],
         shell=True)
 
     # GREP remove MAF header
@@ -74,7 +74,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     sample_dict = process_fastq_files(fastq_list)
     print("sample_dict: ", sample_dict)
 
-    # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。下面的fastqc会覆盖掉这个，想个办法解决，换个名字？
+    # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。
     with concurrent.futures.ProcessPoolExecutor() as executor:
         for sample_name, sample_files in sample_dict.items():
             executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
@@ -84,7 +84,8 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     ### 主要分析步骤
     print("Start multiprocess analysis!")
     result_list = []
-    with concurrent.futures.ProcessPoolExecutor() as executor:
+    cpu_count = int(os.cpu_count()/2)
+    with concurrent.futures.ProcessPoolExecutor(max_workers=int(os.cup_count()/2)) as executor:
         futures = [executor.submit(analyze_sample, sample_name, sample_files, project_dir, software_path, database_path, 
                                     script_path, ref_fa, output_templates_file)
                    for sample_name, sample_files in sample_dict.items()]

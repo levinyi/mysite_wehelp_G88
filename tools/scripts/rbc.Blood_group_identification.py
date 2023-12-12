@@ -156,7 +156,7 @@ def main():
         'cDNA_Changes','Variant_Classification', 'homo/het', 'Allele_name1', 'Allele_name2']].to_excel(final_output_file, index=False)
     maf_df[['Number', 'System', 'Gene', 'PanelDesigned', 'MutationDetected',
         'cDNA_Changes','Variant_Classification', 'homo/het', 'Allele_name1', 'Allele_name2']].to_csv(final_output_file.replace("xlsx", "xls"), index=False)
-    print(maf_df)
+    # print(maf_df)
 
 if __name__ == '__main__':
     main()

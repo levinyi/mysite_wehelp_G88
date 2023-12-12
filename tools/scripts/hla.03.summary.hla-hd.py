@@ -39,6 +39,6 @@ with open(os.path.join(result_path, "HLA-HD_Result_final.summary.xls"),"w") as o
             results.append(";".join(values['type2']))
         output.write("{}\t{}\n".format(sample_name, "\t".join(results)))
 
-print("output: HLA-HD_Result_final.summary.xls")
-print("done")
+print("Output file: HLA-HD_Result_final.summary.xls")
+print("Summary HLA-HD result done")
 

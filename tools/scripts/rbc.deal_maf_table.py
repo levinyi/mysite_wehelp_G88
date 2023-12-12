@@ -73,7 +73,6 @@ def main():
     ## fix AF column [0.5,0.5]
     df['AF'] = df['AF'].apply(select_value)
     df.to_csv(out_file, sep="\t", index = False, header=True)
-    # print(df)
 
 
 if __name__ == "__main__":
