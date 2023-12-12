@@ -85,7 +85,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     print("Start multiprocess analysis!")
     result_list = []
     cpu_count = int(os.cpu_count()/2)
-    with concurrent.futures.ProcessPoolExecutor(max_workers=int(os.cup_count()/2)) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=cpu_count) as executor:
         futures = [executor.submit(analyze_sample, sample_name, sample_files, project_dir, software_path, database_path, 
                                     script_path, ref_fa, output_templates_file)
                    for sample_name, sample_files in sample_dict.items()]
