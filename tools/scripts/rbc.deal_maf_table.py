@@ -54,6 +54,11 @@ def main():
     maf_file = parser.maf_file
     out_file = parser.out_file
 
+    # Check if maf_file exists. and is not empty
+    if not os.path.exists(maf_file) or os.path.getsize(maf_file) == 0:
+        print(f"maf file {maf_file} does not exist or is empty!")
+        sys.exit(1)
+
     df = pd.read_csv(maf_file, sep="\t")
     # select data by column and variat classification.
     df = df[_COLUMNS]
