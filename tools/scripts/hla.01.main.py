@@ -57,6 +57,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     subprocess.run(f"samtools view  -@ {threads} -bf 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.Unmapped.hla.bam", shell=True)
     subprocess.run(f"samtools fastq -@ {threads} -1    {sample_dir}/{sample_name}.mapped.hla.1.fastq -2 {sample_dir}/{sample_name}.mapped.hla.2.fastq -n {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
     
+    return_list = []
     if 'hlahd' in software_list:
         # hlahd
         hlahd_command = (
@@ -71,15 +72,18 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         )
         subprocess.run(hlahd_command, shell=True)
         subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt", shell=True)
+        return_list.append(f"{project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt")
     if 'hla_scan' in software_list:
         # hla_scan
         print("Start hla_scan!")
-        hla_scan_dir = os.path.join(project_dir, "HLAscan_Result")
+        hla_scan_dir = os.path.join(project_dir, sample_name, "HLAscan_Result")
+        print(f"hla_scan_dir: {hla_scan_dir}")
         os.makedirs(hla_scan_dir, exist_ok=True)
         hla_genes = ["HLA-A","HLA-B","HLA-C","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB","HLA-DPA1","HLA-DPB1","HLA-DQA1","HLA-DQB1","HLA-DRA","HLA-DRB1","HLA-DRB5","HLA-E","HLA-F","HLA-G","MICA","MICB","TAP1","TAP2"]
         for gene in hla_genes:
             subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} -r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt\n", shell=True)
         subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/HLAscan.results.txt\n", shell=True)
+        return_list.append(f"{hla_scan_dir}/HLAscan.results.txt")
     
     if 'OptiType' in software_list:
         # optitype
@@ -94,8 +98,9 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         subprocess.run(f"samtools bam2fq {opt_dir}/sample.fished_1.bam > {opt_dir}/sample.fished_1.fastq\n", shell=True)
         subprocess.run(f"samtools bam2fq {opt_dir}/sample.fished_2.bam > {opt_dir}/sample.fished_2.fastq\n", shell=True)
         subprocess.run(f"python3 {OptiType} -i {opt_dir}/sample.fished_1.fastq {opt_dir}/sample.fished_2.fastq --dna -v -o {opt_dir} -p {sample_name}\n", shell=True)
+        return_list.append(f"{opt_dir}/{sample_name}.result.tsv")
     
-    return  f"{project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt"
+    return return_list
 
 
 def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list):
