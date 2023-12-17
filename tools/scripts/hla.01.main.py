@@ -96,7 +96,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         subprocess.run(f"{razers3} -tc {threads} -i 95 -m 1 -dr 0 -o {opt_dir}/sample.fished_2.bam {OptiType_ref} {fq2}\n", shell=True)
         subprocess.run(f"samtools bam2fq {opt_dir}/sample.fished_1.bam > {opt_dir}/sample.fished_1.fastq\n", shell=True)
         subprocess.run(f"samtools bam2fq {opt_dir}/sample.fished_2.bam > {opt_dir}/sample.fished_2.fastq\n", shell=True)
-        subprocess.run(f"python3 {OptiType} -i {opt_dir}/sample.fished_1.fastq {opt_dir}/sample.fished_2.fastq --dna -v -o {opt_dir} -p {sample_name}\n", shell=True)
+        subprocess.run(f"python2.7 {OptiType} -i {opt_dir}/sample.fished_1.fastq {opt_dir}/sample.fished_2.fastq --dna -v -o {opt_dir} -p {sample_name}\n", shell=True)
         return_list.append(f"{opt_dir}/{sample_name}.result.tsv")
     
     return return_list
