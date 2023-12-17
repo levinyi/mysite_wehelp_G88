@@ -84,7 +84,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     if 'OptiType' in software_list:
         # optitype
         print("Start OptiType!")
-        opt_dir = os.path.join(project_dir, "OptiType_Result")
+        opt_dir = os.path.join(project_dir, sample_name ,"OptiType_Result")
         os.makedirs(opt_dir)
         OptiType = os.path.join(software_path, "OptiType-1.3.5", "OptiTypePipeline.py")
         razers3 = os.path.join(software_path, "razers", "razers3")
