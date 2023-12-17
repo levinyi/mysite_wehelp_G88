@@ -50,7 +50,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     subprocess.run(bwa_command, shell=True)
     subprocess.run(["samtools", "index", f"{sample_dir}/{sample_name}.hla.sortedByCoord.bam"])
     subprocess.run(f'samtools mpileup -f {ref_fa} {sample_dir}/{sample_name}.hla.sortedByCoord.bam -aa -A -Q 13 -o {sample_dir}/{sample_name}.pileup.Q13.out', shell=True)
-    subprocess.run(f'python {script_path}/03_mileup_stats.py {sample_dir}/{sample_name}.pileup.Q13.out > {sample_dir}/{sample_name}.pileup.Q13.out.stats', shell=True)
+    subprocess.run(f'python {script_path}/bwa_mileup_stats.py {sample_dir}/{sample_name}.pileup.Q13.out > {sample_dir}/{sample_name}.pileup.Q13.out.stats', shell=True)
     
     # extract fastq
     subprocess.run(f"samtools view  -@ {threads} -bF 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
@@ -73,15 +73,16 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt", shell=True)
     elif 'hla_scan' in software_list:
         # hla_scan
-        hla_scan_dir = os.path.join(project_dir, "HLA", "HLAscan_Result")
+        print("Start hla_scan!")
+        hla_scan_dir = os.path.join(project_dir, "HLAscan_Result")
         os.makedirs(hla_scan_dir, exist_ok=True)
         hla_genes = ["HLA-A","HLA-B","HLA-C","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB","HLA-DPA1","HLA-DPB1","HLA-DQA1","HLA-DQB1","HLA-DRA","HLA-DRB1","HLA-DRB5","HLA-E","HLA-F","HLA-G","MICA","MICB","TAP1","TAP2"]
         for gene in hla_genes:
-            subprocess.run("{hla_scan} -t {hla_scan_threads} -l {fq1} -r {fq2} -d {hla_scan_db} -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt\n".format(**{"gene": gene, "hla_scan_dir": hla_scan_dir}, **config_dict))
-        subprocess.run("python3 {base_dir}/scripts/merge_HLA_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/HLAscan.results.txt\n".format(**{"hla_scan_dir": hla_scan_dir},**config_dict))
-        subprocess.run("\necho '# Finish hla_scan'\n")
+            subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} -r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt\n", shell=True)
+        subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/HLAscan.results.txt\n", shell=True)
     elif 'OptiType' in software_list:
         # optitype
+        print("Start OptiType!")
         opt_dir = os.path.join(project_dir, "OptiType_Result")
         os.makedirs(opt_dir)
         OptiType = os.path.join(software_path, "OptiType-1.3.5", "OptiTypePipeline.py")
