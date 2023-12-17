@@ -67,7 +67,7 @@ def tools_use(request, tools_id):
             save_json_as_xls(json_data, file_path)
             # print("Saved file:", file_path)
         elif tools_id == 'hla':
-            software_list = data.get('selectedSoftware')
+            software_list = ",".join(data.get('selectedSoftware'))
             print(f"you selected software: {software_list}")
         unique_id = str(uuid.uuid4())
         user_id = request.user.id
@@ -82,7 +82,7 @@ def tools_use(request, tools_id):
             status = 'pending',
         )
         print(f"submit a {tools_id} task: project name : {project_name}")
-        print(f"software_list: {software_list}")
+        print(f"software_list in views.py : {software_list}")
         # 异步处理：
         try:
             main_task.delay(user_id, tools_id, unique_id, software_list=software_list)

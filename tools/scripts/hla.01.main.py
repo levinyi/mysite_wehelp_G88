@@ -71,7 +71,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         )
         subprocess.run(hlahd_command, shell=True)
         subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt", shell=True)
-    elif 'hla_scan' in software_list:
+    if 'hla_scan' in software_list:
         # hla_scan
         print("Start hla_scan!")
         hla_scan_dir = os.path.join(project_dir, "HLAscan_Result")
@@ -80,7 +80,8 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         for gene in hla_genes:
             subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} -r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt\n", shell=True)
         subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/HLAscan.results.txt\n", shell=True)
-    elif 'OptiType' in software_list:
+    
+    if 'OptiType' in software_list:
         # optitype
         print("Start OptiType!")
         opt_dir = os.path.join(project_dir, "OptiType_Result")
@@ -122,7 +123,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
             executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
     
     ### Step 4 multiqc  # multiqc was installed through pip install.
-    subprocess.run(f"multiqc {project_dir}", shell=True)
+    subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
 
     ### Step 5 对downsample数据进行 bwa + hlahd， 要等待执行结果。
     result_list = []
@@ -132,13 +133,13 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
 
         for future in concurrent.futures.as_completed(futures):
             result_list.extend(future.result())
-
-    subprocess.run(f"python {script_path}/hla.03.summary.hla-hd.py {project_dir}",shell=True)
-
+    
     ###########################################################################################
     # write file list that need to be packaged into a file.
     with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
-        f.write(f"{project_dir}/HLA-HD_Result_final.summary.xls\n")
+        if 'hlahd' in software_list:
+            subprocess.run(f"python {script_path}/hla.03.summary.hla-hd.py {project_dir}",shell=True)
+            f.write(f"{project_dir}/HLA-HD_Result_final.summary.xls\n")
 
         # 添加其他要打包的文件， 需要确认！
         # for result in result_list:
