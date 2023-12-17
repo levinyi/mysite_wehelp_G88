@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+import shutil
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, JsonResponse
 from .models import Tools, Result, NGSDataPath
 from django.contrib.auth.decorators import login_required
@@ -52,11 +53,12 @@ def tools_use(request, tools_id):
         project_name = data.get("projectName")
         selectedPath = data.get("selectedPath")
         rawdata_path = NGSDataPath.objects.get(data_name=selectedPath, data_type=tools_id).data_path
+
         project_base_dir = os.path.join(DATA_DIR, f"{tools_id.upper()}","analysis")
         project_dir = os.path.join(project_base_dir, project_name)
         if not os.path.exists(project_dir):
             os.mkdir(project_dir)
-
+        software_list = None
         if tools_id in ['hpa','rbc']:
             json_data = data.get('tableData')
             # print("json_data: ", json_data)
@@ -64,7 +66,9 @@ def tools_use(request, tools_id):
             file_path = os.path.join(project_dir, f'tableOfBloodGroupSystems.{file_extension}')
             save_json_as_xls(json_data, file_path)
             # print("Saved file:", file_path)
-
+        elif tools_id == 'hla':
+            software_list = data.get('selectedSoftware')
+            print(f"you selected software: {software_list}")
         unique_id = str(uuid.uuid4())
         user_id = request.user.id
 
@@ -77,10 +81,11 @@ def tools_use(request, tools_id):
             raw_data = rawdata_path,
             status = 'pending',
         )
-        print("submit a task: ", tools_id, project_name)
+        print(f"submit a {tools_id} task: project name : {project_name}")
+        print(f"software_list: {software_list}")
         # 异步处理：
         try:
-            main_task.delay(user_id, tools_id, unique_id)
+            main_task.delay(user_id, tools_id, unique_id, software_list=software_list)
         except Exception as e:
             response_data = {
                 'status': 'error',
@@ -106,14 +111,23 @@ def check_status(request, tools_id):
 
 @login_required
 def delete_status(request, unique_id):
-    result = Result.objects.get(user=request.user, unique_id=unique_id)
-    # delete project folder according to unique_id
+    # Ensure the record exists or return 404
+    result = get_object_or_404(Result, user=request.user, unique_id=str(unique_id))
+    
+    # Delete the project folder using shutil.rmtree for  better security unique_id
     project_folder = result.result_path
     print("delete project_folder: ", project_folder)
-    subprocess.run(f"rm -rf {project_folder}", shell=True)
-    # delete result object
+    try:
+        shutil.rmtree(project_folder)
+    except OSError as e:
+        # Handle the exception (e.g., log it, return an error response)
+        print("Error: %s : %s" % (project_folder, e.strerror))
+
+    # Delete the database record
     tools_id = result.tools_name
     result.delete()
+
+    # Redirect to the appropriate view
     return redirect(f"/tools/check_status/{tools_id}", tools_id = tools_id)
 
 
@@ -171,7 +185,7 @@ def update_data_path(request):
     try:
         # Remove existing entries for the given data_type
         NGSDataPath.objects.filter(data_type=data_type).delete()
-        
+
         # Add new entries
         for subdir in os.listdir(base_path):
             subdir_path = os.path.join(base_path, subdir)

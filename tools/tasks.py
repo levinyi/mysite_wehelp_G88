@@ -49,7 +49,7 @@ def extract_archive(archive_file, project_folder):
 
 
 @app.task()
-def main_task(user_id, tools_id, unique_id):
+def main_task(user_id, tools_id, unique_id, software_list=None):
     print(f"in main task function: {user_id}, {tools_id}, {unique_id}")
     user = User.objects.get(id=user_id)
     result = Result.objects.get(user=user, tools_name=tools_id, unique_id=unique_id)
@@ -70,7 +70,7 @@ def main_task(user_id, tools_id, unique_id):
     print(f"script_dir: {script_dir}") # /home/dushiyi/mysite_wehelp/tools/scripts
     
     if tools_id == 'hla':
-        subprocess.run(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path}", shell=True)
+        subprocess.run(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list}", shell=True)
     elif tools_id == 'hpa':
         subprocess.run(f'python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls {result_path} --hpa', shell=True)  # 调用python脚本
     elif tools_id == 'rbc':

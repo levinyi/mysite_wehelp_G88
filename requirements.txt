@@ -1,3 +1,4 @@
+# pip install -i https://mirrors.aliyun.com/pypi/simple/ --no-cache-dir -r requirements.txt
 Django==4.2
 mysqlclient
 gunicorn
@@ -15,3 +16,6 @@ numpy
 python-decouple
 django-widget-tweaks
 multiqc
+future
+matplotlib
+pyomo
