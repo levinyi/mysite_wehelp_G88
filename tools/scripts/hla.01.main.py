@@ -143,12 +143,14 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     # write file list that need to be packaged into a file.
     with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
         if 'hlahd' in software_list:
+            # 额外统计HLA-HD的结果，并写入文件
             subprocess.run(f"python {script_path}/hla.03.summary.hla-hd.py {project_dir}",shell=True)
             f.write(f"{project_dir}/HLA-HD_Result_final.summary.xls\n")
 
         # 添加其他要打包的文件， 需要确认！
-        # for result in result_list:
-        #     f.write(f"{result}\n")
+        for result in result_list:
+            print(f"result: {result}")
+            f.write(f"{result}\n")
     print("Package result finished!")
 
 
