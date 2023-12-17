@@ -70,6 +70,7 @@ def main_task(user_id, tools_id, unique_id, software_list=None):
     print(f"script_dir: {script_dir}") # /home/dushiyi/mysite_wehelp/tools/scripts
     
     if tools_id == 'hla':
+        print(f"software_list in tasks.py: {software_list}")
         subprocess.run(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list}", shell=True)
     elif tools_id == 'hpa':
         subprocess.run(f'python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls {result_path} --hpa', shell=True)  # 调用python脚本

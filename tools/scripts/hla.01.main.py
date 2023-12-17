@@ -151,7 +151,7 @@ if __name__ == "__main__":
     project_name = sys.argv[2]  # test1
     project_dir  = sys.argv[3]  # /data/storeData/ztron/rawdata/HLA/analysis/test3
     software_list = sys.argv[4].split(",")  # ['hla-hd', 'hla_scan', 'optitype']
-
+    print(f"software_list in hla.main.py 1st : {software_list}")
     os.makedirs(project_dir, exist_ok=True)
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
