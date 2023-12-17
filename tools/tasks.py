@@ -80,8 +80,8 @@ def main_task(user_id, tools_id, unique_id, software_list=None):
     # 更新任务状态为"打包中" & 打包文件
     update_task_status('packaging', unique_id, user_id)
     full_zip_path = os.path.join(result_path, project_name) + '.zip'
-    subprocess.run(f'xargs -a {result_path}/need_to_be_packaged.txt zip -q -j {full_zip_path}', shell=True, check=True)
-    
+    subprocess.run(['xargs', '-a', f'{result_path}/need_to_be_packaged.txt', 'zip', '-q', '-j', full_zip_path], check=True)
+
     # 更新任务状态为"已完成" & print end_time.
     end_time = timezone.now()
     update_task_status('completed', unique_id, user_id, end_time=end_time)

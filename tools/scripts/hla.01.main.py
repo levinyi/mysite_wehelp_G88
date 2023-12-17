@@ -77,13 +77,12 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         # hla_scan
         print("Start hla_scan!")
         hla_scan_dir = os.path.join(project_dir, sample_name, "HLAscan_Result")
-        print(f"hla_scan_dir: {hla_scan_dir}")
         os.makedirs(hla_scan_dir, exist_ok=True)
         hla_genes = ["HLA-A","HLA-B","HLA-C","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB","HLA-DPA1","HLA-DPB1","HLA-DQA1","HLA-DQB1","HLA-DRA","HLA-DRB1","HLA-DRB5","HLA-E","HLA-F","HLA-G","MICA","MICB","TAP1","TAP2"]
         for gene in hla_genes:
             subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} -r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt\n", shell=True)
-        subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/HLAscan.results.txt\n", shell=True)
-        return_list.append(f"{hla_scan_dir}/HLAscan.results.txt")
+        subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
+        return_list.append(f"{hla_scan_dir}/{sample_name}.HLAscan.results.txt")
     
     if 'OptiType' in software_list:
         # optitype
@@ -139,6 +138,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         for future in concurrent.futures.as_completed(futures):
             result_list.extend(future.result())
     
+    print(f"result_list: {result_list}")
     ###########################################################################################
     # write file list that need to be packaged into a file.
     with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
