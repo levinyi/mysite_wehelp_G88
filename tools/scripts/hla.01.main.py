@@ -112,21 +112,24 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         for sample_name, sample_files in sample_dict.items():
             executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
 
-    ### Step 2 对原始数据进行downsample. 要等待执行结果。
-    ##################### 处理downsample文件夹下的fastq文件 #####################################
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        futures = [executor.submit(trim_fastq, sample_name, sample_files, project_dir, software_path) 
-                   for sample_name, sample_files in sample_dict.items()]
-        for future in concurrent.futures.as_completed(futures):
-            future.result()
+    if 'hlahd' in software_list:
+        ### Step 2 对原始数据进行downsample. 要等待执行结果。
+        ##################### 处理downsample文件夹下的fastq文件 #####################################
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            futures = [executor.submit(trim_fastq, sample_name, sample_files, project_dir, software_path) 
+                    for sample_name, sample_files in sample_dict.items()]
+            for future in concurrent.futures.as_completed(futures):
+                future.result()
 
-    ### Step 3 对downsample的数据进行fastqc， 不需要等待执行结果。
-    fastq_list  = find_files_by_suffix(".fq.gz", project_dir)
-    sample_dict = process_fastq_files(fastq_list)
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        for sample_name, sample_files in sample_dict.items():
-            executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
-    
+        ### Step 3 对downsample的数据进行fastqc， 不需要等待执行结果。
+        fastq_list  = find_files_by_suffix(".fq.gz", project_dir)
+        sample_dict = process_fastq_files(fastq_list)
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            for sample_name, sample_files in sample_dict.items():
+                executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
+    else:
+        print("No need to downsample!")
+        
     ### Step 4 multiqc  # multiqc was installed through pip install.
     subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
 
