@@ -81,8 +81,8 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         hla_genes = ["HLA-A","HLA-B","HLA-C","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB","HLA-DPA1","HLA-DPB1","HLA-DQA1","HLA-DQB1","HLA-DRA","HLA-DRB1","HLA-DRB5","HLA-E","HLA-F","HLA-G","MICA","MICB","TAP1","TAP2"]
         with open(f"{hla_scan_dir}/{sample_name}.HLAscan.shell.sh", "w") as f:
             for gene in hla_genes:
-                f.write(f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} -r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
-                subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} -r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt", shell=True)
+                f.write(f"{software_path}/hla_scan/hla_scan -t {threads} -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
+                subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt", shell=True)
         subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
         return_list.append(f"{hla_scan_dir}/{sample_name}.HLAscan.results.txt")
     
