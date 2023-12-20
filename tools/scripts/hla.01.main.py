@@ -81,8 +81,8 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         hla_genes = ["HLA-A","HLA-B","HLA-C","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB","HLA-DPA1","HLA-DPB1","HLA-DQA1","HLA-DQB1","HLA-DRA","HLA-DRB1","HLA-DRB5","HLA-E","HLA-F","HLA-G","MICA","MICB","TAP1","TAP2"]
         with open(f"{hla_scan_dir}/{sample_name}.HLAscan.shell.sh", "w") as f:
             for gene in hla_genes:
-                f.write(f"{software_path}/hla_scan/hla_scan -t {threads} -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
-                subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} >{hla_scan_dir}/{sample_name}.{gene}.out.txt", shell=True)
+                f.write(f"{software_path}/hla_scan/hla_scan -t {threads} -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
+                subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt", shell=True)
         subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
         return_list.append(f"{hla_scan_dir}/{sample_name}.HLAscan.results.txt")
     
@@ -113,6 +113,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         for sample_name, sample_files in sample_dict.items():
             executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
 
+    '''
     if 'hlahd' in software_list:
         ### Step 2 对原始数据进行downsample. 要等待执行结果。
         ##################### 处理downsample文件夹下的fastq文件 #####################################
@@ -130,7 +131,8 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
                 executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path)
     else:
         print("No need to downsample!")
-        
+    
+    '''
     ### Step 4 multiqc  # multiqc was installed through pip install.
     subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
 
