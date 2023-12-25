@@ -71,8 +71,8 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
             f"{project_dir}/{sample_name}/"
         )
         subprocess.run(hlahd_command, shell=True)
-        subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt", shell=True)
-        return_list.append(f"{project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt")
+        subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/{sample_name}.HLA-HD_Result_final.result.txt", shell=True)
+        return_list.append(f"{project_dir}/{sample_name}/HLA-HD_Result/result/{sample_name}.HLA-HD_Result_final.result.txt")
     if 'hla_scan' in software_list:
         # hla_scan
         print("Start hla_scan!")
