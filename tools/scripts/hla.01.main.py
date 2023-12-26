@@ -153,11 +153,14 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
             # 额外统计HLA-HD的结果，并写入文件
             subprocess.run(f"python {script_path}/hla.03.summary.hla-hd.py {project_dir}",shell=True)
             f.write(f"{project_dir}/HLA-HD_Result_final.summary.xls\n")
+        if 'hla_scan' in software_list:
+            subprocess.run(f"python {script_path}/hla.05.summary.hla_scan.py {project_dir}",shell=True)
+            f.write(f"{project_dir}/HLAscan_Result_final.summary.xls\n")
 
         # 添加其他要打包的文件， 需要确认！
-        for result in result_list:
-            print(f"result: {result}")
-            f.write(f"{result}\n")
+        # for result in result_list:
+        #     print(f"result: {result}")
+        #     f.write(f"{result}\n")
     print("Package result finished!")
 
 
