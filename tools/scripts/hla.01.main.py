@@ -118,9 +118,6 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         subprocess.run(f"samtools bam2fq {opt_dir}/sample.fished_2.bam > {opt_dir}/sample.fished_2.fastq\n", shell=True)
         subprocess.run(f"python2.7 {OptiType} -i {opt_dir}/sample.fished_1.fastq {opt_dir}/sample.fished_2.fastq --dna -v -o {opt_dir} -p {sample_name}\n", shell=True)
         return_list.append(f"{opt_dir}/{sample_name}.result.tsv")
-    else:
-        print("No need to mapping!")
-        return []
     
     return return_list
 
