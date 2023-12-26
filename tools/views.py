@@ -142,7 +142,7 @@ def download_result(request, unique_id):
             return HttpResponse("result path have been deleted by someone.")
 
         zip_file_name = os.path.basename(result.proj_name) + ".zip"
-        full_zip_file = os.path.join(result_path, result.proj_name + ".zip")
+        full_zip_file = os.path.join(result_path, result.proj_name + "_Analysis_Result.zip")
         print("full_zip_file: ", full_zip_file)
 
         if not os.path.exists(full_zip_file):
