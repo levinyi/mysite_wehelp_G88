@@ -43,7 +43,8 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     print("I'm analyze_sample function!")
     fq1 = sample_files['fq1']
     fq2 = sample_files['fq2']
-    threads = os.cpu_count()
+    # threads = os.cpu_count()
+    threads = 1
     print("using {} threads".format(threads))
 
     sample_dir = os.path.join(project_dir, sample_name, 'mapping')
@@ -71,7 +72,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 
     if 'hlahd' in software_list:
         hlahd_command = (
-            f"hlahd.sh -t 4 -m 100 -c 0.95 "
+            f"hlahd.sh -t {threads} -m 100 -c 0.95 "
             f"-f {software_path}/hlahd/hlahd.1.7.0/freq_data "
             f"{sample_dir}/{sample_name}.mapped.hla.1.fastq "
             f"{sample_dir}/{sample_name}.mapped.hla.2.fastq "
