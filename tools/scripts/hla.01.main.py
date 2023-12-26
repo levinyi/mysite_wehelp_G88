@@ -29,8 +29,17 @@ def trim_fastq(sample_name, sample_file, project_dir, software_path):
     subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq1_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_1.fq.gz --quiet", shell=True)
     subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq2_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_2.fq.gz --quiet", shell=True)
 
+def run_hla_scan(gene, sample_name, sample_dir, software_path, hla_scan_dir):
+    command = (
+        f"{software_path}/hla_scan/hla_scan -t 1 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq "
+        f"-r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT "
+        f"-g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt"
+    )
+    subprocess.run(command, shell=True)
+
 
 def analyze_sample(sample_name, sample_files, project_dir, software_path, database_path, script_path, ref_fa, software_list):
+    
     print("I'm analyze_sample function!")
     fq1 = sample_files['fq1']
     fq2 = sample_files['fq2']
@@ -62,7 +71,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 
     if 'hlahd' in software_list:
         hlahd_command = (
-            f"hlahd.sh -t 8 -m 100 -c 0.95 "
+            f"hlahd.sh -t 4 -m 100 -c 0.95 "
             f"-f {software_path}/hlahd/hlahd.1.7.0/freq_data "
             f"{sample_dir}/{sample_name}.mapped.hla.1.fastq "
             f"{sample_dir}/{sample_name}.mapped.hla.2.fastq "
@@ -72,19 +81,28 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
             f"{project_dir}/{sample_name}/"
         )
         subprocess.run(hlahd_command, shell=True)
-        subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/{sample_name}.HLA-HD_Result_final.result.txt", shell=True)
+        subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/HLA-HD_Result_final.result.txt", shell=True)
+        
         return_list.append(f"{project_dir}/{sample_name}/HLA-HD_Result/result/{sample_name}.HLA-HD_Result_final.result.txt")
+    
     if 'hla_scan' in software_list:
         print("Start hla_scan!")
         hla_scan_dir = os.path.join(project_dir, sample_name, "HLAscan_Result")
         os.makedirs(hla_scan_dir, exist_ok=True)
+
         hla_genes = ["HLA-A","HLA-B","HLA-C","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB","HLA-DPA1","HLA-DPB1","HLA-DQA1","HLA-DQB1","HLA-DRA","HLA-DRB1","HLA-DRB5","HLA-E","HLA-F","HLA-G","MICA","MICB","TAP1","TAP2"]
+
         with open(f"{hla_scan_dir}/{sample_name}.HLAscan.shell.sh", "w") as f:
             for gene in hla_genes:
-                f.write(f"{software_path}/hla_scan/hla_scan -t 4 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
-                subprocess.run(f"{software_path}/hla_scan/hla_scan -t 4 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt", shell=True)
+                f.write(f"{software_path}/hla_scan/hla_scan -t 1 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
+
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            executor.map(run_hla_scan, hla_genes, [sample_name]*len(hla_genes), [sample_dir]*len(hla_genes), [software_path]*len(hla_genes), [hla_scan_dir]*len(hla_genes))
+
         subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
+
         return_list.append(f"{hla_scan_dir}/{sample_name}.HLAscan.results.txt")
+
     if 'OptiType' in software_list:
         ref_fa = os.path.join(ref_fa, "hla_reference_dna.fasta")
         # optitype
@@ -157,7 +175,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
             subprocess.run(f"python {script_path}/hla.03.summary.hla-hd.py {project_dir}",shell=True)
             f.write(f"{project_dir}/HLA-HD_Result_final.summary.xls\n")
         if 'hla_scan' in software_list:
-            subprocess.run(f"python {script_path}/hla.05.summary.hla_scan.py {project_dir}",shell=True)
+            subprocess.run(f"python {script_path}/hla.03.summary.hla_scan.py {project_dir}",shell=True)
             f.write(f"{project_dir}/HLAscan_Result_final.summary.xls\n")
 
         # 添加其他要打包的文件， 需要确认！

@@ -12,8 +12,8 @@ with open(db_file, "r") as f:
         gene,count,freq,C = line.split()
         db_dict[gene] = freq
 
-file_name = hd_file.replace("result.txt", "result.with.freq.txt")
-with open(hd_file, "r") as f, open(file_name, "w") as output:
+output_file = hd_file.replace("result.txt", "result.with.freq.txt")
+with open(hd_file, "r") as f, open(output_file, "w") as output:
     for line in f:
         line = line.rstrip("\n")
         a = line.split()
