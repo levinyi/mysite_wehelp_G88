@@ -12,6 +12,8 @@ print("find {} samples in current directory".format(len(file_list)))
 big_df = pd.DataFrame()
 for each in file_list:
     print(each)
+    if os.path.getsize(each) == 0:
+        continue
     df = pd.read_csv(each, sep="\t")
     big_df = big_df._append(df)
 
