@@ -1,7 +1,7 @@
 import os
 import sys
 import pandas as pd
-from tools.scripts.commonFunction import find_files_by_suffix
+from commonFunction import find_files_by_suffix
 
 
 result_path = sys.argv[1]
