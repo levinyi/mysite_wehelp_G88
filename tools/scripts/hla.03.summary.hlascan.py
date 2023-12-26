@@ -13,7 +13,7 @@ big_df = pd.DataFrame()
 for each in file_list:
     print(each)
     df = pd.read_csv(each, sep="\t")
-    big_df = pd.concat([big_df, df], axis=1)
+    big_df = big_df._append(df)
 
 # 转置big_df
 big_df = big_df.T
