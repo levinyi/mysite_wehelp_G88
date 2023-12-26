@@ -42,28 +42,27 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 
     return_list = []
 
+    bwa_command = (
+        f"bwa mem -t {threads} -Y -H '@HD\\tVN:1.5\\tGO:none\\tSO:coordinate' "
+        f"-R '@RG\\tID:TEST\\tSM:TEST\\tLB:Target\\tPL:BGI\\tPU:HVW2MCCXX:6:none' "
+        f"{ref_fa} {fq1} {fq2} | "
+        f"samtools view -buhS -t {ref_fa}.fai - | "
+        f"samtools sort -o {sample_dir}/{sample_name}.hla.sortedByCoord.bam -"
+    )
+
+    subprocess.run(bwa_command, shell=True)
+    subprocess.run(["samtools", "index", f"{sample_dir}/{sample_name}.hla.sortedByCoord.bam"])
+    # subprocess.run(f'samtools mpileup -f {ref_fa} {sample_dir}/{sample_name}.hla.sortedByCoord.bam -aa -A -Q 13 -o {sample_dir}/{sample_name}.pileup.Q13.out', shell=True)
+    # subprocess.run(f'python {script_path}/bwa_mileup_stats.py {sample_dir}/{sample_name}.pileup.Q13.out > {sample_dir}/{sample_name}.pileup.Q13.out.stats', shell=True)
+
+    # extract fastq
+    subprocess.run(f"samtools view  -@ {threads} -bF 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
+    subprocess.run(f"samtools view  -@ {threads} -bf 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.Unmapped.hla.bam", shell=True)
+    subprocess.run(f"samtools fastq -@ {threads} -1    {sample_dir}/{sample_name}.mapped.hla.1.fastq -2 {sample_dir}/{sample_name}.mapped.hla.2.fastq -n {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
+
     if 'hlahd' in software_list:
-        # ref_fa = os.path.join(ref_fa, "hla_gen.fasta")
-        bwa_command = (
-            f"bwa mem -t {threads} -Y -H '@HD\\tVN:1.5\\tGO:none\\tSO:coordinate' "
-            f"-R '@RG\\tID:TEST\\tSM:TEST\\tLB:Target\\tPL:BGI\\tPU:HVW2MCCXX:6:none' "
-            f"{ref_fa} {fq1} {fq2} | "
-            f"samtools view -buhS -t {ref_fa}.fai - | "
-            f"samtools sort -o {sample_dir}/{sample_name}.hla.sortedByCoord.bam -"
-        )
-
-        subprocess.run(bwa_command, shell=True)
-        subprocess.run(["samtools", "index", f"{sample_dir}/{sample_name}.hla.sortedByCoord.bam"])
-        # subprocess.run(f'samtools mpileup -f {ref_fa} {sample_dir}/{sample_name}.hla.sortedByCoord.bam -aa -A -Q 13 -o {sample_dir}/{sample_name}.pileup.Q13.out', shell=True)
-        # subprocess.run(f'python {script_path}/bwa_mileup_stats.py {sample_dir}/{sample_name}.pileup.Q13.out > {sample_dir}/{sample_name}.pileup.Q13.out.stats', shell=True)
-        
-        # extract fastq
-        subprocess.run(f"samtools view  -@ {threads} -bF 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
-        subprocess.run(f"samtools view  -@ {threads} -bf 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.Unmapped.hla.bam", shell=True)
-        subprocess.run(f"samtools fastq -@ {threads} -1    {sample_dir}/{sample_name}.mapped.hla.1.fastq -2 {sample_dir}/{sample_name}.mapped.hla.2.fastq -n {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
-
         hlahd_command = (
-            f"hlahd.sh -t {threads} -m 100 -c 0.95 "
+            f"hlahd.sh -t 8 -m 100 -c 0.95 "
             f"-f {software_path}/hlahd/hlahd.1.7.0/freq_data "
             f"{sample_dir}/{sample_name}.mapped.hla.1.fastq "
             f"{sample_dir}/{sample_name}.mapped.hla.2.fastq "
@@ -75,38 +74,18 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
         subprocess.run(hlahd_command, shell=True)
         subprocess.run(f"python {script_path}/hla.02.freq.py {database_path}/hla.cwd.xls {project_dir}/{sample_name}/HLA-HD_Result/result/{sample_name}.HLA-HD_Result_final.result.txt", shell=True)
         return_list.append(f"{project_dir}/{sample_name}/HLA-HD_Result/result/{sample_name}.HLA-HD_Result_final.result.txt")
-    elif 'hla_scan' in software_list:
-        # bwa
-        bwa_command = (
-            f"bwa mem -t {threads} -Y -H '@HD\\tVN:1.5\\tGO:none\\tSO:coordinate' "
-            f"-R '@RG\\tID:TEST\\tSM:TEST\\tLB:Target\\tPL:BGI\\tPU:HVW2MCCXX:6:none' "
-            f"{ref_fa} {fq1} {fq2} | "
-            f"samtools view -buhS -t {ref_fa}.fai - | "
-            f"samtools sort -o {sample_dir}/{sample_name}.hla.sortedByCoord.bam -"
-        )
-        subprocess.run(bwa_command, shell=True)
-        subprocess.run(["samtools", "index", f"{sample_dir}/{sample_name}.hla.sortedByCoord.bam"])
-        subprocess.run(f'samtools mpileup -f {ref_fa} {sample_dir}/{sample_name}.hla.sortedByCoord.bam -aa -A -Q 13 -o {sample_dir}/{sample_name}.pileup.Q13.out', shell=True)
-        subprocess.run(f'python {script_path}/bwa_mileup_stats.py {sample_dir}/{sample_name}.pileup.Q13.out > {sample_dir}/{sample_name}.pileup.Q13.out.stats', shell=True)
-        
-        # extract fastq
-        subprocess.run(f"samtools view  -@ {threads} -bF 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
-        subprocess.run(f"samtools view  -@ {threads} -bf 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.Unmapped.hla.bam", shell=True)
-        subprocess.run(f"samtools fastq -@ {threads} -1    {sample_dir}/{sample_name}.mapped.hla.1.fastq -2 {sample_dir}/{sample_name}.mapped.hla.2.fastq -n {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
-    
-        ref_fa = os.path.join(ref_fa, "HLA-ALL.IMGT")
-        # hla_scan
+    if 'hla_scan' in software_list:
         print("Start hla_scan!")
         hla_scan_dir = os.path.join(project_dir, sample_name, "HLAscan_Result")
         os.makedirs(hla_scan_dir, exist_ok=True)
         hla_genes = ["HLA-A","HLA-B","HLA-C","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB","HLA-DPA1","HLA-DPB1","HLA-DQA1","HLA-DQB1","HLA-DRA","HLA-DRB1","HLA-DRB5","HLA-E","HLA-F","HLA-G","MICA","MICB","TAP1","TAP2"]
         with open(f"{hla_scan_dir}/{sample_name}.HLAscan.shell.sh", "w") as f:
             for gene in hla_genes:
-                f.write(f"{software_path}/hla_scan/hla_scan -t {threads} -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
-                subprocess.run(f"{software_path}/hla_scan/hla_scan -t {threads} -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt", shell=True)
+                f.write(f"{software_path}/hla_scan/hla_scan -t 4 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
+                subprocess.run(f"{software_path}/hla_scan/hla_scan -t 4 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt", shell=True)
         subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
         return_list.append(f"{hla_scan_dir}/{sample_name}.HLAscan.results.txt")
-    elif 'OptiType' in software_list:
+    if 'OptiType' in software_list:
         ref_fa = os.path.join(ref_fa, "hla_reference_dna.fasta")
         # optitype
         print("Start OptiType!")
@@ -131,12 +110,11 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list):
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
     sample_dict = process_fastq_files(fastq_list)
-    '''
+
     # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。
     with concurrent.futures.ProcessPoolExecutor() as executor:
         for sample_name, sample_files in sample_dict.items():
             executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
-    '''
 
     '''
     if 'hlahd' in software_list:
@@ -159,8 +137,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     
     '''
     ### Step 4 multiqc  # multiqc was installed through pip install.
-
-    # subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
+    subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
 
     ### Step 5 对downsample数据进行 bwa + hlahd， 要等待执行结果。
     result_list = []
