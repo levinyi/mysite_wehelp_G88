@@ -44,7 +44,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     fq1 = sample_files['fq1']
     fq2 = sample_files['fq2']
     # threads = os.cpu_count()
-    threads = 1
+    threads = 2
     print("using {} threads".format(threads))
 
     sample_dir = os.path.join(project_dir, sample_name, 'mapping')
@@ -95,12 +95,13 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
 
         with open(f"{hla_scan_dir}/{sample_name}.HLAscan.shell.sh", "w") as f:
             for gene in hla_genes:
-                f.write(f"{software_path}/hla_scan/hla_scan -t 1 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
+                f.write(f"{software_path}/hla_scan/hla_scan -t 1 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq \
+                        -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
 
         with concurrent.futures.ProcessPoolExecutor() as executor:
             executor.map(run_hla_scan, hla_genes, [sample_name]*len(hla_genes), [sample_dir]*len(hla_genes), [software_path]*len(hla_genes), [hla_scan_dir]*len(hla_genes))
 
-        subprocess.run(f"python3 {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
+        subprocess.run(f"python {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
 
         return_list.append(f"{hla_scan_dir}/{sample_name}.HLAscan.results.txt")
 

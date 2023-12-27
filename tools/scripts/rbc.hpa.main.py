@@ -14,11 +14,12 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     os.makedirs(sample_folder, exist_ok=True)
 
     # threads = round(os.cpu_count()/10) # 10% cpu for each thread
+    threads = 2
 
     # BWA MEM command
     print(f"BWA MEM Start: {sample_name}")
     subprocess.run([
-        f"bwa mem -t 1 -v 1 -Y -H \"@HD\\tVN:1.5\\tGO:none\\tSO:coordinate\" -R \"@RG\\tID:TEST\\tSM:TEST\\tLB:Target\\tPL:BGI\\tPU:HVW2MCCXX:6:none\"  {ref_fa} {fq1} {fq2} | samtools view -buhS -t {ref_fa}.fai - | samtools sort -o {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -"],
+        f"bwa mem -t {threads} -v 1 -Y -H \"@HD\\tVN:1.5\\tGO:none\\tSO:coordinate\" -R \"@RG\\tID:TEST\\tSM:TEST\\tLB:Target\\tPL:BGI\\tPU:HVW2MCCXX:6:none\"  {ref_fa} {fq1} {fq2} | samtools view -buhS -t {ref_fa}.fai - | samtools sort -o {project_dir}/{sample_name}/{sample_name}.Rawsample.hg38.sortedByCoord.bam -"],
         shell=True)
     
     # Samtools index command
