@@ -258,7 +258,10 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     
     '''
     ### Step 4 multiqc  # multiqc was installed through pip install.
-    subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
+    if find_files_by_suffix("multiqc_report.html", project_dir) == []:
+        subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
+    else:
+        print("Skip multiqc, multiqc_report.html files exist!")
 
     ### Step 5 bwa
     bwa_threads = 8
@@ -273,7 +276,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     ### Step 6 从bam中提取fastq文件
     samtools_threads = 10
     mapped_fq_files = find_files_by_suffix(".mapped.hla.1.fastq", project_dir)
-    if len(mapped_fq_files) == 0:
+    if len(mapped_fq_files) != len(bam_files):
         with concurrent.futures.ProcessPoolExecutor() as executor:
             futures = [executor.submit(extract_fastq, sample_name, project_dir, samtools_threads)
                     for sample_name, sample_files in sample_dict.items()]
