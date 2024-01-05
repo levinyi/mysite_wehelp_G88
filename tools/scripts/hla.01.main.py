@@ -163,7 +163,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         print("Skip Samtools extract fastq! Extracted fastq files exist, ")
 
     '''
-    if 'hla-hd' in software_list:
+    if 'hlahd' in software_list:
         hlahd_result_list = find_files_by_suffix("HLA-HD_Result_final.result.txt", project_dir)
         if len(hlahd_result_list) == 0:
             hlahd_threads = os.cpu_count()
@@ -208,7 +208,7 @@ if __name__ == "__main__":
     data_dir     = sys.argv[1]
     project_name = sys.argv[2]  # test1
     project_dir  = sys.argv[3]  # /data/storeData/ztron/rawdata/HLA/analysis/test1
-    software_list = sys.argv[4].split(",")  # ['hla-hd', 'hla_scan', 'optitype']
+    software_list = sys.argv[4].split(",")  # ['hlahd', 'hla_scan', 'optitype']
     print(f"software_list in hla.main.py : {software_list}")
     os.makedirs(project_dir, exist_ok=True)
 
