@@ -16,22 +16,22 @@ def main(project_dir, hpa_db, outputfile):
     big_list = [header]
     '''
         判断方法：
-        1. 当样本中的 cDNA_Changes 存在时，检查 homo/het 列的值。
+        1. 当样本中的 cDNA_Changes 存在于hpa_db_dict中时，检查 样本中homo/het 列的值。
         2. 如果值是 homo，则应该使用 df_hpa 中对应的 het 列的值。
         3. 如果值是 het，则应该将 df_hpa 中的 homo 和 het 列的值结合起来。
-        4. 如果样本中没有检测到 df_hpa 数据库中的 cDNA_Changes，则使用 df_hpa 中的 homo 列的值。
+        4. 如果样本中没有检测到 df_hpa 数据库中的 cDNA_Changes，则使用 hpa_db_dict 中的 homo 列的值。
     '''
-    for each in file_list:
+    for each_file in file_list:
         content = []
-        sample_name = os.path.basename(os.path.dirname(each))
+        sample_name = os.path.basename(os.path.dirname(each_file))
         content.append(sample_name)
 
-        df = pd.read_csv(each)
+        df = pd.read_csv(each_file)
         df_hpa = df[df["System"] == "HPA"]
         # what if df_hpa is empty?
+        if df_hpa.empty:
+            continue
         
-        # cdna_changes = df_hpa['cDNA_Changes'].values.tolist()
-
         for cdna_change, homo_het in hpa_db_dict.items():
             if cdna_change in df_hpa['cDNA_Changes'].values:
                 df_filtered = df_hpa[(df_hpa['cDNA_Changes'] == cdna_change)]

@@ -13,6 +13,7 @@ def _argparse():
 def select_value(value):
     a = str(value).split(",")
     if len(a) == 2:
+        # [0.5,0.5]
         b = a[0].strip('[')
         return b
     else:
@@ -77,6 +78,7 @@ def main():
     ##############################
     ## fix AF column [0.5,0.5]
     df['AF'] = df['AF'].apply(select_value)
+    
     df.to_csv(out_file, sep="\t", index = False, header=True)
 
 
