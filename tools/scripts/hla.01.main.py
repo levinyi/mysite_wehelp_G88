@@ -44,7 +44,7 @@ def analyze_sample(sample_name, sample_files, project_dir, software_path, databa
     fq1 = sample_files['fq1']
     fq2 = sample_files['fq2']
     # threads = os.cpu_count()
-    threads = 2
+    threads = 8
     print("using {} threads".format(threads))
 
     sample_dir = os.path.join(project_dir, sample_name, 'mapping')
