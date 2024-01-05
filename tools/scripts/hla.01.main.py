@@ -9,10 +9,10 @@ software_path = os.path.join(BASE_DIR, "pipeline/software")
 os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
 print(os.environ["PATH"])
 
-def run_hla_scan(gene, sample_name, sample_dir, software_path, hla_scan_dir):
+def run_hla_scan(gene, sample_name, fq1, fq2, software_path, hla_scan_dir):
     command = (
-        f"{software_path}/hla_scan/hla_scan -t 1 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq "
-        f"-r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT "
+        f"{software_path}/hla_scan/hla_scan -t 1 -l {fq1} "
+        f"-r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT "
         f"-g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt"
     )
     subprocess.run(command, shell=True)
@@ -74,12 +74,20 @@ def run_hlahd(sample_name, sample_files, project_dir, software_path, database_pa
     
     return return_list
 
-def run_hlascan(sample_name, project_dir, software_path, script_path):
-    sample_dir = os.path.join(project_dir, sample_name, 'mapping')
-    
-    return_list = []    
-    
+def run_hlascan(sample_name, sample_files, project_dir, software_path, script_path):
     print("Start hla_scan!")
+    sample_dir = os.path.join(project_dir, sample_name)
+    os.makedirs(sample_dir, exist_ok=True)
+    fq1 = sample_files['fq1']
+    fq2 = sample_files['fq2']
+    unzip_fq1 = os.path.join(sample_dir, os.path.basename(fq1).replace(".gz", ""))
+
+    subprocess.run(f"zcat {fq1} > {unzip_fq1}", shell=True)
+    unzip_fq2 = os.path.join(sample_dir, os.path.basename(fq2).replace(".gz", ""))
+    subprocess.run(f"zcat {fq2} > {unzip_fq2}", shell=True)
+    
+    return_list = []
+    
     hla_scan_dir = os.path.join(project_dir, sample_name, "HLAscan_Result")
     os.makedirs(hla_scan_dir, exist_ok=True)
 
@@ -87,11 +95,11 @@ def run_hlascan(sample_name, project_dir, software_path, script_path):
 
     with open(f"{hla_scan_dir}/{sample_name}.HLAscan.shell.sh", "w") as f:
         for gene in hla_genes:
-            f.write(f"{software_path}/hla_scan/hla_scan -t 1 -l {sample_dir}/{sample_name}.mapped.hla.1.fastq \
-                    -r {sample_dir}/{sample_name}.mapped.hla.2.fastq -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
+            f.write(f"{software_path}/hla_scan/hla_scan -t 1 -l {fq1} -r {fq2} \
+                    -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        executor.map(run_hla_scan, hla_genes, [sample_name]*len(hla_genes), [sample_dir]*len(hla_genes), [software_path]*len(hla_genes), [hla_scan_dir]*len(hla_genes))
+        executor.map(run_hla_scan, hla_genes, [sample_name]*len(hla_genes), [unzip_fq1]*len(hla_genes),[unzip_fq2]*len(hla_genes), [software_path]*len(hla_genes), [hla_scan_dir]*len(hla_genes))
 
     subprocess.run(f"python {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
 
@@ -122,11 +130,10 @@ def run_optitype(sample_name, sample_files, project_dir, software_path, ref_fa, 
     
     return return_list
 
-def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list):
+def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list, threads):
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
     sample_dict = process_fastq_files(fastq_list)
 
-    '''
     # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。
     fastqc_files = find_files_by_suffix("fastqc.html", project_dir)
     if len(fastqc_files) == 0:
@@ -142,33 +149,12 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     else:
         print("Skip multiqc, multiqc_report.html files exist!")
 
-    ### Step 5 bwa
-    bwa_threads = 8
-    bam_files = find_files_by_suffix(".bam", project_dir)
-    if len(bam_files) == 0:
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            futures = [executor.submit(run_bwa_mem, sample_files['fq1'], sample_files['fq2'], ref_fa, sample_name, project_dir, bwa_threads)
-                    for sample_name, sample_files in sample_dict.items()]
-    else:
-        print("Skip BWA, BAM files exist!")
-    
-    ### Step 6 从bam中提取fastq文件
-    samtools_threads = 10
-    mapped_fq_files = find_files_by_suffix(".mapped.hla.1.fastq", project_dir)
-    if len(mapped_fq_files) != len(bam_files):
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            futures = [executor.submit(extract_fastq, sample_name, project_dir, samtools_threads)
-                    for sample_name, sample_files in sample_dict.items()]
-    else:
-        print("Skip Samtools extract fastq! Extracted fastq files exist, ")
-
-    '''
+    # Step 2 
     if 'hlahd' in software_list:
         hlahd_result_list = find_files_by_suffix("HLA-HD_Result_final.result.txt", project_dir)
         if len(hlahd_result_list) == 0:
-            hlahd_threads = os.cpu_count()
             with concurrent.futures.ProcessPoolExecutor() as executor:
-                futures = [executor.submit(run_hlahd, sample_name, sample_files, project_dir, software_path, database_path, script_path, hlahd_threads)
+                futures = [executor.submit(run_hlahd, sample_name, sample_files, project_dir, software_path, database_path, script_path, threads)
                         for sample_name, sample_files in sample_dict.items()]
         else:
             print("Skip hla_scan, HLA-HD_Result_final.result.txt files exist!")
@@ -177,7 +163,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     
     if 'hla_scan' in software_list:
         with concurrent.futures.ProcessPoolExecutor() as executor:
-            futures = [executor.submit(run_hlascan, sample_name, project_dir, software_path, script_path)
+            futures = [executor.submit(run_hlascan, sample_name, sample_files, project_dir, software_path, script_path, threads)
                     for sample_name, sample_files in sample_dict.items()]
     else:
         print("No need to run hla_scan!")
@@ -189,7 +175,6 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     else:
         print("No need to run OptiType!")
 
-    '''
     ###########################################################################################
     # write file list that need to be packaged into a file.
     with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
@@ -202,6 +187,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
             f.write(f"{project_dir}/HLAscan_Result_final.summary.xls\n")
 
     print("Package result finished!")
+    '''
     '''
 
 if __name__ == "__main__":
@@ -218,5 +204,7 @@ if __name__ == "__main__":
     ref_path = os.path.join(BASE_DIR, "pipeline/ref/hla")
     ref_fa = os.path.join(ref_path, "hla_gen.fasta")
     script_path = os.path.join(BASE_DIR, "tools/scripts")
+    
+    threads = os.cpu_count()
 
-    main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list)
+    main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list, threads)
