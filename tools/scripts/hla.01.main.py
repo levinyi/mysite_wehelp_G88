@@ -150,6 +150,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         print("Skip multiqc, multiqc_report.html files exist!")
 
     max_parallel_jobs = int(os.cpu_count()/2)
+    print("Max parallel jobs:", max_parallel_jobs, type(max_parallel_jobs))  # 打印以确保类型正确
     # Step 2 
     if 'hlahd' in software_list:
         hlahd_result_list = find_files_by_suffix("HLA-HD_Result_final.result.txt", project_dir)
