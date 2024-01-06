@@ -9,9 +9,9 @@ software_path = os.path.join(BASE_DIR, "pipeline/software")
 os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
 print(os.environ["PATH"])
 
-def run_hla_scan(gene, sample_name, fq1, fq2, software_path, hla_scan_dir):
+def run_hla_scan(gene, sample_name, fq1, fq2, software_path, hla_scan_dir, threads):
     command = (
-        f"{software_path}/hla_scan/hla_scan -t 1 -l {fq1} "
+        f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} "
         f"-r {fq2} -d {software_path}/hla_scan/db/HLA-ALL.IMGT "
         f"-g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt"
     )
@@ -74,7 +74,7 @@ def run_hlahd(sample_name, sample_files, project_dir, software_path, database_pa
     
     return return_list
 
-def run_hlascan(sample_name, sample_files, project_dir, software_path, script_path):
+def run_hlascan(sample_name, sample_files, project_dir, software_path, script_path, threads):
     print("Start hla_scan!")
     sample_dir = os.path.join(project_dir, sample_name)
     os.makedirs(sample_dir, exist_ok=True)
@@ -95,11 +95,11 @@ def run_hlascan(sample_name, sample_files, project_dir, software_path, script_pa
 
     with open(f"{hla_scan_dir}/{sample_name}.HLAscan.shell.sh", "w") as f:
         for gene in hla_genes:
-            f.write(f"{software_path}/hla_scan/hla_scan -t 1 -l {fq1} -r {fq2} \
+            f.write(f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} -r {fq2} \
                     -d {software_path}/hla_scan/db/HLA-ALL.IMGT -g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt\n")
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        executor.map(run_hla_scan, hla_genes, [sample_name]*len(hla_genes), [unzip_fq1]*len(hla_genes),[unzip_fq2]*len(hla_genes), [software_path]*len(hla_genes), [hla_scan_dir]*len(hla_genes))
+        executor.map(run_hla_scan, hla_genes, [sample_name]*len(hla_genes), [unzip_fq1]*len(hla_genes),[unzip_fq2]*len(hla_genes), [software_path]*len(hla_genes), [hla_scan_dir]*len(hla_genes), [threads]*len(hla_genes))
 
     subprocess.run(f"python {script_path}/hla.04.merge_HLAscan_result.py {hla_scan_dir}/{sample_name}*.out.txt > {hla_scan_dir}/{sample_name}.HLAscan.results.txt\n", shell=True)
 
@@ -149,11 +149,12 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     else:
         print("Skip multiqc, multiqc_report.html files exist!")
 
+    max_parallel_jobs = os.cpu_count()/2
     # Step 2 
     if 'hlahd' in software_list:
         hlahd_result_list = find_files_by_suffix("HLA-HD_Result_final.result.txt", project_dir)
         if len(hlahd_result_list) == 0:
-            with concurrent.futures.ProcessPoolExecutor() as executor:
+            with concurrent.futures.ProcessPoolExecutor(max_workers=max_parallel_jobs) as executor:
                 futures = [executor.submit(run_hlahd, sample_name, sample_files, project_dir, software_path, database_path, script_path, threads)
                         for sample_name, sample_files in sample_dict.items()]
         else:
@@ -162,7 +163,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         print("No need to run hlahd!")
     
     if 'hla_scan' in software_list:
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=max_parallel_jobs) as executor:
             futures = [executor.submit(run_hlascan, sample_name, sample_files, project_dir, software_path, script_path, threads)
                     for sample_name, sample_files in sample_dict.items()]
     else:
