@@ -50,7 +50,7 @@ def extract_fastq(sample_name, project_dir, threads = 10):
     # subprocess.run(f"samtools view  -@ {threads} -bf 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.Unmapped.hla.bam", shell=True)
     subprocess.run(f"samtools fastq -@ {threads} -1    {sample_dir}/{sample_name}.mapped.hla.1.fastq -2 {sample_dir}/{sample_name}.mapped.hla.2.fastq -n {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
 
-def run_hlahd(sample_name, sample_files, project_dir, software_path, database_path, script_path, threads = 10):
+def run_hlahd(sample_name, sample_files, project_dir, software_path, database_path, script_path, threads):
     sample_dir = os.path.join(project_dir, sample_name)
     os.makedirs(sample_dir, exist_ok=True)
     fq1 = sample_files['fq1']
@@ -155,7 +155,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         hlahd_result_list = find_files_by_suffix("HLA-HD_Result_final.result.txt", project_dir)
         if len(hlahd_result_list) == 0:
             with concurrent.futures.ProcessPoolExecutor(max_workers=max_parallel_jobs) as executor:
-                futures = [executor.submit(run_hlahd, sample_name, sample_files, project_dir, software_path, database_path, script_path, threads)
+                futures = [executor.submit(run_hlahd, sample_name, sample_files, project_dir, software_path, database_path, script_path, max_parallel_jobs)
                         for sample_name, sample_files in sample_dict.items()]
         else:
             print("Skip hla_scan, HLA-HD_Result_final.result.txt files exist!")

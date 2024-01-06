@@ -74,15 +74,15 @@ def main_task(user_id, tools_id, unique_id, software_list=None):
         subprocess.run(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list}", shell=True)
         # 将运行命令写入文件
         with open(f"{result_path}/run_command.sh", "w") as f:
-            f.write(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list}")
+            f.write(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list}\n")
     elif tools_id == 'hpa':
         subprocess.run(f'python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls {result_path} --hpa', shell=True)  # 调用python脚本
         with open(f"{result_path}/run_command.sh", "w") as f:
-            f.write(f"python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls {result_path} --hpa")
+            f.write(f"python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls {result_path} --hpa\n")
     elif tools_id == 'rbc':
         subprocess.run(f'python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.rbc.xls {result_path}', shell=True)
         with open(f"{result_path}/run_command.sh", "w") as f:
-            f.write(f"python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.rbc.xls {result_path}")
+            f.write(f"python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.rbc.xls {result_path}\n")
 
     # 更新任务状态为"打包中" & 打包文件
     update_task_status('packaging', unique_id, user_id)
