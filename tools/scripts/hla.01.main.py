@@ -7,7 +7,7 @@ from commonFunction import deal_fastqc, find_files_by_suffix, process_fastq_file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 software_path = os.path.join(BASE_DIR, "pipeline/software")
 os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
-print(os.environ["PATH"])
+# print(os.environ["PATH"])
 
 def run_hla_scan(gene, sample_name, fq1, fq2, software_path, hla_scan_dir, threads):
     command = (
