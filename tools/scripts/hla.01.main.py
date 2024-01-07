@@ -9,6 +9,26 @@ software_path = os.path.join(BASE_DIR, "pipeline/software")
 os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
 # print(os.environ["PATH"])
 
+
+# not used
+def trim_fastq(sample_name, sample_file, project_dir, software_path):
+    print("I'm trim_fastq function!")
+    seqkit = os.path.join(software_path, "seqkit/seqkit")
+    trim_threads = os.cpu_count()
+    trim_portion = 0.1
+    seqkit_seed = 120
+    trim_string = "0.2M"
+    trim_number = int(float(trim_string.rstrip("M"))*1000000)  # 1000000
+    
+    fq1_path = sample_file['fq1']
+    fq2_path = sample_file['fq2']
+    
+    trim_data_dir = os.path.join(project_dir, sample_name, f"downsample_{trim_string}")
+
+    os.makedirs(trim_data_dir, exist_ok=True)
+    subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq1_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_1.fq.gz --quiet", shell=True)
+    subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq2_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_2.fq.gz --quiet", shell=True)
+
 def run_hla_scan(gene, sample_name, fq1, fq2, software_path, hla_scan_dir, threads):
     command = (
         f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} "
@@ -142,6 +162,16 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
                 executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
     else:
         print("Skip Fastqc,  Fastqc files exist!")
+    
+    fastq_files = find_files_by_suffix(".fq.gz", project_dir)
+    if len(fastq_files) == 0:
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            futures = [executor.submit(trim_fastq, sample_name, sample_files, project_dir, software_path) 
+                    for sample_name, sample_files in sample_dict.items()]
+    else:
+        print("Skip trim_fastq,  fq.gz files exist!")
+    trim_fastq_files = find_files_by_suffix(".fq.gz", project_dir)
+    sample_dict = process_fastq_files(trim_fastq_files)
 
     ### Step 4 multiqc  # multiqc was installed through pip install.
     if find_files_by_suffix("multiqc_report.html", project_dir) == []:
@@ -150,13 +180,15 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
         print("Skip multiqc, multiqc_report.html files exist!")
 
     max_parallel_jobs = int(os.cpu_count()/2)
-    print("Max parallel jobs:", max_parallel_jobs, type(max_parallel_jobs))  # 打印以确保类型正确
+    max_hlahd_jobs = os.cpu_count()
+    # print("Max parallel jobs:", max_parallel_jobs, type(max_parallel_jobs))  # 打印以确保类型正确
+    
     # Step 2 
     if 'hlahd' in software_list:
         hlahd_result_list = find_files_by_suffix("HLA-HD_Result_final.result.txt", project_dir)
         if len(hlahd_result_list) == 0:
             with concurrent.futures.ProcessPoolExecutor(max_workers=max_parallel_jobs) as executor:
-                futures = [executor.submit(run_hlahd, sample_name, sample_files, project_dir, software_path, database_path, script_path, max_parallel_jobs)
+                futures = [executor.submit(run_hlahd, sample_name, sample_files, project_dir, software_path, database_path, script_path, max_hlahd_jobs)
                         for sample_name, sample_files in sample_dict.items()]
         else:
             print("Skip hla_scan, HLA-HD_Result_final.result.txt files exist!")
