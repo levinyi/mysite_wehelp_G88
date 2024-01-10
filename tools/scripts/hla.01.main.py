@@ -7,17 +7,15 @@ from commonFunction import deal_fastqc, find_files_by_suffix, process_fastq_file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 software_path = os.path.join(BASE_DIR, "pipeline/software")
 os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
-# print(os.environ["PATH"])
 
 
-# not used
 def trim_fastq(sample_name, sample_file, project_dir, software_path):
     print("I'm trim_fastq function!")
     seqkit = os.path.join(software_path, "seqkit/seqkit")
     trim_threads = os.cpu_count()
     trim_portion = 0.1
     seqkit_seed = 120
-    trim_string = "0.2M"
+    trim_string = "0.4M"
     trim_number = int(float(trim_string.rstrip("M"))*1000000)  # 1000000
     
     fq1_path = sample_file['fq1']

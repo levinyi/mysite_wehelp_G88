@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.sqlite3
+db.sqlite3-journal
+*.egg-info/
+.DS_Store
+.git/
+.gitignore
+mysite.backup.sql
+*.yml
+*.sh
+.env
+pipeline/database/
+pipeline/ref/
+pipeline/software/gatk/gatk-package-4.2.6.1-local.jar
