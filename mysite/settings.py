@@ -91,7 +91,7 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT':3306,
-        'OPTIONS': {'unix_socket': '/var/run/mysqld/mysqld.sock'},
+        # 'OPTIONS': {'unix_socket': '/var/run/mysqld/mysqld.sock'},
     }
 }
 

@@ -139,66 +139,67 @@ def specified_gene(df, gene):
 
     # Store nucleotide changes for each allele
     allele_to_nucleotides = {}
+    common_allele_dict = {}
     for _, row in gene_specific_df.iterrows():
         allele = row['Allele_name(Het)']
         changes = str(row['Nucleotide_change']).split(';')
+        common = row['Allele_name(Homo)']
         allele_to_nucleotides.setdefault(allele, []).extend(changes)
+        common_allele_dict[allele] = common # bug
 
-    return allele_to_nucleotides
+    return allele_to_nucleotides, common_allele_dict
 
 
 def identify_matched_alleles(excel_df, gene, homo_nucleotides, het_nucleotides):
     homo_nucleotides_set = set(homo_nucleotides)
     print(f"I'm processing {gene} {homo_nucleotides}, {het_nucleotides}")
-    allele_to_nucleotides = specified_gene(excel_df, gene)
-    print("yyyyyyyyyyyyy", allele_to_nucleotides)
+    allele_to_nucleotides, common_allele_dict = specified_gene(excel_df, gene)
+    # print("yyyyyyyyyyyyy", allele_to_nucleotides)
+
     # Identify matched alleles in list 1:
-    # matched_alleles_homo = {}
     allele_paired = []
     for allele1, nucleotides in allele_to_nucleotides.items():
         nucleotides_set = set(nucleotides)
 
         if nucleotides_set.issubset(homo_nucleotides_set):
-            # 计算交集的数量
-            # intersection_count = len(nucleotides_set & homo_nucleotides_set)
-            # matched_alleles_homo[allele1] = intersection_count
-
             # 把剩下的归到list2中，但不能把homo的再归到list2，就重复了，所以再加一步判断。
             # 也就是说这个homo的一定要在list1中被使用才行。
             rest_site = []
             for each in homo_nucleotides:
                 if each not in nucleotides:
                     rest_site.append(each)
-            print(f"    find {allele1}, {nucleotides} and rest: {rest_site}")
-            print(f"    dealing rest site:")
-            if len(rest_site) != 0:
+        
+            # print(f"    find {allele1}, {nucleotides} and rest: {rest_site}")
+            # print(f"    dealing rest site:")
+
+            if len(rest_site) != 0 or len(het_nucleotides) != 0:
                 het_nucleotides_set = het_nucleotides + rest_site
-                print(f"      merged rest_site: {het_nucleotides_set}")
+                # print(f"      merged rest_site: {het_nucleotides_set}")
                 # 判断放在这
                 if len(het_nucleotides) == len(set(het_nucleotides_set)):
                     # raise error
-                    print("        rest_site should not return homo site.")
+                    # print("        rest_site should not return homo site.")
+                    allele_paired.append((allele1, 'error'))
                 else:
-                    print("        rest_site good.")
-            
-            for allele2, nucleotides2 in allele_to_nucleotides.items():
-                nucleotides_set = set(nucleotides2)
-                if nucleotides_set == set(het_nucleotides_set):
-                    print(f"        find rest_site allele: ", allele2, nucleotides2)
-                    allele_paired.append((allele1, allele2))
-                else:
-                    # print(f"        Not find rest_site allele: ", allele2, nucleotides2)
-                    allele_paired.append((allele1, '-'))
-                    
-    
-    # print("    allele_paired: ",allele_paired)
+                    for allele2, nucleotides2 in allele_to_nucleotides.items():
+                        nucleotides_set = set(nucleotides2)
+                        if nucleotides_set == set(het_nucleotides_set):
+                            # print(f"        find rest_site allele: ", allele2, nucleotides2)
+                            allele_paired.append((allele1, allele2))
+                        else:
+                            allele_paired.append((allele1, '-'))
+            else:
+                allele_paired.append((allele1,"Common"))
+
+
     # 使用集合去除冗余
     unique_tuples = set(frozenset(item) for item in allele_paired)
 
     # 将结果转换回列表
     result_list = [tuple(item) for item in unique_tuples]
-
-    print("    allele_paired w/o dup: ",result_list)
+    if len(result_list) == 0:
+        result_list = [("-","-")]
+    print("    allele_paired: ", result_list)
     return result_list
 
 def main(excel_file, hpa_db, maf_file, final_output_file):
@@ -214,6 +215,7 @@ def main(excel_file, hpa_db, maf_file, final_output_file):
     # print(excel_df)
     # 按homo，het去处理。
     '''for debug
+
     gene = 'ABO'
     list1 = ['c.106G>T', 'c.188G>A', 'c.189C>T', 'c.220C>T', 'c.261delG', 'c.297A>G', 'c.526C>G',
              'c.646T>A', 'c.657C>T', 'c.681G>A', 'c.703G>A', 'c.771C>T', 'c.796C>A', 'c.803G>C', 
@@ -226,11 +228,14 @@ def main(excel_file, hpa_db, maf_file, final_output_file):
     # rest2 = c.526C>G, c.657C>T, c.703G>A, 'c.796C>A', 'c.803G>C', c.930G>A + c.297A>G
     identify_matched_alleles(excel_df, gene, list1, list2)
     '''
+    '''
     gene = 'A4GALT'
     list1 = ['c.987G>A','c.903C>G','c.109A>G']
     list2 = []
     identify_matched_alleles(excel_df, gene, list1, list2)
+
     '''
+    
     for gene, cdna_dict in maf_dict.items():
         list1 = cdna_dict.get('homo',[]) + cdna_dict.get('het',[])
         list2 = cdna_dict.get('homo', [])
@@ -238,7 +243,7 @@ def main(excel_file, hpa_db, maf_file, final_output_file):
         # matched_allele_homo, matched_allele_het = identify_matched_alleles(excel_df, gene, list1, list2)
         # print(f'Gene: {gene}, Matched Allele (Homo): {matched_allele_homo}, Matched Allele (Het): {matched_allele_het}')
 
-
+    '''
     variant_classification_dict = maf_df.set_index('cDNA_Changes')['Variant_Classification'].to_dict()
 
     ######################################################
