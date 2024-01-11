@@ -22,12 +22,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!l(pvo_d!8qz8v+lg^zvd6bu11a0g+cf3ztbipv7h3n3s%97$%'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+CSRF_TRUSTED_ORIGINS = ['http://example.com']
+
 
 
 # Application definition
@@ -88,6 +91,7 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT':3306,
+        'OPTIONS': {'unix_socket': '/var/run/mysqld/mysqld.sock'},
     }
 }
 
@@ -143,6 +147,6 @@ LOGIN_URL = '/account/login/'
 
 
 # Celery配置
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'  # RabbitMQ连接URL
-# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'  # 使用Django数据库作为结果后端
-result_backend = 'redis://127.0.0.1:6379/0'  # The 'CELERY_RESULT_BACKEND' setting is deprecated and scheduled for removal in version 6.0.0. Use the result_backend instead
+CELERY_BROKER_URL = 'redis://redis:6379/0'  # RabbitMQ连接URL
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'  # 使用Django数据库作为结果后端 
+result_backend = 'redis://redis:6379/0'  # The 'CELERY_RESULT_BACKEND' setting is deprecated and scheduled for removal in version 6.0.0. Use the result_backend instead

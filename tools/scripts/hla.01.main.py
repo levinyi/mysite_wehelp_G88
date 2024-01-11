@@ -7,10 +7,8 @@ from commonFunction import deal_fastqc, find_files_by_suffix, process_fastq_file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 software_path = os.path.join(BASE_DIR, "pipeline/software")
 os.environ["PATH"] += os.pathsep + f"{software_path}/hlahd/hlahd.1.7.0/bin"
-# print(os.environ["PATH"])
 
 
-# not used
 def trim_fastq(sample_name, sample_file, project_dir, software_path):
     print("I'm trim_fastq function!")
     seqkit = os.path.join(software_path, "seqkit/seqkit")

@@ -9,7 +9,7 @@ def deal_hpa_db(hpa_db):
 
 def main(project_dir, hpa_db, outputfile):
     hpa_db_dict = deal_hpa_db(hpa_db)
-    file_list = [i.rstrip("\n") for i in os.popen(f"find {project_dir} -type f -name *brief.table.xls").readlines()]
+    file_list = [i.rstrip("\n") for i in os.popen(f"find {project_dir} -type f -name *brief.table.csv").readlines()]
     print(f"find {len(file_list)} samples in {project_dir} directory")
 
     header= ["Sample"] + [f"HPA-{i}"  for i in range(1, 36)]

@@ -2,6 +2,7 @@
 Django==4.2
 mysqlclient
 gunicorn
+uwsgi
 lxml
 crispy-bootstrap5
 django-crispy-forms
