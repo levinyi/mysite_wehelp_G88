@@ -104,8 +104,8 @@ def process_maf2dict(maf_df):
     '''
         {
             "ABO": { 
-                homo: ['c.826G>A','c.768C>T','c.678G>A'],
-                het: [],
+                "homo": ['c.826G>A', 'c.768C>T', 'c.678G>A'],
+                "het": ['c.106G>T', 'c.188G>A', 'c.189C>T', 'c.220C>T', 'c.261delG'],
                 }
             "ABCC1": {
                 "homo": [],
@@ -134,65 +134,9 @@ def process_excel2df(excel_file):
     return df
 
 
-def core_process_of_identification_old(excel_df, gene, list1, list2):
-    # Select rows where Gene column equals the given gene
-    gene_df = excel_df[excel_df['Gene'] == gene]
-
-    # Create a dictionary to store Nucleotide_change values for each allele name
-    allele_nucleotide_changes = {}
-
-    # Iterate over rows and populate the dictionary
-    for _, row in gene_df.iterrows():
-        allele_name = row['Allele_name(Het)']
-        nucleotide_changes = str(row['Nucleotide_change']).split(';')
-        
-        if allele_name not in allele_nucleotide_changes:
-            allele_nucleotide_changes[allele_name] = []
-        
-        allele_nucleotide_changes[allele_name].extend(nucleotide_changes)
-    print(allele_nucleotide_changes)
-    # {'ABO*A1.02': ['c.467C>T'], 'ABO*A2.01': ['c.467C>T', 'c.1061delC']}
-
-    # Step 1
-    matched_allele_homo = []
-    matched_allele_het = []
-    for allele_name, nucleotide_changes_list in allele_nucleotide_changes.items():
-        if set(list1) == set(nucleotide_changes_list):
-            matched_allele_homo.append(allele_name)
-
-    if len(matched_allele_homo) >0:
-        '''说明已经有最优的了，开始处理het'''
-        for allele_name, nucleotide_changes_list in allele_nucleotide_changes.items():
-            if set(list2) == set(nucleotide_changes_list):
-                matched_allele_het.append(allele_name)
-    
-        if len(matched_allele_het) >0:
-            '''说明het也有最优解了'''
-            return matched_allele_homo, matched_allele_het
-    else:
-        '''说明没找到最优解，需要看list1的子集是不是全部包含nucleotide_changes_list'''
-
-        for allele_name, nucleotide_changes_list in allele_nucleotide_changes.items():
-            set1 = set(list1)
-            set2 = set(nucleotide_changes_list)
-            is_subset = set2.issubset(set1)
-            if is_subset:
-                # 获取交集
-                intersection = set1.intersection(set2)
-
-                # 获取非交集
-                difference = set1.difference(set2)
-                
-                # 把非交集放到 list2 中
-                list2.append(difference)
-                
-        # 找到最多的，返回
-        
-
-
-    return matched_allele_homo, matched_allele_het
-
 def identify_matched_alleles(excel_df, gene, homo_nucleotides, het_nucleotides):
+    homo_nucleotides_set = set(homo_nucleotides)
+
     # Filter the dataframe for the specified gene
     gene_specific_df = excel_df[excel_df['Gene'] == gene]
 
@@ -203,62 +147,76 @@ def identify_matched_alleles(excel_df, gene, homo_nucleotides, het_nucleotides):
         changes = str(row['Nucleotide_change']).split(';')
         allele_to_nucleotides.setdefault(allele, []).extend(changes)
     # print(allele_to_nucleotides)
-    
+    print(gene, homo_nucleotides, het_nucleotides)
     # Identify matched alleles
-    matched_alleles_homo, matched_alleles_het = [], []
+    matched_alleles_homo = {}
     for allele, nucleotides in allele_to_nucleotides.items():
+        # print(allele, nucleotides)
         nucleotides_set = set(nucleotides)
 
-        if set(homo_nucleotides) == nucleotides_set:
-            matched_alleles_homo.append(allele)
-
-        if set(het_nucleotides) == nucleotides_set:
-            matched_alleles_het.append(allele)
+        if nucleotides_set.issubset(homo_nucleotides_set):
+            # 计算交集的数量
+            intersection_count = len(nucleotides_set & homo_nucleotides_set)
+            print(allele, intersection_count)
+            matched_alleles_homo[allele] = intersection_count
     
-    print(matched_alleles_homo, matched_alleles_het)
+    # 找出最大值
+    # 如果有两个，两个都要报道出来
+    max_value = max(matched_alleles_homo.values())
 
-    # Handle cases where no exact matches are found
-    if not matched_alleles_homo:
-        for allele, nucleotides in allele_to_nucleotides.items():
-            # print(f"comparing {sorted(homo_nucleotides)} vs {sorted(nucleotides)}")
-            if set(nucleotides).issubset(set(homo_nucleotides)):
-                difference = set(homo_nucleotides).difference(nucleotides)
-                het_nucleotides.extend(difference)
+    # 找出所有值等于最大值的键
+    max_keys = [key for key, value in matched_alleles_homo.items() if value == max_value]
 
-        # Re-run the matching process for het alleles after updating het_nucleotides
-        for allele, nucleotides in allele_to_nucleotides.items():
-            if set(het_nucleotides) == set(nucleotides):
-                matched_alleles_het.append(allele)
-    print(matched_alleles_homo, matched_alleles_het)
+    # 输出key, 然后判断是prefect match还是子集。
+    for key in max_keys:
+        print(f"键: {key}, 值: {max_value}")
+        # 把剩下的归到list2中，但不能把homo的再归到list2，就重复了，所以再加一步判断。也就是说这个homo的一定要在list1中被使用才行。
+        
+    
+    # # Handle cases where no exact matches are found
+    # if not matched_alleles_homo:
+    #     for allele, nucleotides in allele_to_nucleotides.items():
+    #         # print(f"comparing {sorted(homo_nucleotides)} vs {sorted(nucleotides)}")
+    #         if set(nucleotides).issubset(set(homo_nucleotides)):
+    #             difference = set(homo_nucleotides).difference(nucleotides)
+    #             het_nucleotides.extend(difference)
 
-    return matched_alleles_homo, matched_alleles_het
+    #     # Re-run the matching process for het alleles after updating het_nucleotides
+    #     for allele, nucleotides in allele_to_nucleotides.items():
+    #         if set(het_nucleotides) == set(nucleotides):
+    #             matched_alleles_het.append(allele)
+    # print(matched_alleles_homo, matched_alleles_het)
+
+    # return matched_alleles_homo, matched_alleles_het
 
 def main(excel_file, hpa_db, maf_file, final_output_file):
     # deal with MAF file.
     maf_df = read_maf(maf_file)
-    print(maf_df)
+    # print(maf_df)
 
     maf_dict = process_maf2dict(maf_df)
-    print(maf_dict)
+    # print(maf_dict)
 
     # 处理excel 数据
     excel_df = process_excel2df(excel_file)
-    print(excel_df)
+    # print(excel_df)
     # 按homo，het去处理。
     gene = 'ABO'
-    list1 = maf_dict['ABO'].get('homo', [])
-    list2 = maf_dict['ABO'].get('het',  [])
-    print(gene, list1, list2)
+    list1 = ['c.106G>T', 'c.188G>A', 'c.189C>T', 'c.220C>T', 'c.261delG', 'c.297A>G', 
+             'c.646T>A', 'c.681G>A', 'c.771C>T',' c.829G>A', 'c.526C>G', 'c.657C>T', 
+             'c.703G>A', 'c.796C>A', 'c.803G>C', 'c.930G>A']
+    list2 = ['c.297A>G']
     identify_matched_alleles(excel_df, gene, list1, list2)
 
-    # for gene, cdna_dict in maf_dict.items():
-    #     list1 = cdna_dict.get('homo',[])
-    #     list2 = cdna_dict.get('het', [])
-    #     matched_allele_homo, matched_allele_het = identify_matched_alleles(excel_df, gene, list1, list2)
-    #     print(f'Gene: {gene}, Matched Allele (Homo): {matched_allele_homo}, Matched Allele (Het): {matched_allele_het}')
-
-
     '''
+    for gene, cdna_dict in maf_dict.items():
+        list2 = cdna_dict.get('het', [])
+        list1 = cdna_dict.get('homo',[]) + list2
+        identify_matched_alleles(excel_df, gene, list1, list2)
+        # matched_allele_homo, matched_allele_het = identify_matched_alleles(excel_df, gene, list1, list2)
+        # print(f'Gene: {gene}, Matched Allele (Homo): {matched_allele_homo}, Matched Allele (Het): {matched_allele_het}')
+
+
     variant_classification_dict = maf_df.set_index('cDNA_Changes')['Variant_Classification'].to_dict()
 
     ######################################################
