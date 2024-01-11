@@ -168,28 +168,22 @@ def identify_matched_alleles(excel_df, gene, homo_nucleotides, het_nucleotides):
             for each in homo_nucleotides:
                 if each not in nucleotides:
                     rest_site.append(each)
-        
-            # print(f"    find {allele1}, {nucleotides} and rest: {rest_site}")
-            # print(f"    dealing rest site:")
 
             if len(rest_site) != 0 or len(het_nucleotides) != 0:
                 het_nucleotides_set = het_nucleotides + rest_site
-                # print(f"      merged rest_site: {het_nucleotides_set}")
-                # 判断放在这
                 if len(het_nucleotides) == len(set(het_nucleotides_set)):
-                    # raise error
-                    # print("        rest_site should not return homo site.")
                     allele_paired.append((allele1, 'error'))
                 else:
                     for allele2, nucleotides2 in allele_to_nucleotides.items():
                         nucleotides_set = set(nucleotides2)
                         if nucleotides_set == set(het_nucleotides_set):
-                            # print(f"        find rest_site allele: ", allele2, nucleotides2)
+                            # prefect match !
                             allele_paired.append((allele1, allele2))
                         else:
                             allele_paired.append((allele1, '-'))
             else:
-                allele_paired.append((allele1,"Common"))
+                common_allele = common_allele_dict[allele1]
+                allele_paired.append((allele1, common_allele))
 
 
     # 使用集合去除冗余

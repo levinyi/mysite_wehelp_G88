@@ -147,6 +147,6 @@ LOGIN_URL = '/account/login/'
 
 
 # Celery配置
-CELERY_BROKER_URL = 'redis://redis:6379/0'  # RabbitMQ连接URL
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'  # RabbitMQ连接URL
 # CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'  # 使用Django数据库作为结果后端 
-result_backend = 'redis://redis:6379/0'  # The 'CELERY_RESULT_BACKEND' setting is deprecated and scheduled for removal in version 6.0.0. Use the result_backend instead
+result_backend = 'redis://127.0.0.1:6379/0'  # The 'CELERY_RESULT_BACKEND' setting is deprecated and scheduled for removal in version 6.0.0. Use the result_backend instead
