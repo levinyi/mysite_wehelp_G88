@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'wehelp_web_db',
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
+        'HOST': 'localhost',
         'PORT':3306,
         'OPTIONS': {'unix_socket': '/var/run/mysqld/mysqld.sock'},
     }
