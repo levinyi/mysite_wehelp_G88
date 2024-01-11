@@ -111,7 +111,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     ######################################################################
     print("Start Step2 BWA MEM!")
     result_list = []
-    cpu_count = int(os.cpu_count()/2)
+    cpu_count = int(os.cpu_count()/2) - 6  # 为了不影响其他任务，这里减去6个核心，30个核心
     
     bam_files = find_files_by_suffix(".bam", project_dir)
 
