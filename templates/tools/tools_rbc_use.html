@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 {% load static %}
 
 {% block content %}
@@ -17,15 +18,11 @@
         <div class="row pt-3">
             <div class="col">
                 <h5 class="panel-body">
-                    <br><br>
-                    这里是一些使用说明
-                    <br><br>
-                    数据的接收与处理： 上传测序NGS数据文件压缩包，确保文件中没有子文件夹。
-                    <br><br>
-                    项目名称：为项目提供一个可辨识且唯一的名称
-                    <br><br>
-                    <br><br>
-                    查看结果状态：<a href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a>
+                    <ul>1. 填写项目名称：为项目提供一个可辨识且唯一的名称</ul>
+                    <ul>2. 选择数据，当数据不存在时，点击刷新按钮</ul>
+                    <ul>3. 选择panel，如需使用自定义panel，点击添加按钮</ul>
+                    <ul>4. 点击提交按钮，提交任务</ul>
+                    <ul>5. 查看结果状态：<a href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a></ul>
                 </h5>
             </div>
         </div>
@@ -54,477 +51,207 @@
                <span>未找到? <a href="{% url 'tools:update_data_path' %}" id="update-data-link"><i class="bi bi-arrow-clockwise"></i></a></span>
             </div>
 
-            <!-- table json data -->
-            <span>核对下表，并修改 PanelDesigned 列 </span>
-            <div class="mb-4 pt-3">
-                <table class="table table-striped table-hover table-bordered" style="text-align:center" id="myTable">
-                <thead>
-                    <tr>
-                        <th>Number</th>
-                        <th>System</th>
-                        <th>Gene</th>
-                        <th>PanelDesigned</th>
-                        <th>Transcript_USED</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>ABO</td>
-                        <td>ABO</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_020469.2</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>MNS</td>
-                        <td>GYPE</td>
-                        <td contenteditable="true">NO</td>
-                        <td>NM_002102.3</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>MNS</td>
-                        <td>GYPB</td>
-                        <td contenteditable="true">NO</td>
-                        <td>NM_002100.5</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>MNS</td>
-                        <td>GYPA</td>
-                        <td contenteditable="true">NO</td>
-                        <td>NM_002099.5</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>P1PK</td>
-                        <td>A4GALT</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_017436.4</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>RH</td>
-                        <td>RHCE</td>
-                        <td contenteditable="true">NO</td>
-                        <td>NM_020485.8</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>RH</td>
-                        <td>RHD</td>
-                        <td contenteditable="true">NO</td>
-                        <td>NM_001127691.3</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>LU</td>
-                        <td>BCAM</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_005581.4</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>KEL</td>
-                        <td>KEL</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_000420.3</td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>LE</td>
-                        <td>FUT3</td>
-                        <td contenteditable="true">NO</td>
-                        <td>NM_000149.4</td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>FY</td>
-                        <td>ACKR1</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_002036.4</td>
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td>JK</td>
-                        <td>SLC14A1</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_015865.7</td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>DI</td>
-                        <td>SLC4A1</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_000342.4</td>
-                    </tr>
-                    <tr>
-                        <td>11</td>
-                        <td>YT</td>
-                        <td>ACHE</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_001302621.1</td>
-                    </tr>
-                    <tr>
-                        <td>12</td>
-                        <td>XG</td>
-                        <td>CD99</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_002414.3</td>
-                    </tr>
-                    <tr>
-                        <td>12</td>
-                        <td>XG</td>
-                        <td>XG</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_175569.2</td>
-                    </tr>
-                    <tr>
-                        <td>13</td>
-                        <td>SC</td>
-                        <td>ERMAP</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_001017922.2</td>
-                    </tr>
-                    <tr>
-                        <td>14</td>
-                        <td>DO</td>
-                        <td>ART4</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_021071.4</td>
-                    </tr>
-                    <tr>
-                        <td>15</td>
-                        <td>CO</td>
-                        <td>AQP1</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_198098.2</td>
-                    </tr>
-                    <tr>
-                        <td>16</td>
-                        <td>LW</td>
-                        <td>ICAM4</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_001544.4</td>
-                    </tr>
-                    <tr>
-                        <td>17</td>
-                        <td>CH/RG</td>
-                        <td>C4A</td>
-                        <td contenteditable="true">NO</td>
-                        <td>NM_007293.3</td>
-                    </tr>
-                    <tr>
-                        <td>17</td>
-                        <td>CH/RG</td>
-                        <td>C4B</td>
-                        <td contenteditable="true">NO</td>
-                        <td>NM_001002029.4</td>
-                    </tr>
-                    <tr>
-                        <td>18</td>
-                        <td>H</td>
-                        <td>FUT1</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_000148.3</td>
-                    </tr>
-                    <tr>
-                        <td>18</td>
-                        <td>H</td>
-                        <td>FUT2</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_000511.5</td>
-                    </tr>
-                    <tr>
-                        <td>19</td>
-                        <td>XK</td>
-                        <td>XK</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_021083.4</td>
-                    </tr>
-                    <tr>
-                        <td>20</td>
-                        <td>GE</td>
-                        <td>GYPC</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_002101.4</td>
-                    </tr>
-                    <tr>
-                        <td>21</td>
-                        <td>CROM</td>
-                        <td>CD55</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_000574.5</td>
-                    </tr>
-                    <tr>
-                        <td>22</td>
-                        <td>KN</td>
-                        <td>CR1</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_000573.3</td>
-                    </tr>
-                    <tr>
-                        <td>23</td>
-                        <td>IN</td>
-                        <td>CD44</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_000610.4</td>
-                    </tr>
-                    <tr>
-                        <td>24</td>
-                        <td>OK</td>
-                        <td>BSG</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_001728.4</td>
-                    </tr>
-                    <tr>
-                        <td>25</td>
-                        <td>RAPH</td>
-                        <td>CD151</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_004357.4</td>
-                    </tr>
-                    <tr>
-                        <td>26</td>
-                        <td>JMH</td>
-                        <td>SEMA7A</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_003612.3</td>
-                    </tr>
-                    <tr>
-                        <td>27</td>
-                        <td>I</td>
-                        <td>GCNT2</td>
-                        <td contenteditable="true">YES</td>
-                        <td>NM_145655
-                    </tr>
-                    <tr>
-                        <td>28</td>
-                        <td>GLOB</td>
-                        <td>B3GALNT1</td>
-                        <td>YES</td>
-                        <td>NM_033169.3</td>
-                    </tr>
-                    <tr>
-                        <td>29</td>
-                        <td>GIL</td>
-                        <td>AQP3</td>
-                        <td>YES</td>
-                        <td>NM_004925.4</td>
-                    </tr>
-                    <tr>
-                        <td>30</td>
-                        <td>RHAG</td>
-                        <td>RHAG</td>
-                        <td>YES</td>
-                        <td>NM_000324.2</td>
-                    </tr>
-                    <tr>
-                        <td>31</td>
-                        <td>FORS</td>
-                        <td>GBGT1</td>
-                        <td>YES</td>
-                        <td>NM_021996.5</td>
-                    </tr>
-                    <tr>
-                        <td>32</td>
-                        <td>JR</td>
-                        <td>ABCG2</td>
-                        <td>YES</td>
-                        <td>NM_004827.2</td>
-                    </tr>
-                    <tr>
-                        <td>33</td>
-                        <td>LAN</td>
-                        <td>ABCB6</td>
-                        <td>YES</td>
-                        <td>NM_005689.2</td>
-                    </tr>
-                    <tr>
-                        <td>34</td>
-                        <td>VEL</td>
-                        <td>SMIM1</td>
-                        <td>YES</td>
-                        <td>NM_001163724.3</td>
-                    </tr>
-                    <tr>
-                        <td>35</td>
-                        <td>CD59</td>
-                        <td>CD59</td>
-                        <td>YES</td>
-                        <td>NM_203330.2</td>
-                    </tr>
-                    <tr>
-                        <td>36</td>
-                        <td>AUG</td>
-                        <td>SLC29A1</td>
-                        <td>YES</td>
-                        <td>NM_001304463.1</td>
-                    </tr>
-                    <tr>
-                        <td>37</td>
-                        <td>KANNO</td>
-                        <td>PRNP</td>
-                        <td>YES</td>
-                        <td>NM_000311.5</td>
-                    </tr>
-                    <tr>
-                        <td>38</td>
-                        <td>SID</td>
-                        <td>B4GALNT2</td>
-                        <td>YES</td>
-                        <td>NM_153446.2</td>
-                    </tr>
-                    <tr>
-                        <td>39</td>
-                        <td>CTL2</td>
-                        <td>SLC44A2</td>
-                        <td>YES</td>
-                        <td>NM_001145056.2</td>
-                    </tr>
-                    <tr>
-                        <td>40</td>
-                        <td>PEL</td>
-                        <td>ABCC4</td>
-                        <td>YES</td>
-                        <td>NM_005845.5</td>
-                    </tr>
-                    <tr>
-                        <td>41</td>
-                        <td>MAM</td>
-                        <td>EMP3</td>
-                        <td>YES</td>
-                        <td>NM_001425.3</td>
-                    </tr>
-                    <tr>
-                        <td>42</td>
-                        <td>EMM</td>
-                        <td>PIGG</td>
-                        <td>YES</td>
-                        <td>NM_001127178.3</td>
-                    </tr>
-                    <tr>
-                        <td>43</td>
-                        <td>ABCC1</td>
-                        <td>ABCC1</td>
-                        <td>YES</td>
-                        <td>NM_004996.4</td>
-                    </tr>
-                    <tr>
-                        <td>44</td>
-                        <td>Er</td>
-                        <td>PIEZO1</td>
-                        <td>NO</td>
-                        <td>NM_001142864.4</td>
-                    </tr>
-                    <tr>
-                        <td>/</td>
-                        <td>GATA1</td>
-                        <td>GATA1</td>
-                        <td>YES</td>
-                        <td>NM_002049.3</td>
-                    </tr>
-                    <tr>
-                        <td>/</td>
-                        <td>KLF1</td>
-                        <td>KLF1</td>
-                        <td>YES</td>
-                        <td>NM_006563.3</td>
-                    </tr>
-                </tbody>    
-                </table>
+            <!-- Add new panel -->
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="text-success">Commonly used panel at Wehelp</h5>
+                <div class="d-flex">
+                    <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#panelModal">
+                        <i class="bi bi-plus-circle me-2"></i>Add new panel
+                    </button>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#managePanelModal">
+                        <i class="bi bi-gear-fill me-2"></i>Manage panel
+                    </button>
+                </div>
             </div>
 
-            <!-- button -->
-            <div class="col-xs-7 mb-3">
-                <button type="submit" class="btn btn-primary" id="submitBtn">Start Analysis</button>
+            <!-- 模态框 1 添加新panel-->
+            <div class="modal fade" id="panelModal" tabindex="-1" aria-labelledby="panelModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="panelModalLabel">Add New Panel</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- 表单 -->
+                            <form>
+                            <div class="mb-3">
+                                <label for="panelName" class="form-label">Panel Name</label>
+                                <input type="text" class="form-control" id="panelName" placeholder="Enter panel name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="panelFile" class="form-label">Upload File</label>
+                                <input type="file" class="form-control" id="panelFile">
+                            </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="savePanelBtn">Upload</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-xs-7 mb-3" id="target-element">
-                {% if check_available %}
-                    <span>Your project name {{ project_name }} is starting </span>
-                    <span>Your unique id is {{ unique_id }}.  Please </span>
-                    <a href="{% url 'tools:check_status' tools_id=tools_id %}">Check Here</span>
-                {% endif %}
+
+            <!-- 模态框 2 管理panel-->
+            <div class="modal fade" id="managePanelModal" tabindex="-1" aria-labelledby="managePanelModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="managePanelModalLabel">Manage Panels</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Panel Name</th>
+                                        <th scope="col">Download</th>
+                                        <th scope="col">Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for panel in panel_list %}
+                                    <tr>
+                                        <td>{{ panel.name }}</td>
+                                        <td><a href="{% url 'tools:download_file' panel.panel_file %}" class="link-underline link-underline-opacity-0">{{ panel.panel_file.name|basename }}</a></td>
+                                        <td>
+                                            <a  href="javascript:;" 
+                                                onclick="del_item(this, {{ panel.id }})"
+                                                data-url="{% url 'tools:panel_delete' panel.id %}">
+                                                <i class="bi bi-trash" style="color:red"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Select Panel -->
+            <select class="form-select mt-2" size="5" id="panel_id">
+                <option value="" selected >Choose a panel</option>
+                {% for panel in panel_list %}
+                    <option value="{{ panel.id }}" class="text-success">{{ panel.name }} -- {{ panel.panel_file.name|basename }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- button -->
+            <div class="col-xs-7 mb-3 mt-5">
+                <button type="button" class="btn btn-primary" id="analysisButton">Start Analysis</button>
             </div>
         </form>
     </div>
 </div>
 {% endblock %}
+
 {% block javascript %}
 <script type="text/javascript">
-    document.getElementById('uploadForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('analysisButton').addEventListener('click', function () {
 
-        // 检查下拉框是否选择了非默认值
-        let selectedPath = document.getElementById('path_select').value;
-        if (!selectedPath || selectedPath === "") {
-            alert("请选择一个有效的文件夹名称！");
-            return; // 阻止表单提交
-        }
-        // 收集数据
-        let projectName = document.getElementsByName('project_name')[0].value;
-        let tableData = collectTableData();
-        console.log('tableData:', tableData);
+            event.preventDefault();
+            console.log('form submitted');
 
-        let formData = {
-            projectName: projectName,
-            selectedPath: selectedPath,
-            tableData: tableData
-        };
+            // 收集数据
+            let projectName = document.getElementsByName('project_name')[0].value;
+            if (!projectName || projectName === "") {
+                alert("请输入项目名称！");
+                return; // 阻止表单提交
+            };
 
-        // 发送 AJAX 请求
-        fetch("{% url 'tools:tools_use' 'rbc' %}", {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('提交成功:', data);
-            if (data.status === 'success') {
-                // 处理成功的响应，例如刷新页面或跳转
-                alert("任务提交成功!,将跳转到状态查询页！")
-                // window.location.reload(); // 例如刷新页面
-                window.location.href = '/tools/check_status/rbc/'; // 跳转到另一个页面
-            }
-            else {
-                // 处理失败的响应
-                console.error('Error:', data);
-                alert("任务提交失败，请联系管理员启动异步服务!,错误信息：" + data.message);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+            // 检查下拉框是否选择了非默认值
+            let selectedPath = document.getElementById('path_select').value;
+            if (!selectedPath || selectedPath === "") {
+                alert("请选择一个有效的数据路径！");
+                return; // 阻止表单提交
+            };
+
+            let panel = document.getElementById('panel_id');
+            let panel_id = panel.options[panel.selectedIndex].value;
+            console.log("panel_id: ", panel_id);
+            if (!panel_id || panel_id === "") {
+                alert("请选择一个有效的panel！");
+                return; // 阻止表单提交
+            };
+
+            let formData = {
+                projectName: projectName,
+                selectedPath: selectedPath,
+                panel_id: panel_id
+            };
+
+            // 发送 AJAX 请求
+            fetch("{% url 'tools:tools_use' 'rbc' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                    console.log('提交成功:', data);
+                    if (data.status === 'success') {
+                        // 处理成功的响应，例如刷新页面或跳转
+                        alert("任务提交成功!,将跳转到状态查询页！")
+                        window.location.href = '/tools/check_status/rbc/'; // 跳转到另一个页面
+                    }
+                    else {
+                        // 处理失败的响应
+                        console.error('Error:', data);
+                        alert("任务提交失败，请联系管理员启动异步服务!,错误信息：" + data.message);
+                    }
+            })
+            .catch(error => console.error('Error:', error));
+        });
     });
 
-    // submit table.
-    function collectTableData() {
-        let table = document.getElementById('myTable');
-        let rows = table.getElementsByTagName('tr');
-        let tableData = [];
+    // upload new panel.
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('savePanelBtn').addEventListener('click', function () {
+            var panelName = document.getElementById('panelName').value;
+            var panelFile = document.getElementById('panelFile').files[0];
 
-        // 首先收集表头数据
-        let headers = rows[0].getElementsByTagName('th');
-        let headerData = {};
-        for (let h = 0; h < headers.length; h++) {
-            headerData[`column${h}`] = headers[h].innerText;
-        }
-        tableData.push(headerData);
-
-        // 然后收集表格中的数据
-        for (let i = 1; i < rows.length; i++) {  // 从索引 1 开始，因为 0 是表头
-            let cells = rows[i].getElementsByTagName('td');
-            let rowData = {};
-            for (let j = 0; j < cells.length; j++) {
-                rowData[`column${j}`] = cells[j].innerText;
+            if (!panelName || !panelFile) {
+                alert('Please enter a panel name and select a file.');
+                return;
             }
-            tableData.push(rowData);
-        }
-        return tableData;
-    }
+
+            var formData = new FormData();
+            formData.append('panel_name', panelName);
+            formData.append('panel_file', panelFile);
+
+            fetch('/tools/panel_upload/', { // 替换为你的服务器端URL
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Panel uploaded successfully');
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the panel.');
+            });
+        });
+    });
 
     // refresh data selection.
     document.addEventListener('DOMContentLoaded', function() {
@@ -574,7 +301,45 @@
         }
         return cookieValue;
     }
-</script>
 
+    // 删除项目
+    function del_item(the, id) {
+        var deleteUrl = $(the).data('url');
+        console.log(deleteUrl);
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim',
+            area: ['420px', '240px'],
+            title: 'Delete',
+            content: '<div style="padding: 20px 80px;">Are you sure to delete this item?</div>',
+            btn: ['Yes', 'No'],
+            btnAlign: 'c',
+            yes: function (index, layero) {
+                $.ajax({
+                    url: deleteUrl,
+                    type: "POST",
+                    data: {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'id': id,
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            layer.msg('Delete successfully!', { icon: 1 });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            layer.msg(data.message, { icon: 2 });
+                        }
+                    },
+                    error: function (xhr, errmsg, err) {
+                        layer.msg('Delete failed!', { icon: 2 });
+                    }
+                });
+            },
+        })
+    }
+</script>
 {% endblock %}
 

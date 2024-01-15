@@ -6,10 +6,8 @@ import re
 
 def _argparse():
     parser = argparse.ArgumentParser(description="")
-    parser.add_argument('-m', dest='maf_file', action="store", help="maf file")
-    parser.add_argument('-o', dest='out_file', action="store", help="out file")
-    # 可选参数
-    parser.add_argument('--hpa', dest='hpa', action="store_true", default=False, help="Special handing for CD36 gene")
+    parser.add_argument('-m', dest='maf_file', action="store",help="maf file")
+    parser.add_argument('-o', dest='out_file', action="store",help="out file")
     return parser.parse_args()
 
 def select_value(value):
@@ -56,7 +54,6 @@ def main():
 
     maf_file = parser.maf_file
     out_file = parser.out_file
-    include_hpa = parser.hpa
 
     # Check if maf_file exists. and is not empty
     if not os.path.exists(maf_file) or os.path.getsize(maf_file) == 0:
@@ -66,15 +63,6 @@ def main():
     df = pd.read_csv(maf_file, sep="\t")
     # select data by column and variat classification.
     df = df[_COLUMNS]
-
-    # Handle special case for CD36 gene if --hpa is set
-    if include_hpa:
-        # Filter for CD36 with Variant_Classification 'Intron'
-        cd36_intron = df[(df['Hugo_Symbol'] == 'CD36') & (df['Variant_Classification'] == 'Intron')]
-
-        # Append the CD36 intron cases to the dataframe after filtering for standard Variant_Classifications
-        df = pd.concat([df[df['Variant_Classification'].isin(Variant_Classification)], cd36_intron])
-    
 
     # filter Variant Classification
     if len(Variant_Classification) > 0:

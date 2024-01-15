@@ -133,6 +133,7 @@ def process_excel2df(excel_file):
     # remove space in Nucleotide_change,
     return df
 
+
 def specified_gene(df, gene):
     # Filter the dataframe for the specified gene
     gene_specific_df = df[df['Gene'] == gene]
@@ -152,9 +153,8 @@ def specified_gene(df, gene):
 
 def identify_matched_alleles(excel_df, gene, homo_nucleotides, het_nucleotides):
     homo_nucleotides_set = set(homo_nucleotides)
-    print(f"I'm processing {gene} {homo_nucleotides}, {het_nucleotides}")
+    # print(f"I'm processing {gene} {homo_nucleotides}, {het_nucleotides}")
     allele_to_nucleotides, common_allele_dict = specified_gene(excel_df, gene)
-    # print("yyyyyyyyyyyyy", allele_to_nucleotides)
 
     # Identify matched alleles in list 1:
     allele_paired = []
@@ -169,9 +169,10 @@ def identify_matched_alleles(excel_df, gene, homo_nucleotides, het_nucleotides):
                 if each not in nucleotides:
                     rest_site.append(each)
 
-            if len(rest_site) != 0 or len(het_nucleotides) != 0:
+            if len(rest_site) != 0:
                 het_nucleotides_set = het_nucleotides + rest_site
                 if len(het_nucleotides) == len(set(het_nucleotides_set)):
+                    # 表示合并后和合并前是相同的表，那么有可能是把homo的位点合并了，这是不允许的，返回error。
                     allele_paired.append((allele1, 'error'))
                 else:
                     for allele2, nucleotides2 in allele_to_nucleotides.items():
@@ -182,95 +183,66 @@ def identify_matched_alleles(excel_df, gene, homo_nucleotides, het_nucleotides):
                         else:
                             allele_paired.append((allele1, '-'))
             else:
-                common_allele = common_allele_dict[allele1]
-                allele_paired.append((allele1, common_allele))
-
+                if len(het_nucleotides) == 0:
+                    common_allele = common_allele_dict[allele1]
+                    allele_paired.append((allele1, common_allele))
+                else:
+                    for allele2, nucleotides2 in allele_to_nucleotides.items():
+                        nucleotides_set = set(nucleotides2)
+                        if nucleotides_set == set(het_nucleotides):
+                            # prefect match !
+                            allele_paired.append((allele1, allele2))
+                        else:
+                            allele_paired.append((allele1, '-'))
 
     # 使用集合去除冗余
     unique_tuples = set(frozenset(item) for item in allele_paired)
+    
+    # 剔除掉包含有error的元组
+    unique_tuples = [item for item in unique_tuples if 'error' not in item]
 
     # 将结果转换回列表
     result_list = [tuple(item) for item in unique_tuples]
+    
     if len(result_list) == 0:
         result_list = [("-","-")]
-    print("    allele_paired: ", result_list)
+    
     return result_list
+
 
 def main(excel_file, hpa_db, maf_file, final_output_file):
     # deal with MAF file.
     maf_df = read_maf(maf_file)
-    print(maf_df)
+    # print(maf_df)
 
     maf_dict = process_maf2dict(maf_df)
-    print(maf_dict)
+    # print(maf_dict)
 
     # 处理excel 数据
     excel_df = process_excel2df(excel_file)
     # print(excel_df)
-    # 按homo，het去处理。
-    '''for debug
 
-    gene = 'ABO'
-    list1 = ['c.106G>T', 'c.188G>A', 'c.189C>T', 'c.220C>T', 'c.261delG', 'c.297A>G', 'c.526C>G',
-             'c.646T>A', 'c.657C>T', 'c.681G>A', 'c.703G>A', 'c.771C>T', 'c.796C>A', 'c.803G>C', 
-             'c.829G>A', 'c.930G>A']
-    list2 = ['c.297A>G']
-    # O.01.02: c.106G>T; c.188G>A; c.189C>T; c.220C>T; c.261delG; c.297A>G; c.646T>A; c.681G>A; c.771C>T; c.829G>A
-    # O.01.24: c.106G>T; c.188G>A; c.189C>T; c.261delG; c.297A>G; c.526C>G; c.657C>T; c.703G>A; c.796C>A; c.803G>C; c.930G>A
-    # B.01.01: c.297A>G;c.526C>G;c.657C>T;c.703G>A;c.796C>A;c.803G>C;c.930G>A
-    # rest1 = 'c.220C>T', 'c.646T>A', 'c.681G>A', 'c.771C>T', 'c.829G>A', + 'c.297A>G'
-    # rest2 = c.526C>G, c.657C>T, c.703G>A, 'c.796C>A', 'c.803G>C', c.930G>A + c.297A>G
-    identify_matched_alleles(excel_df, gene, list1, list2)
-    '''
-    '''
-    gene = 'A4GALT'
-    list1 = ['c.987G>A','c.903C>G','c.109A>G']
-    list2 = []
-    identify_matched_alleles(excel_df, gene, list1, list2)
-
-    '''
-    
+    new_df = pd.DataFrame()
     for gene, cdna_dict in maf_dict.items():
         list1 = cdna_dict.get('homo',[]) + cdna_dict.get('het',[])
         list2 = cdna_dict.get('homo', [])
-        identify_matched_alleles(excel_df, gene, list1, list2)
-        # matched_allele_homo, matched_allele_het = identify_matched_alleles(excel_df, gene, list1, list2)
-        # print(f'Gene: {gene}, Matched Allele (Homo): {matched_allele_homo}, Matched Allele (Het): {matched_allele_het}')
+        print(gene, list1, list2)
+        name_list = identify_matched_alleles(excel_df, gene, list1, list2)
+        for allele1, allele2 in name_list:
+            new_df = new_df._append({'Gene':gene, 'Allele_name1': allele1, 'Allele_name2': allele2}, ignore_index=True)
+    
+    # print("new_df")
+    # print(new_df)
+    ###############################################
+    maf_df = pd.merge(maf_df, new_df, how='left', on='Gene')
+    # print("maf_df")
+    # print( maf_df)
+    # maf_df['Allele_name1'] = maf_df['Allele_name1'].apply(lambda x: "".join(x))
+    # maf_df['Allele_name2'] = maf_df['Allele_name2'].apply(lambda x: "".join(x))
+    maf_df['Allele_name1'] = maf_df['Allele_name1'].apply(lambda x: "".join(x) if isinstance(x, list) else x)
+    maf_df['Allele_name2'] = maf_df['Allele_name2'].apply(lambda x: "".join(x) if isinstance(x, list) else x)
 
-    '''
-    variant_classification_dict = maf_df.set_index('cDNA_Changes')['Variant_Classification'].to_dict()
-
-    ######################################################
-    #### for allele name: add two columns: Allele_name1, Allele_name2
-    df1 = pd.read_excel(excel_file)  # blood pdf
-    new_allele_homo = []
-    new_allele_het = []
-    for index, row in new_df.iterrows():
-        cDNA_Changes_list = row['cDNA_Changes_list']
-        homo_het_set = row['homo/het_set']
-        gene = row['Gene']
-        gene_allele_df = df1[df1['Gene'] == gene]
-        
-        # print("Now let's start with ", gene, cDNA_Changes_list)
-        if len(cDNA_Changes_list) == 1 and cDNA_Changes_list[0] == '':
-            matched_rows = gene_allele_df[gene_allele_df['Nucleotide_change'] == 'Common']
-            allele_name1 = matched_rows['Allele_name(Het)'].values
-            allele_name2 = matched_rows['Allele_name(Homo)'].values
-        else:
-            allele_name1, allele_name2 = match_allele(cDNA_Changes_list, gene_allele_df, variant_classification_dict, homo_het_set)
-        new_allele_homo.append(allele_name1)
-        new_allele_het.append(allele_name2)
-        
-    new_df['Allele_name1'] = new_allele_homo
-    new_df['Allele_name2'] = new_allele_het
-
-    ################################################
-    maf_df = pd.merge(maf_df, new_df, on="Gene")
-    # print(maf_df)
-    maf_df['Allele_name1'] = maf_df['Allele_name1'].apply(lambda x: "".join(x))
-    maf_df['Allele_name2'] = maf_df['Allele_name2'].apply(lambda x: "".join(x))
-
-    # maf_df.loc[maf_df.duplicated(subset='Allele_name1'), 'Allele_name1'] = ""  # bug
+    # 
     maf_df['Allele_name1'] = maf_df.groupby('Gene',group_keys=False)['Allele_name1'].apply(remove_duplicates)
     maf_df['Allele_name2'] = maf_df.groupby('Gene',group_keys=False)['Allele_name2'].apply(remove_duplicates)
 
@@ -278,7 +250,7 @@ def main(excel_file, hpa_db, maf_file, final_output_file):
     #  for HPA
     if 'HPA' in maf_df['System'].values:
         hpa_df = pd.read_csv(hpa_db, sep="\t")
-        maf_df = pd.merge(maf_df, hpa_df, how="left", on=['System', 'Gene', 'cDNA_Changes'])
+        maf_df = pd.merge(maf_df,hpa_df, how="left", on=['Gene','System','cDNA_Changes'])
         maf_df['Allele_name1'] = maf_df['homo']
         maf_df['Allele_name2'] = maf_df['het']
 
@@ -290,12 +262,12 @@ def main(excel_file, hpa_db, maf_file, final_output_file):
         'cDNA_Changes','Variant_Classification', 'homo/het', 'Allele_name1', 'Allele_name2']].to_csv(final_output_file.replace("xlsx", "csv"), index=False)
 
     print(maf_df)
-    '''
+
 
 if __name__ == '__main__':
     parser = _argparse()
 
-    excel_file = parser.excel_file   # input: Blood.Gene.metadata.xlxs6
+    excel_file = parser.excel_file   # input: Blood.Gene.metadata.v2.xlsx
     hpa_db = parser.hpa_database
     maf_file   = parser.maf_file    # input: maf file
     final_output_file = parser.output_file  # output: final ouput table file

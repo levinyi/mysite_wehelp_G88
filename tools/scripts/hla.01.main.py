@@ -27,6 +27,7 @@ def trim_fastq(sample_name, sample_file, project_dir, software_path):
     subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq1_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_1.fq.gz --quiet", shell=True)
     subprocess.run(f"{seqkit} sample -j {trim_threads} -p {trim_portion} -s {seqkit_seed} {fq2_path} | {seqkit} head -n {trim_number} -o {trim_data_dir}/{sample_name}_2.fq.gz --quiet", shell=True)
 
+
 def run_hla_scan(gene, sample_name, fq1, fq2, software_path, hla_scan_dir, threads):
     command = (
         f"{software_path}/hla_scan/hla_scan -t {threads} -l {fq1} "
@@ -34,6 +35,7 @@ def run_hla_scan(gene, sample_name, fq1, fq2, software_path, hla_scan_dir, threa
         f"-g {gene} > {hla_scan_dir}/{sample_name}.{gene}.out.txt"
     )
     subprocess.run(command, shell=True)
+
 
 def run_bwa_mem(fq1, fq2, ref_fa, sample_name, project_dir, threads = 10):
     # BWA MEM command
@@ -54,6 +56,7 @@ def run_bwa_mem(fq1, fq2, ref_fa, sample_name, project_dir, threads = 10):
         f"samtools index {project_dir}/{sample_name}/{sample_name}.hla.sortedByCoord.bam"],
         shell=True)
 
+
 def extract_fastq(sample_name, project_dir, threads = 10):
     print("I'm extract_fastq function!")
     
@@ -67,6 +70,7 @@ def extract_fastq(sample_name, project_dir, threads = 10):
     subprocess.run(f"samtools view  -@ {threads} -bF 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
     # subprocess.run(f"samtools view  -@ {threads} -bf 4 {sample_dir}/{sample_name}.hla.sortedByCoord.bam > {sample_dir}/{sample_name}.Unmapped.hla.bam", shell=True)
     subprocess.run(f"samtools fastq -@ {threads} -1    {sample_dir}/{sample_name}.mapped.hla.1.fastq -2 {sample_dir}/{sample_name}.mapped.hla.2.fastq -n {sample_dir}/{sample_name}.mapped.hla.bam", shell=True)
+
 
 def run_hlahd(sample_name, sample_files, project_dir, software_path, database_path, script_path, threads):
     sample_dir = os.path.join(project_dir, sample_name)
@@ -91,6 +95,7 @@ def run_hlahd(sample_name, sample_files, project_dir, software_path, database_pa
     return_list.append(f"{project_dir}/{sample_name}/HLA-HD_Result/result/{sample_name}.HLA-HD_Result_final.result.txt")
     
     return return_list
+
 
 def run_hlascan(sample_name, sample_files, project_dir, software_path, script_path, threads):
     print("Start hla_scan!")
@@ -148,7 +153,8 @@ def run_optitype(sample_name, sample_files, project_dir, software_path, ref_fa, 
     
     return return_list
 
-def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list, threads):
+
+def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list, threads, output_site):
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
     sample_dict = process_fastq_files(fastq_list)
 
@@ -212,7 +218,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
         if 'hlahd' in software_list:
             # 额外统计HLA-HD的结果，并写入文件
-            subprocess.run(f"python {script_path}/hla.03.summary.hla-hd.py {project_dir}",shell=True)
+            subprocess.run(f"python {script_path}/hla.03.summary.hla-hd.py {project_dir} {output_site}",shell=True)
             f.write(f"{project_dir}/HLA-HD_Result_final.summary.xls\n")
         if 'hla_scan' in software_list:
             subprocess.run(f"python {script_path}/hla.03.summary.hlascan.py {project_dir}",shell=True)
@@ -227,7 +233,9 @@ if __name__ == "__main__":
     project_name = sys.argv[2]  # test1
     project_dir  = sys.argv[3]  # /data/storeData/ztron/rawdata/HLA/analysis/test1
     software_list = sys.argv[4].split(",")  # ['hlahd', 'hla_scan', 'optitype']
-    print(f"software_list in hla.main.py : {software_list}")
+    output_site = sys.argv[5]  # 'all_sites' or 'partial_sites'
+
+    print(f"software_list in hla.main.py : {software_list} and output_site: {output_site}")
     os.makedirs(project_dir, exist_ok=True)
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -239,4 +247,4 @@ if __name__ == "__main__":
     
     threads = os.cpu_count()
 
-    main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list, threads)
+    main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list, threads, output_site)

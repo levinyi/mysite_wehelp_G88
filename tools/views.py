@@ -1,7 +1,7 @@
 import shutil
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, JsonResponse
-from .models import Tools, Result, NGSDataPath
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from .models import RBCPanel, Tools, Result, NGSDataPath
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
@@ -47,7 +47,13 @@ def tools_use(request, tools_id):
                 'fq_count': file.fq_count,
             }
             available_files_list.append(file_dict)
-        return render(request, f'tools/tools_{tools_id}_use.html', {'tools_id': tools_id,'available_files':available_files_list})
+        
+        if tools_id == 'rbc':
+            panel_list = RBCPanel.objects.all()
+            return render(request, f'tools/tools_{tools_id}_use.html', {'tools_id': tools_id,'available_files':available_files_list, 'panel_list': panel_list})
+        else:
+            return render(request, f'tools/tools_{tools_id}_use.html', {'tools_id': tools_id,'available_files':available_files_list})
+        
     elif request.method == "POST":
         data = json.loads(request.body)
         project_name = data.get("projectName")
@@ -58,14 +64,30 @@ def tools_use(request, tools_id):
         project_dir = os.path.join(project_base_dir, project_name)
         if not os.path.exists(project_dir):
             os.mkdir(project_dir)
+
         software_list = None
-        if tools_id in ['hpa','rbc']:
+        output_site = None
+
+        if tools_id == 'hla':
+            software_list = ",".join(data.get('selectedSoftware'))
+            output_site = data.get('outputOption')  # 'all_sites' or 'partial_sites'
+            print(f"output_site: {output_site}")
+        elif tools_id == 'hpa':
             json_data = data.get('tableData')
-            file_extension = 'hpa.xls' if tools_id == 'hpa' else 'rbc.xls'
+            # file_extension = 'hpa.xls' if tools_id == 'hpa' else 'rbc.xls'
+            file_extension = 'hpa.xls'
             file_path = os.path.join(project_dir, f'tableOfBloodGroupSystems.{file_extension}')
             save_json_as_xls(json_data, file_path)
-        elif tools_id == 'hla':
-            software_list = ",".join(data.get('selectedSoftware'))
+        elif tools_id == 'rbc':
+            panel_id = data.get('panel_id')
+            print(f"panel_id: {panel_id}")
+
+            panel = RBCPanel.objects.get(id=panel_id)
+            panel_file = panel.panel_file.path
+            print(f"panel_file: {panel_file}")
+
+            new_file_path = os.path.join(project_dir, "tableOfBloodGroupSystems.rbc.xls")
+            shutil.copy(panel_file, new_file_path)
 
         unique_id = str(uuid.uuid4())
         user_id = request.user.id
@@ -83,7 +105,7 @@ def tools_use(request, tools_id):
         
         # 异步处理：
         try:
-            main_task.delay(user_id, tools_id, unique_id, software_list=software_list)
+            main_task.delay(user_id, tools_id, unique_id, software_list=software_list, output_site=output_site)
         except Exception as e:
             response_data = {
                 'status': 'error',
@@ -203,5 +225,47 @@ def update_data_path(request):
         print("try Exception as e:", e)
         return JsonResponse({'message': str(e)}, status=500)
 
+
+def download_file(request, full_zip_path):
+    '''下载任意全路径的文件都可以'''
+
+    # 在点击时检查参数是否有效
+    if not full_zip_path:
+        return HttpResponseBadRequest("Invalid file path")
+    
+    file_name = os.path.basename(full_zip_path)
+    with open(full_zip_path, 'rb') as f:
+        response = HttpResponse(f)
+        response['Content-Disposition'] = f'attachment; filename={file_name}'
+        return response
+
+def panel_upload(request):
+    if request.method == 'POST':
+        panel_name = request.POST.get('panel_name')
+        panel_file = request.FILES.get('panel_file')
+        print(f"panel_name: {panel_name}, panel_file: {panel_file}")
+        if not panel_name or not panel_file:
+            return JsonResponse({'status': 'error', 'message': 'Invalid parameters'}, status=400)
+        try:
+            RBCPanel.objects.create(name=panel_name, panel_file=panel_file)
+            return JsonResponse({'status': 'success', 'message': 'Panel uploaded successfully'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        return render(request, 'tools/tools.rbc_use.html')
+
+def panel_delete(request, panel_id):
+    if request.method == 'POST':
+        panel = RBCPanel.objects.get(id=panel_id)
+        file_path = panel.panel_file.path
+        panel.delete()
+        # 同时删除服务器上的文件
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        return JsonResponse({'status': 'success', 'message': 'Panel deleted successfully'})
+    else:
+        return render(request, 'tools/tools.rbc_use.html')
+    
 def test(request):
     return render(request, 'test.html')
+

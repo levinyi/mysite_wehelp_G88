@@ -41,3 +41,13 @@ class NGSDataPath(models.Model):
     create_time = models.DateField(verbose_name="create time", db_index=True)
     status = models.CharField(verbose_name="status", max_length=332)
 
+
+class RBCPanel(models.Model):
+    name = models.CharField(verbose_name="panel name", max_length=255)
+    panel_file = models.FileField(verbose_name="panel file", upload_to="static/files/rbc_panel")
+    created_at = models.DateTimeField(verbose_name="create time", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="update time", auto_now=True)
+
+    def __str__(self):
+        return self.name
+    

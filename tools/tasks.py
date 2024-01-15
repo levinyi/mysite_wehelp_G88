@@ -49,7 +49,7 @@ def extract_archive(archive_file, project_folder):
 
 
 @app.task()
-def main_task(user_id, tools_id, unique_id, software_list=None):
+def main_task(user_id, tools_id, unique_id, software_list=None, output_site=None):
     print(f"in main task function: {user_id}, {tools_id}, {unique_id}")
     user = User.objects.get(id=user_id)
     result = Result.objects.get(user=user, tools_name=tools_id, unique_id=unique_id)
@@ -71,10 +71,10 @@ def main_task(user_id, tools_id, unique_id, software_list=None):
     
     if tools_id == 'hla':
         print(f"software_list in tasks.py: {software_list}")
-        subprocess.run(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list}", shell=True)
+        subprocess.run(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list} {output_site}", shell=True)
         # 将运行命令写入文件
         with open(f"{result_path}/run_command.sh", "w") as f:
-            f.write(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list}\n")
+            f.write(f"python {script_dir}/hla.01.main.py {data_dir} {project_name} {result_path} {software_list} {output_site} \n")
     elif tools_id == 'hpa':
         subprocess.run(f'python {script_dir}/rbc.hpa.main.py {data_dir} {project_name} {result_path}/tableOfBloodGroupSystems.hpa.xls {result_path} --hpa', shell=True)  # 调用python脚本
         with open(f"{result_path}/run_command.sh", "w") as f:

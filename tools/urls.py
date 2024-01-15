@@ -12,4 +12,7 @@ urlpatterns = [
     path('delete_status/<str:unique_id>/', views.delete_status, name='delete_status'),
     path('test/', views.test, name="test"),
     path('update_data_path/', views.update_data_path, name='update_data_path'),
+    path('download_file/<path:full_zip_path>/', views.download_file, name='download_file'),
+    path('panel_upload/', views.panel_upload, name='panel_upload'),
+    path('panel_delete/<int:panel_id>/', views.panel_delete, name='panel_delete'),
 ]

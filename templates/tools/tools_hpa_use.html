@@ -132,13 +132,6 @@
             <div class="col-xs-7 mb-3">
                 <button type="submit" class="btn btn-primary" id="submitBtn">Start Analysis</button>
             </div>
-            <div class="col-xs-7 mb-3" id="target-element">
-                {% if check_available %}
-                    <span>Your project name {{ project_name }} is starting </span>
-                    <span>Your unique id is {{ unique_id }}.  Please </span>
-                    <a href="{% url 'tools:check_status' tools_id=tools_id %}">Check Here</span>
-                {% endif %}
-            </div>
         </form>
     </div>
 </div>
@@ -155,6 +148,7 @@
             alert("请选择一个有效的文件夹名称！");
             return; // 阻止表单提交
         }
+        
         // 收集数据
         let projectName = document.getElementsByName('project_name')[0].value;
         let tableData = collectTableData();

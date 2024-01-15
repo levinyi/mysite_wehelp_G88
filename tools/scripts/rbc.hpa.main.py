@@ -48,13 +48,21 @@ def run_gatk(ref_fa, sample_name, project_dir):
         f"grep -v \"^#\" {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.raw.MAF > {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.MAF.xls"],
         shell=True)
     
-def deal_maf(sample_name, project_dir, output_templates_file, script_path, database_path):
+def deal_maf(sample_name, project_dir, output_templates_file, script_path, database_path, hpa=False):
     # Python scripts filter MAF table
-    run_command1 = (
-        f"python3 {script_path}/rbc.deal_maf_table.py  "
-        f"-m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.MAF.xls "
-        f"-o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.MAF.xls"
-    )
+    if hpa:
+        run_command1 = (
+            f"python3 {script_path}/rbc.deal_maf_table.py  "
+            f"-m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.MAF.xls "
+            f"-o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.MAF.xls "
+            f"--hpa "
+        )
+    else:
+        run_command1 = (
+            f"python3 {script_path}/rbc.deal_maf_table.py  "
+            f"-m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.MAF.xls "
+            f"-o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.MAF.xls "
+        )
     subprocess.run(run_command1, shell=True)
 
     # add dbsnp HVGS info
@@ -66,16 +74,21 @@ def deal_maf(sample_name, project_dir, output_templates_file, script_path, datab
     )
     subprocess.run(run_command2, shell=True)
 
+
 def blood_identy(sample_name, project_dir, database_path, script_path):
     # identify blood group info
     run_command = (
-        f"python {script_path}/rbc.Blood_group_identification.py "
+        f"python {script_path}/rbc.Blood_group_identification_v2.py "
         f"-b {database_path}/Blood.Gene.metadata.manually.checked.v2.xlsx "
         f"-p {database_path}/HPA.Gene.cDNA_Changes.xls "
         f"-m {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.small.add.dbsnp.MAF.xls "
         f"-o {project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.brief.table.xlsx"
     )
     subprocess.run(run_command, shell=True)
+
+    result_list = [f"{project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.brief.table.xlsx"]
+
+    return result_list
 
 
 def extract_cds(sample_name, project_dir, script_path, database_path):
@@ -88,26 +101,37 @@ def extract_cds(sample_name, project_dir, script_path, database_path):
     ) 
     subprocess.run(run_command, shell=True)
 
-    result_list = [f"{project_dir}/{sample_name}/{sample_name}.Rawsample.funcotated.brief.table.xlsx"]
+    result_list = [f"{project_dir}/{sample_name}/{sample_name}.Rawsample.CDS.fasta"]
+    
     return result_list
 
 
 def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, output_templates_file, hpa):
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
+    # 如果没有fq.gz文件，就退出
+    if len(fastq_list) == 0:
+        print("No fq.gz files found!")
+        sys.exit(1)
+
     sample_dict = process_fastq_files(fastq_list)
     # print("sample_dict: ", sample_dict)
+
     print("Start Step1 Fastqc!")
     # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。
     fastqc_files = find_files_by_suffix("fastqc.html", project_dir)
-
     if len(fastqc_files) == 0:
         with concurrent.futures.ProcessPoolExecutor() as executor:
             for sample_name, sample_files in sample_dict.items():
                 executor.submit(deal_fastqc, sample_name, sample_files, project_dir, software_path, redirct=True)
-        subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
     else:
         print("\tfastqc files exist, skip fastqc!")
 
+    multiqc = find_files_by_suffix("multiqc_report.html", project_dir)
+    if len(multiqc) == 0:
+        subprocess.run(f"multiqc {project_dir}  --outdir {project_dir}", shell=True)
+    else:
+        print("\tmultiqc files exist, skip multiqc!")
+    
     ######################################################################
     print("Start Step2 BWA MEM!")
     result_list = []
@@ -125,7 +149,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     ######################################################################
     print("Start Step3 GATK!")
     maf_files = find_files_by_suffix(".MAF", project_dir)
-    print(maf_files)
+    print(f"find maf_files: {len(maf_files)}")
     if len(maf_files) == 0:
         with concurrent.futures.ProcessPoolExecutor(max_workers=cpu_count) as executor:
             futures = [executor.submit(run_gatk, ref_fa, sample_name, project_dir)
@@ -136,10 +160,10 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     ######################################################################
     print("Start Step4 deal MAF!")
     small_maf_files = find_files_by_suffix(".add.dbsnp.MAF.xls", project_dir)
-    print("small_maf_files: ", small_maf_files)
+    print("find small_maf_files: ", len(small_maf_files))
     if len(small_maf_files) == 0:
         with concurrent.futures.ProcessPoolExecutor(max_workers=cpu_count) as executor:
-            futures = [executor.submit(deal_maf, sample_name, project_dir, output_templates_file, script_path, database_path)
+            futures = [executor.submit(deal_maf, sample_name, project_dir, output_templates_file, script_path, database_path, hpa)
                     for sample_name, sample_files in sample_dict.items()]
     else:
         print("\tsmall MAF files exist, skip analysis!")
@@ -147,10 +171,14 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     ######################################################################
     print("Start Step5 blood identity!")
     brief_table_files = find_files_by_suffix("brief.table.xlsx", project_dir)
+    print("find brief_table_files: ", len(brief_table_files))
     if len(brief_table_files) == 0:
         with concurrent.futures.ProcessPoolExecutor(max_workers=cpu_count) as executor:
             futures = [executor.submit(blood_identy, sample_name, project_dir, database_path, script_path)
                     for sample_name, sample_files in sample_dict.items()]
+            
+            for future in concurrent.futures.as_completed(futures):
+                result_list.extend(future.result())
     else:
         print("\tbrief table files exist, skip analysis!")
     
@@ -158,6 +186,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     ######################################################################
     print("Start Step6 extract CDS!")
     cds_files = find_files_by_suffix(".CDS.fasta", project_dir)
+    print("find cds_files: ", len(cds_files))
     if len(cds_files) == 0:
         with concurrent.futures.ProcessPoolExecutor(max_workers=cpu_count) as executor:
             futures = [executor.submit(extract_cds, sample_name, project_dir, script_path, database_path)
@@ -170,9 +199,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
 
     
     ######################################################################
-    
-    print("Multiprocess analysis finished!")
-    print("result_list: ", result_list)
+    print("Start Step7 HPA report!")
     if hpa:
         print("Start HPA report!")
         subprocess.run(f"python3 {script_path}/hpa.summary.report.py -i {project_dir} -d {database_path}/HPA.Gene.cDNA_Changes.xls -o {project_dir}/HPA.summary.report.xls", shell=True)
@@ -211,7 +238,7 @@ if __name__ == '__main__':
     # 使用参数
     data_dir = args.data_dir
     project_dir = args.result_path
-    
+
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     software_path = os.path.join(BASE_DIR, "pipeline/software")
     database_path = os.path.join(BASE_DIR, "pipeline/database")

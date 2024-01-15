@@ -78,7 +78,11 @@ def main():
 
     # print(dbsnp_df)
     ########################## template file ###################################
-    template_df = pd.read_table(template_file, sep="\t")
+    try:
+        template_df = pd.read_table(template_file, sep="\t")
+    except:
+        template_df = pd.read_excel(template_file)
+
     template_df['Number'] = template_df['Number'].apply(lambda x: str(x).zfill(3) if x !='/' else x)
     # print("template_df", template_df)
     ########################## MAF file ##################################

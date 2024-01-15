@@ -63,6 +63,22 @@
                 <input class="form-check-input" type="checkbox" id="inlineCheckbox3" name="software" value="OptiType" disabled>
                 <label class="form-check-label" for="inlineCheckbox3">OptiType</label>
             </div>
+            <!-- Output Options -->
+            <div class="mt-3">
+                <label for="formFile1" class="form-label">Output Options:</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="all_sites" checked>
+                <label class="form-check-label" for="exampleRadios1">
+                    Output All HLA sites.
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="part_sites">
+                <label class="form-check-label" for="exampleRadios2">
+                    Output Only 11 sites (A、B、C、DRB1、DQB1、DPB1、DQA1、DPA1、DRB3、DRB4、DRB5)
+                </label>
+            </div>
             <!-- button -->
             <div class="col-xs-7 mb-3 mt-4">
                 <button type="submit" class="btn btn-primary" id="submitBtn">Start Analysis</button>
@@ -97,10 +113,13 @@
         // 获取选中的软件的值
         let selectedSoftware = Array.from(checkboxes).map(checkbox => checkbox.value);
 
+        let outputOption = document.querySelector('input[name="exampleRadios"]:checked').value;
+        console.log(outputOption);
         let formData = {
             projectName: projectName,
             selectedPath: selectedPath,
             selectedSoftware: selectedSoftware,
+            outputOption: outputOption
         };
 
         // 发送 AJAX 请求
