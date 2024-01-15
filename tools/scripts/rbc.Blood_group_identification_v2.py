@@ -196,18 +196,16 @@ def identify_matched_alleles(excel_df, gene, homo_nucleotides, het_nucleotides):
                             allele_paired.append((allele1, '-'))
 
     # 使用集合去除冗余
-    unique_tuples = set(frozenset(item) for item in allele_paired)
-    
-    # 剔除掉包含有error的元组
-    unique_tuples = [item for item in unique_tuples if 'error' not in item]
+    unique_tuples = []
+    # unique_tuples = set(frozenset(item) for item in allele_paired)
+    for item in allele_paired:
+        if 'error' not in item and item not in unique_tuples:
+            unique_tuples.append(item)
 
-    # 将结果转换回列表
-    result_list = [tuple(item) for item in unique_tuples]
-    
-    if len(result_list) == 0:
-        result_list = [("-","-")]
-    
-    return result_list
+    if len(unique_tuples) == 0:
+        unique_tuples = [("-","-")]
+    print(f"unique_tuples: {unique_tuples}")
+    return unique_tuples
 
 
 def main(excel_file, hpa_db, maf_file, final_output_file):
@@ -230,15 +228,10 @@ def main(excel_file, hpa_db, maf_file, final_output_file):
         name_list = identify_matched_alleles(excel_df, gene, list1, list2)
         for allele1, allele2 in name_list:
             new_df = new_df._append({'Gene':gene, 'Allele_name1': allele1, 'Allele_name2': allele2}, ignore_index=True)
-    
-    # print("new_df")
-    # print(new_df)
+
     ###############################################
     maf_df = pd.merge(maf_df, new_df, how='left', on='Gene')
-    # print("maf_df")
-    # print( maf_df)
-    # maf_df['Allele_name1'] = maf_df['Allele_name1'].apply(lambda x: "".join(x))
-    # maf_df['Allele_name2'] = maf_df['Allele_name2'].apply(lambda x: "".join(x))
+
     maf_df['Allele_name1'] = maf_df['Allele_name1'].apply(lambda x: "".join(x) if isinstance(x, list) else x)
     maf_df['Allele_name2'] = maf_df['Allele_name2'].apply(lambda x: "".join(x) if isinstance(x, list) else x)
 
