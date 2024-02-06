@@ -13,17 +13,14 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     {% include "header.html" %}
-    {% block content %}
-    {% endblock %}
-
-    {% include "footer.html" %}
-
+    {% block content %}{% endblock %}
     <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/deleteItem.js' %}"></script>
     {% block javascript %}{% endblock %}
+    {% include "footer.html" %}
 </body>
 
 </html>

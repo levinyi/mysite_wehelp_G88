@@ -6,8 +6,8 @@
 <div class="container">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'tools:tools_list' %}">在线工具</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'tools:tools_use' tools_id=tools_id %}">{{ tools_id }}</a></li>
+            <li class="breadcrumb-item"><a class="text-decoration-none" href="{% url 'tools:tools_list' %}">在线工具</a></li>
+            <li class="breadcrumb-item"><a class="text-decoration-none" href="{% url 'tools:tools_use' tools_id=tools_id %}">{{ tools_id }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">结果查询</li>
         </ol>
     </nav>
@@ -16,8 +16,6 @@
                 <thead>
                     <tr>
                         <th scope="col">unique_id</th>
-                        <!-- <th scope="col">data</th>
-                        <th scope="col">result_path</th> -->
                         <th scope="col">project_name</th>
                         <th scope="col">status</th>
                         <th scope="col">Start time</th>

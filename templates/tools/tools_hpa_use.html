@@ -5,24 +5,28 @@
 <div class="container">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a class="text-decoration-none" href="{% url 'tools:tools_list' %}">工具列表</a></li>
+            <li class="breadcrumb-item"><a class="text-decoration-none" class="text-decoration-none" href="{% url 'tools:tools_list' %}">工具列表</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ tools_id }}</li>
         </ol>
     </nav>
     <div class="row form-control mt-3 pt-3">
         <div class="col">
-            <h3 class="panel-title">使用方法：</h3>
+            <h4 class="panel-title">使用方法：</h4>
         </div>
 
         <div class="row pt-3">
             <div class="col">
-                <h5 class="panel-body">
-                    <ul>1. 填写项目名称：为项目提供一个可辨识且唯一的名称</ul>
-                    <ul>2. 上传数据：将需要分析的所有样本fastq打包成一个总压缩包</ul>
-                    <ul>3. 核对表格信息</ul>
-                    <ul>4. 点击提交按钮，提交任务</ul>
-                    <ul>5. 查看结果状态：<a class="text-decoration-none" href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a></ul>
-                </h5>
+                <div class="panel-body">
+                    为确保您的分析任务顺利进行，请按照以下步骤操作：
+                    <ul>
+                        <li><strong>填写项目名称</strong>：为您的项目输入一个无空格、可识别且唯一的名称。</li>
+                        <li><strong>上传数据</strong>：选择您的NGS数据路径。如果您未在下拉列表中找到您的数据，请使用更新数据路径链接。</li>
+                        <li><strong>核对表格信息</strong>：检查表格，确保信息正确无误。您可以直接在页面上修改PanelDesigned列。</li>
+                        <li><strong>提交任务</strong>：确认信息无误后，点击提交按钮开始分析。</li>
+                        <li><strong>查看结果状态</strong>：通过<a class="text-decoration-none" href="{% url 'tools:check_status' tools_id=tools_id %}" title="查看以往分析状态">以往状态查询</a>查询以往的状态和结果。</li>
+                    </ul>
+                    注意：所有步骤完成后，您将能够跟踪分析进度并访问结果。
+                </div>
             </div>
         </div>
     </div>
