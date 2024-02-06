@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %} Check {{ tools_id }} Status {% endblock %}
 
 {% block content %}
 <div class="container">
@@ -42,16 +43,18 @@
                             <td></td>
                         {% endif %}
                         <td>
-                            <a href="{% url 'tools:delete_status' unique_id=result.unique_id %}">
-                                <i class="bi bi-trash text-danger"></i>
-                            </a>
+                            <a class="delete-item-btn" data-url="{% url 'tools:delete_status' unique_id=result.unique_id %}"
+                                data-id="{{ result.unique_id }}">
+                                <i class="bi bi-trash" style="color:red"></i>
+                            </a>   
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        <!-- Delete panel modal -->
+        {% include 'deleteModal.html' %}
     </div>
-    
     <nav aria-label="Page navigation example">
         <ul class='pagination'>{{ page_string }}</ul>
     </nav>

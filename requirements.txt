@@ -13,10 +13,10 @@ pandas
 rarfile
 Pillow
 biopython
-numpy
 python-decouple
 django-widget-tweaks
 multiqc
 future
 matplotlib
 pyomo
+multiqc

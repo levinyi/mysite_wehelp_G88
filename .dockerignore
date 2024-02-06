@@ -12,6 +12,5 @@ mysite.backup.sql
 *.yml
 *.sh
 .env
-pipeline/database/
-pipeline/ref/
-pipeline/software/gatk/gatk-package-4.2.6.1-local.jar
+pipeline/
+Dockerfile

@@ -53,7 +53,6 @@ def tools_use(request, tools_id):
             return render(request, f'tools/tools_{tools_id}_use.html', {'tools_id': tools_id,'available_files':available_files_list, 'panel_list': panel_list})
         else:
             return render(request, f'tools/tools_{tools_id}_use.html', {'tools_id': tools_id,'available_files':available_files_list})
-        
     elif request.method == "POST":
         data = json.loads(request.body)
         project_name = data.get("projectName")
@@ -128,27 +127,20 @@ def check_status(request, tools_id):
     }
     return render(request, 'tools/check_status.html', context)
 
-
 @login_required
 def delete_status(request, unique_id):
-    # Ensure the record exists or return 404
-    result = get_object_or_404(Result, user=request.user, unique_id=str(unique_id))
-    
-    # Delete the project folder using shutil.rmtree for  better security unique_id
-    project_folder = result.result_path
-    print("delete project_folder: ", project_folder)
-    try:
-        shutil.rmtree(project_folder)
-    except OSError as e:
-        # Handle the exception (e.g., log it, return an error response)
-        print("Error: %s : %s" % (project_folder, e.strerror))
-
-    # Delete the database record
-    tools_id = result.tools_name
-    result.delete()
-
-    # Redirect to the appropriate view
-    return redirect(f"/tools/check_status/{tools_id}", tools_id = tools_id)
+    if request.method == 'POST':
+        result = Result.objects.get(user=request.user, unique_id=unique_id)
+        # delete project folder according to unique_id
+        project_folder = result.result_path
+        print("delete project_folder: ", project_folder)
+        subprocess.run(f"rm -rf {project_folder}", shell=True)
+        # delete result object
+        tools_id = result.tools_name
+        result.delete()
+        return JsonResponse({'status': 'success', 'message': 'Result deleted successfully'})
+    else:
+        return HttpResponseBadRequest("Invalid request method.")
 
 
 @login_required
@@ -228,7 +220,6 @@ def update_data_path(request):
 
 def download_file(request, full_zip_path):
     '''下载任意全路径的文件都可以'''
-
     # 在点击时检查参数是否有效
     if not full_zip_path:
         return HttpResponseBadRequest("Invalid file path")

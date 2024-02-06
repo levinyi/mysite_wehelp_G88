@@ -28,8 +28,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['*']
-CORS_ORIGIN_ALLOW_ALL = True
-CSRF_TRUSTED_ORIGINS = ['http://example.com']
+# CORS_ORIGIN_ALLOW_ALL = True
+CSRF_TRUSTED_ORIGINS = ['http://192.168.1.5:9000']
 
 
 
@@ -89,7 +89,7 @@ DATABASES = {
         'NAME': 'wehelp_web_db',
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': config('DB_HOST'),
         'PORT':3306,
         # 'OPTIONS': {'unix_socket': '/var/run/mysqld/mysqld.sock'},
     }
@@ -131,7 +131,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Default primary key field type
@@ -144,9 +144,12 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 LOGIN_REDIRECT_URL = '/tools/tools-list/'
 LOGIN_URL = '/account/login/'
+LOGOUT_REDIRECT_URL = '/account/login/'
+LOGOUT_URL = '/account/logout/'
+
 
 
 # Celery配置
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'  # RabbitMQ连接URL
-# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'  # 使用Django数据库作为结果后端 
-result_backend = 'redis://127.0.0.1:6379/0'  # The 'CELERY_RESULT_BACKEND' setting is deprecated and scheduled for removal in version 6.0.0. Use the result_backend instead
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+result_backend = config('CELERY_RESULT_BACKEND')
+

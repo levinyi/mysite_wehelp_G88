@@ -1,3 +1,4 @@
+from django.db import connections
 from my_celery import app
 import os
 import rarfile
@@ -50,6 +51,10 @@ def extract_archive(archive_file, project_folder):
 
 @app.task()
 def main_task(user_id, tools_id, unique_id, software_list=None, output_site=None):
+    # fix the bug: django.db.utils.OperationalError: (2006, 'MySQL server has gone away')
+    for conn in connections.all():
+        conn.close_if_unusable_or_obsolete()
+    
     print(f"in main task function: {user_id}, {tools_id}, {unique_id}")
     user = User.objects.get(id=user_id)
     result = Result.objects.get(user=user, tools_name=tools_id, unique_id=unique_id)

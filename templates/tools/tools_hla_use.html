@@ -17,11 +17,12 @@
         <div class="row pt-3">
             <div class="col">
                 <h5 class="panel-body">
-                    <br>
-                    <ul>1.填写项目名称：为项目提供一个可辨识且唯一的名称.</ul>
-                    <ul>2.找到数据路径，数据路径不存在时点击刷新按钮。数据中必须包含fq.gz文件才能被找到。</ul>
-                    <br><br>
-                    查看结果状态：<a href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a>
+                    <ul>1. 填写项目名称：为项目提供一个可辨识且唯一的名称</ul>
+                    <ul>2. 上传数据：将需要分析的所有样本fastq打包成一个总压缩包</ul>
+                    <ul>3. 选择分析软件</ul>
+                    <ul>4. 选择输出结果位点格式</ul>
+                    <ul>5. 点击提交按钮，提交任务</ul>
+                    <ul>6. 查看结果状态：<a class="text-decoration-none" href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a></ul>
                 </h5>
             </div>
         </div>

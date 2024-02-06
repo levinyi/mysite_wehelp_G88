@@ -194,13 +194,15 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
             
             for future in concurrent.futures.as_completed(futures):
                 result_list.extend(future.result())
+        cds_files = find_files_by_suffix(".CDS.fasta", project_dir)
+        print("After: find cds_files: ", len(cds_files))
     else:
         print("\tCDS files exist, skip analysis!")
 
     
     ######################################################################
-    print("Start Step7 HPA report!")
     if hpa:
+        print("Start Step7 HPA report!")
         print("Start HPA report!")
         subprocess.run(f"python3 {script_path}/hpa.summary.report.py -i {project_dir} -d {database_path}/HPA.Gene.cDNA_Changes.xls -o {project_dir}/HPA.summary.report.xls", shell=True)
         
@@ -212,6 +214,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
             for each in result_list:
                 f.write(each + "\n")
     else:
+        print("Start Step7 RBC report!")
         with open(os.path.join(project_dir, "need_to_be_packaged.txt"), "w") as f:
             for each in result_list:
                 f.write(each + "\n")

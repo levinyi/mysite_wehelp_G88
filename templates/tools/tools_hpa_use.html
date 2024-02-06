@@ -17,15 +17,11 @@
         <div class="row pt-3">
             <div class="col">
                 <h5 class="panel-body">
-                    <br><br>
-                    这里是一些使用说明
-                    <br><br>
-                    数据的接收与处理： 上传测序NGS数据文件压缩包，确保文件中没有子文件夹。
-                    <br><br>
-                    项目名称：为项目提供一个可辨识且唯一的名称
-                    <br><br>
-                    <br><br>
-                    查看结果状态：<a class="text-decoration-none" href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a>
+                    <ul>1. 填写项目名称：为项目提供一个可辨识且唯一的名称</ul>
+                    <ul>2. 上传数据：将需要分析的所有样本fastq打包成一个总压缩包</ul>
+                    <ul>3. 核对表格信息</ul>
+                    <ul>4. 点击提交按钮，提交任务</ul>
+                    <ul>5. 查看结果状态：<a class="text-decoration-none" href="{% url 'tools:check_status' tools_id=tools_id %}">以往状态查询</a></ul>
                 </h5>
             </div>
         </div>
