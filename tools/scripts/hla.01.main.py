@@ -52,9 +52,7 @@ def run_bwa_mem(fq1, fq2, ref_fa, sample_name, project_dir, threads = 10):
         f"samtools sort -o {project_dir}/{sample_name}/{sample_name}.hla.sortedByCoord.bam -"
     )
     subprocess.run(bwa_command, shell=True)
-    subprocess.run([
-        f"samtools index {project_dir}/{sample_name}/{sample_name}.hla.sortedByCoord.bam"],
-        shell=True)
+    subprocess.run([ f"samtools index {project_dir}/{sample_name}/{sample_name}.hla.sortedByCoord.bam"], shell=True)
 
 
 def extract_fastq(sample_name, project_dir, threads = 10):
@@ -154,7 +152,7 @@ def run_optitype(sample_name, sample_files, project_dir, software_path, ref_fa, 
     return return_list
 
 
-def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list, threads, output_site):
+def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, hg38_ref_fa, software_list, threads, output_site):
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
     sample_dict = process_fastq_files(fastq_list)
 
@@ -167,6 +165,21 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
     else:
         print("Skip Fastqc,  Fastqc files exist!")
     
+    ######################################################################
+    print("Start Step2 BWA MEM!")
+    cpu_count = int(os.cpu_count()/2) - 6  # 为了不影响其他任务，这里减去6个核心，30个核心
+    
+    bam_files = find_files_by_suffix(".bam", project_dir)
+
+    if len(bam_files) == 0:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=cpu_count) as executor:
+            futures = [executor.submit(run_bwa_mem, sample_files['fq1'], sample_files['fq2'], hg38_ref_fa, sample_name, project_dir)
+                    for sample_name, sample_files in sample_dict.items()]
+    else:
+        print("\tBAM files exist, skip analysis!")
+    
+    ######################################################################
+
     fastq_files = find_files_by_suffix(".fq.gz", project_dir)
     if len(fastq_files) == 0:
         with concurrent.futures.ProcessPoolExecutor() as executor:
@@ -225,8 +238,7 @@ def main(data_dir, project_dir, software_path, database_path, script_path, ref_f
             f.write(f"{project_dir}/HLAscan_Result_final.summary.xls\n")
 
     print("Package result finished!")
-    '''
-    '''
+
 
 if __name__ == "__main__":
     data_dir     = sys.argv[1]
@@ -243,8 +255,9 @@ if __name__ == "__main__":
     database_path = os.path.join(BASE_DIR, "pipeline/database")
     ref_path = os.path.join(BASE_DIR, "pipeline/ref/hla")
     ref_fa = os.path.join(ref_path, "hla_gen.fasta")
+    hg38_ref_fa = os.path.join(BASE_DIR, "pipeline/ref/hg38/Homo_sapiens_assembly38.fasta")
     script_path = os.path.join(BASE_DIR, "tools/scripts")
     
     threads = os.cpu_count()
 
-    main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, software_list, threads, output_site)
+    main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, hg38_ref_fa, software_list, threads, output_site)
