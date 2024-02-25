@@ -155,8 +155,9 @@ def run_optitype(sample_name, sample_files, project_dir, software_path, ref_fa, 
 def main(data_dir, project_dir, software_path, database_path, script_path, ref_fa, hg38_ref_fa, software_list, threads, output_site):
     fastq_list  = find_files_by_suffix(".fq.gz", data_dir)
     sample_dict = process_fastq_files(fastq_list)
-
     # Step 1 对原始数据进行 fastqc， 不需要等待执行结果。
+    print("Start Step1 deal_fastqc!")
+    print(f"fastq_list: {fastq_list}, sample_dict: {sample_dict}")
     fastqc_files = find_files_by_suffix("fastqc.html", project_dir)
     if len(fastqc_files) == 0:
         with concurrent.futures.ProcessPoolExecutor() as executor:
@@ -248,9 +249,11 @@ if __name__ == "__main__":
     output_site = sys.argv[5]  # 'all_sites' or 'partial_sites'
 
     print(f"software_list in hla.main.py : {software_list} and output_site: {output_site}")
+    print(f"data_dir: {data_dir}") # check data_dir is correct or not
     os.makedirs(project_dir, exist_ok=True)
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    print(f"BASE_DIR: {BASE_DIR}") # /app/
     software_path = os.path.join(BASE_DIR, "pipeline/software")
     database_path = os.path.join(BASE_DIR, "pipeline/database")
     ref_path = os.path.join(BASE_DIR, "pipeline/ref/hla")

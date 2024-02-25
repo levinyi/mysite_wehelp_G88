@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     default-jdk \
     zip \
     bowtie2 \
+    bwa \
     samtools && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # 验证 软件安装

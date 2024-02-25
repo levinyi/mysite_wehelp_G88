@@ -179,8 +179,10 @@ rawdata_dirs = {
     'rbc': str(os.path.join(DATA_DIR, "RBC", "rawdata")),
 }
 
-@require_http_methods(["POST"])
+
 def update_data_path(request):
+    if request.method != 'POST':
+        return JsonResponse({'message': 'Invalid request method'}, status=400)
     # get data_type
     data = json.loads(request.body)
     data_type = data.get('data_type')  # hla, hpa, rbc from front-end
@@ -191,8 +193,9 @@ def update_data_path(request):
         return JsonResponse({'message': 'Invalid data type'}, status=400)
 
     base_path = rawdata_dirs[data_type]
+    print("checking base_path: ", base_path)
     if not os.path.exists(base_path):
-        return JsonResponse({'message': 'Base path does not exist'}, status=400)
+        return JsonResponse({'message': f'Base path does not exist: {base_path}'}, status=400)
 
     try:
         # Remove existing entries for the given data_type
